@@ -11,11 +11,12 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Rubik&display=swap');
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  font-family: 'Rubik', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
   background-color: #F4F5F6;
 }
 </style>
