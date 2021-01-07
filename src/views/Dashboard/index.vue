@@ -45,7 +45,7 @@
             outlined
             flat
             min-height="90vh"
-            class="d-flex align-start flex-column pb-3"
+            class="d-flex align-start flex-column pb-8"
           >
             <div class="table mb-auto w-full">
               <v-data-table
@@ -73,7 +73,7 @@
                 </v-col>
                 <v-col cols="6" md="6" lg="6" class="py-0">
                   <div class="d-flex flex-row justify-end">
-                    <p class="text-bold">Rp. 0</p>
+                    <p class="text-bold mr-2">Rp. 0</p>
                   </div>
                 </v-col>
                 <v-col cols="12" md="12" lg="12" class="py-0">

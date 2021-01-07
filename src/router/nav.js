@@ -30,12 +30,12 @@ export const mainMenu = [
     text: 'Produk',
     children: [
       {
-        text: 'Daftar Kategori',
-        to: '/not-found'
+        text: 'Daftar Produk',
+        to: '/produk/daftar-produk'
       },
       {
-        text: 'Daftar Produk',
-        to: '/not-found'
+        text: 'Daftar Kategori',
+        to: '/produk/daftar-kategori'
       }
     ]
   },

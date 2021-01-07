@@ -14,6 +14,24 @@ const routes = [
         path: '/dashboard',
         name: 'Dashboard',
         component: () => import('@/views/Dashboard')
+      },
+    ]
+  },
+  {
+    path: '/produk',
+    name: 'Produk',
+    redirect: '/produk/daftar-produk',
+    component: () => import('@/layouts/Home'),
+    children: [
+      {
+        path: '/produk/daftar-produk',
+        name: 'Daftar Produk',
+        component: () => import('@/views/Produk/views/DaftarProduk.vue')
+      },
+      {
+        path: '/produk/daftar-kategori',
+        name: 'Daftar Kategori',
+        component: () => import('@/views/Produk/views/DaftarKategori.vue')
       }
     ]
   }

@@ -12,25 +12,7 @@
       class="white lighten-4"
     >
       <template v-for="(item, i) in sidebarData">
-        <v-row
-          v-if="item.heading"
-          :key="i"
-          align="center"
-        >
-          <v-col cols="12">
-            <v-subheader v-if="item.heading">
-              {{ item.heading }}
-            </v-subheader>
-          </v-col>
-        </v-row>
-        <v-divider
-          v-else-if="item.divider"
-          :key="i"
-          dark
-          class="my-4"
-        />
         <v-list-item
-          v-else
           :key="i"
           link
           :to="item.to"
@@ -38,7 +20,7 @@
           <v-list-item-action>
             <v-icon color="primary">{{ item.icon }}</v-icon>
           </v-list-item-action>
-          <v-list-item-title class="grey--text" style="margin-left:-15px">
+          <v-list-item-title style="margin-left:-15px">
             {{ item.text }}
           </v-list-item-title>
         </v-list-item>
