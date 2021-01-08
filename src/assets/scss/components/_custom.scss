@@ -10,6 +10,20 @@
   width: 100%;
 }
 
+// form input
+.form-input {
+  margin-top: 20px;
+  .label-form {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  .icon-input {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+  }
+}
+
 .table {
   .v-application {
     .primary--text {

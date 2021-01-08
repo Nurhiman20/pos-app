@@ -4,6 +4,7 @@ import router from './router'
 import vuetify from './plugins/vuetify'
 import Vuex from 'vuex'
 import './assets/scss/main.scss'
+import './plugins/VeeValidate'
 
 Vue.use(Vuex)
 
