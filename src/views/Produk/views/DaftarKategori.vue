@@ -81,7 +81,7 @@
             </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error darken-1" text @click="dialogAddCategory = false">Batal</v-btn>
+              <v-btn color="error darken-1" text @click="dialogEditCategory = false">Batal</v-btn>
               <v-btn color="primary" dark type="submit" :loading="loading">Edit</v-btn>
             </v-card-actions>
           </v-form>
@@ -153,6 +153,7 @@ export default {
           console.log(result);
           this.dialogAddCategory = false
           this.getCategory()
+          this.nameCategory = null
         })
     }
   },
