@@ -20,6 +20,7 @@
       <v-data-table
         :headers="headers"
         :items="listCategory"
+        :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
       >
@@ -28,7 +29,7 @@
             <v-btn icon color="success" @click="goToEdit(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn icon color="error" @click="deleteMenu(item)">
+            <v-btn icon color="error" @click="goDelete(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </div>
@@ -55,7 +56,33 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="error darken-1" text @click="dialogAddCategory = false">Batal</v-btn>
-              <v-btn color="primary" dark type="submit">Tambahkan</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="loading">Tambahkan</v-btn>
+            </v-card-actions>
+          </v-form>
+        </ValidationObserver>
+      </v-card>
+    </v-dialog>
+
+    <!-- dialog edit category -->
+    <v-dialog v-model="dialogEditCategory" persistent width="400">
+      <v-card class="pa-3">
+        <v-card-title class="ml-0">Edit Kategori</v-card-title>
+        <ValidationObserver ref="form" v-slot="{ handleSubmit }">
+          <v-form @submit.prevent="handleSubmit(editCategory)">
+            <ValidationProvider v-slot="{ errors }" name="Nama kategori" rules="required">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedCategory.name"
+                label="Nama Kategori"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="error darken-1" text @click="dialogAddCategory = false">Batal</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="loading">Edit</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -65,28 +92,72 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+const product = createNamespacedHelpers("product");
+
 export default {
   data() {
     return {
       search: null,
       nameCategory: null,
-      selectedCategory: null,
+      selectedCategory: {
+        id: null,
+        name: null
+      },
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Nama', value: 'name', sortable: true },
         { text: '', value: 'actions', sortable: false }
       ],
-      listCategory: [
-        {
-          id: 1,
-          name: 'Minuman'
-        }
-      ],
-      dialogAddCategory: false
+      dialogAddCategory: false,
+      dialogEditCategory: false
     }
   },
+  computed: {
+    ...product.mapState(['loading', 'listCategory'])
+  },
   methods: {
-    addCategory() {}
+    ...product.mapActions(['getCategory', 'postCategory', 'deleteCategory']),
+    randomId() {
+      var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+      var uniqid = randLetter + Date.now();
+      return uniqid
+    },
+    goDelete(item) {
+      console.log(item);
+      this.deleteCategory(item)
+        .then(result => {
+          console.log(result);
+          this.getCategory()
+        })
+    },
+    goToEdit(item) {
+      this.selectedCategory = item
+      this.dialogEditCategory = true
+    },
+    editCategory() {
+      this.postCategory(this.selectedCategory)
+        .then(result => {
+          console.log(result);
+          this.dialogEditCategory = false
+          this.getCategory()
+        })
+    },
+    addCategory() {
+      let dataForm = {
+        id: this.randomId(),
+        name: this.nameCategory
+      }
+      this.postCategory(dataForm)
+        .then(result => {
+          console.log(result);
+          this.dialogAddCategory = false
+          this.getCategory()
+        })
+    }
+  },
+  created() {
+    this.getCategory()
   },
 }
 </script>

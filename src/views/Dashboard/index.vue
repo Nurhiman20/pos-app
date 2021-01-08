@@ -338,7 +338,7 @@ export default {
       openDB('vue-pos', 1, {
         upgrade(db) {
           db.createObjectStore('product', { keyPath: 'id' });
-          db.createObjectStore('category', { autoIncrement: true });
+          db.createObjectStore('category', { keyPath: 'id' });
         },
       });
     }
