@@ -76,6 +76,24 @@ async function postCategory({ commit }, dataForm) {
   });
 }
 
+async function deleteProduct({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .delete('product', dataForm.id)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function deleteCategory({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
@@ -99,5 +117,6 @@ export default {
   getCategory,
   postProduct,
   postCategory,
+  deleteProduct,
   deleteCategory
 }

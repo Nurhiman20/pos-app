@@ -29,7 +29,7 @@
             <v-btn icon color="success" @click="goToEdit(item)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn icon color="error" @click="deleteMenu(item)">
+            <v-btn icon color="error" @click="goDelete(item)">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
           </div>
@@ -127,7 +127,7 @@ export default {
     ...product.mapState(['loading', 'listProduct', 'listCategory'])
   },
   methods: {
-    ...product.mapActions(['getProduct', 'getCategory', 'postProduct']),
+    ...product.mapActions(['getProduct', 'getCategory', 'postProduct', 'deleteProduct']),
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
       var uniqid = 'prod-' + randLetter + Date.now();
@@ -138,6 +138,13 @@ export default {
     },
     valueCategory(item) {
       return item
+    },
+    goDelete(item) {
+      this.deleteProduct(item)
+        .then(result => {
+          console.log(result);
+          this.getProduct()
+        })
     },
     addProduct() {
       let dataForm = {

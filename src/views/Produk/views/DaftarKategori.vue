@@ -124,7 +124,6 @@ export default {
       return uniqid
     },
     goDelete(item) {
-      console.log(item);
       this.deleteCategory(item)
         .then(result => {
           console.log(result);
