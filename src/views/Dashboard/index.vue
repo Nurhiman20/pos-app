@@ -146,8 +146,6 @@
 </template>
 
 <script>
-import { openDB } from 'idb';
-
 export default {
   data() {
     return {
@@ -333,18 +331,7 @@ export default {
     },
     submitTransaksi() {
       this.dialogSuccess = true
-    },    
-    createStore() {
-      openDB('vue-pos', 1, {
-        upgrade(db) {
-          db.createObjectStore('product', { keyPath: 'id' });
-          db.createObjectStore('category', { keyPath: 'id' });
-        },
-      });
     }
-  },
-  created() {
-    this.createStore()
   }
 }
 </script>

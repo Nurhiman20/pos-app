@@ -120,7 +120,7 @@ export default {
     ...product.mapActions(['getCategory', 'postCategory', 'deleteCategory']),
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = randLetter + Date.now();
+      var uniqid = 'cat-' + randLetter + Date.now();
       return uniqid
     },
     goDelete(item) {
@@ -132,33 +132,33 @@ export default {
         })
     },
     goToEdit(item) {
-      this.selectedCategory = item
-      this.dialogEditCategory = true
+      this.selectedCategory = item;
+      this.dialogEditCategory = true;
     },
     editCategory() {
       this.postCategory(this.selectedCategory)
         .then(result => {
           console.log(result);
-          this.dialogEditCategory = false
-          this.getCategory()
+          this.dialogEditCategory = false;
+          this.getCategory();
         })
     },
     addCategory() {
       let dataForm = {
         id: this.randomId(),
         name: this.nameCategory
-      }
+      };
       this.postCategory(dataForm)
         .then(result => {
           console.log(result);
           this.dialogAddCategory = false
           this.getCategory()
           this.nameCategory = null
-        })
+        });
     }
   },
   created() {
-    this.getCategory()
+    this.getCategory();
   },
 }
 </script>

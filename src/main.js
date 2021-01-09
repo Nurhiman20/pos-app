@@ -5,6 +5,9 @@ import vuetify from './plugins/vuetify'
 import store from './store'
 import './assets/scss/main.scss'
 import './plugins/VeeValidate'
+import { SchemaSyncHandler } from './plugins/schemasync.js'
+
+SchemaSyncHandler.sync()
 
 Vue.config.productionTip = false
 

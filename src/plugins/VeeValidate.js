@@ -21,7 +21,7 @@ extend('max', {
 })
 extend('integer', {
   ...integer,
-  message: '{_field_} harus diisi dengan nomor'
+  message: '{_field_} harus diisi dengan angka'
 })
 extend('password', {
   params: ['target'],

@@ -3,6 +3,7 @@ import mutations from './mutations'
 
 const state = {
   loading: false,
+  listProduct: [],
   listCategory: []
 }
 
