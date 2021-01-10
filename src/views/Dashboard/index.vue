@@ -9,29 +9,41 @@
             class="pa-4"
             min-height="90vh"
           >
-            <v-btn color="#2B81D6" dark :outlined="activeView === 'minuman' ? false : true"  @click="changeView('minuman')">Minuman</v-btn>
-            <v-btn color="#2B81D6" dark class="ml-1" :outlined="activeView === 'makanan' ? false : true" @click="changeView('makanan')">Makanan</v-btn>
-            <v-btn color="#2B81D6" dark class="ml-1" :outlined="activeView === 'coffee' ? false : true" @click="changeView('coffee')">Coffee</v-btn>
-            <v-btn color="#2B81D6" dark class="ml-1" :outlined="activeView === 'jus' ? false : true" @click="changeView('jus')">Jus</v-btn>
-            <v-btn color="#2B81D6" dark class="ml-1" :outlined="activeView === 'ayam' ? false : true" @click="changeView('ayam')">Ayam</v-btn>
-            <v-btn color="#2B81D6" dark class="ml-1" :outlined="activeView === 'dessert' ? false : true" @click="changeView('dessert')">Dessert</v-btn>
+            <v-btn
+              :outlined="isActiveCategory({ id: 'all', name: 'all'})"
+              color="#2B81D6"
+              class="mr-1"
+              dark
+              @click="changeView({ id: 'all', name: 'all'})"
+            >All</v-btn>
+            <v-btn
+              v-for="(cat, index) in listCategory"
+              :key="index"
+              :outlined="isActiveCategory(cat)"
+              color="#2B81D6"
+              class="mr-1"
+              dark
+              @click="changeView(cat)"
+            >{{ cat.name }}</v-btn>
             <v-text-field
               v-model="search"
               outlined
               dense
               label="Cari..."
+              append-icon="mdi-magnify"
               class="mb-0 mt-4"
             ></v-text-field>
             <div class="mt-2">
-              <p v-if="resultSearch.length === 0">Mohon maaf.. Menu tersebut tidak tersedia</p>
+              <p v-if="resultSearch.length === 0">Mohon maaf.. Produk tidak tersedia</p>
               <v-row v-else>
                 <v-col cols="4" md="4" lg="4" v-for="(item, i) in resultSearch" :key="i">
                   <v-card class="cursor-pointer" @click="addMenu(item)">
                     <div class="d-flex flex-column">
                       <v-img src="https://picsum.photos/400/300?random" :aspect-ratio="4/3"></v-img>
-                      <div class="ml-4 mt-3">
-                        <p>{{ item.nama }}</p>
-                        <p class="mt-n3 text-bold">Rp. {{ item.harga }}</p>
+                      <div class="mt-n2">
+                        <v-card-title>{{ item.name }}</v-card-title>
+                        <v-card-subtitle>{{ item.description }}</v-card-subtitle>
+                        <p class="ml-4 mt-n3 text-bold">Rp{{ formatCurrency(item.price) }},00</p>
                       </div>
                     </div>
                   </v-card>
@@ -146,6 +158,9 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+const product = createNamespacedHelpers("product");
+
 export default {
   data() {
     return {
@@ -159,80 +174,10 @@ export default {
         nama: null,
         qty: 1
       },
-      activeView: 'minuman',
-      listView: [
-        {
-          nama: 'Jus Jeruk',
-          harga: 15000,
-          qty: 1,
-          diskon: 0,
-          total: 15000
-        },
-        {
-          nama: 'Thai Tea',
-          harga: 70000,
-          qty: 1,
-          diskon: 0,
-          total: 70000
-        },
-        {
-          nama: 'Es Teh Manis',
-          harga: 5000,
-          qty: 1,
-          diskon: 0,
-          total: 5000
-        }
-      ],
-      minuman: [
-        {
-          nama: 'Jus Jeruk',
-          harga: 15000,
-          qty: 1,
-          diskon: 0,
-          total: 15000
-        },
-        {
-          nama: 'Thai Tea',
-          harga: 70000,
-          qty: 1,
-          diskon: 0,
-          total: 70000
-        },
-        {
-          nama: 'Es Teh Manis',
-          harga: 5000,
-          qty: 1,
-          diskon: 0,
-          total: 5000
-        },
-        {
-          nama: 'Teh Manis Panas',
-          harga: 4000,
-          qty: 1,
-          diskon: 0,
-          total: 5000
-        }
-      ],
-      makanan: [
-        {
-          nama: 'Seblak',
-          harga: 10000,
-          qty: 1,
-          diskon: 0,
-          total: 10000
-        },
-        {
-          nama: 'Batagor',
-          harga: 12000,
-          qty: 1,
-          diskon: 0,
-          total: 12000
-        }
-      ],
-      coffee: [],
-      jus: [],
-      ayam: [],
-      dessert: [],
+      activeView: {
+        id: 'all',
+        name: 'all'
+      },
       headers: [
         { text: 'Produk', value: 'nama', sortable: false },        
         { text: 'Harga', value: 'harga', sortable: false },
@@ -245,13 +190,15 @@ export default {
     }
   },
   computed: {
-    resultSearch(){
-      if(this.search){
-        return this.listView.filter((item) => {
-          return this.search.toLowerCase().split(' ').every(v => item.nama.toLowerCase().includes(v))
+    ...product.mapState(['listCategory']),
+    ...product.mapGetters(['listViewProduct']),
+    resultSearch() {
+      if(this.search) {
+        return this.listViewProduct.filter((item) => {
+          return this.search.toLowerCase().split(' ').every(v => item.name.toLowerCase().includes(v))
         })
       } else {
-        return this.listView;
+        return this.listViewProduct;
       }
     },
     total() {
@@ -270,31 +217,27 @@ export default {
       }
     }
   },
-  watch: {
-    activeView(val) {
-      if (val === 'minuman') {
-        this.listView = this.minuman
-      } else if (val === 'makanan') {
-        this.listView = this.makanan
-      } else if (val === 'jus') {
-        this.listView = this.jus
-      } else if (val === 'coffee') {
-        this.listView = this.coffee
-      } else if (val === 'ayam') {
-        this.listView = this.ayam
-      } else {
-        this.listView = []
-      }
-    }
-  },
   methods: {
+    ...product.mapMutations(['SET_FILTER_CATEGORY']),
+    ...product.mapActions(['getProduct', 'getCategory']),
+    formatCurrency(val) {
+      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+    },
+    isActiveCategory(val) {
+      if (this.activeView.name === val.name) {
+        return false
+      } else {
+        return true
+      }
+    },
     closeDialogSuccess() {
       this.dialogSuccess = false
       this.selectedMenu = []
       this.tunai = 0
     },
     changeView(val) {
-      this.activeView = val
+      this.activeView = val;
+      this.SET_FILTER_CATEGORY(val);
     },
     addMenu(item) {
       const found = this.selectedMenu.some(el => el.nama === item.nama);
@@ -332,7 +275,11 @@ export default {
     submitTransaksi() {
       this.dialogSuccess = true
     }
-  }
+  },
+  created() {
+    this.getProduct();
+    this.getCategory();
+  },
 }
 </script>
 

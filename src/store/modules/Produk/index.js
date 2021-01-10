@@ -1,15 +1,21 @@
-import actions from './actions'
-import mutations from './mutations'
+import actions from './actions';
+import mutations from './mutations';
+import getters from './getters'
 
 const state = {
   loading: false,
   listProduct: [],
-  listCategory: []
+  listCategory: [],
+  filterCategory: {
+    id: 'all',
+    name: 'all'
+  }
 }
 
 export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
+  getters
 }
