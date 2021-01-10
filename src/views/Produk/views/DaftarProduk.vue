@@ -137,7 +137,7 @@
                 outlined
               ></v-select>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Deskripsi produk" rules="required|max:200">
+            <ValidationProvider v-slot="{ errors }" name="Deskripsi produk" rules="required|max:50">
               <v-textarea
                 v-model="selectedProduct.description"
                 :error-messages="errors"
