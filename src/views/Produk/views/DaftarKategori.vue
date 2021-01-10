@@ -38,68 +38,34 @@
     </v-card>
     
     <!-- dialog add category -->
-    <v-dialog v-model="dialogAddCategory" persistent width="400">
-      <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Kategori</v-card-title>
-        <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(addCategory)">
-            <ValidationProvider v-slot="{ errors }" name="Nama kategori" rules="required">
-              <v-text-field
-                :error-messages="errors"
-                v-model="nameCategory"
-                label="Nama Kategori"
-                outlined
-                dense
-                class="mb-0 mt-2 px-4"
-              ></v-text-field>
-            </ValidationProvider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="error darken-1" text @click="dialogAddCategory = false">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="loading">Tambahkan</v-btn>
-            </v-card-actions>
-          </v-form>
-        </ValidationObserver>
-      </v-card>
-    </v-dialog>
+    <add-category-dialog
+      :show="dialogAddCategory"
+      @closeDialog="closeDialogAdd"
+    ></add-category-dialog>
 
     <!-- dialog edit category -->
-    <v-dialog v-model="dialogEditCategory" persistent width="400">
-      <v-card class="pa-3">
-        <v-card-title class="ml-0">Edit Kategori</v-card-title>
-        <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(editCategory)">
-            <ValidationProvider v-slot="{ errors }" name="Nama kategori" rules="required">
-              <v-text-field
-                :error-messages="errors"
-                v-model="selectedCategory.name"
-                label="Nama Kategori"
-                outlined
-                dense
-                class="mb-0 mt-2 px-4"
-              ></v-text-field>
-            </ValidationProvider>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="error darken-1" text @click="dialogEditCategory = false">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="loading">Edit</v-btn>
-            </v-card-actions>
-          </v-form>
-        </ValidationObserver>
-      </v-card>
-    </v-dialog>
+    <edit-category-dialog 
+      :show="dialogEditCategory"
+      :selected="selectedCategory"
+      @closeDialog="closeDialogEdit"
+    ></edit-category-dialog>
   </div>
 </template>
 
 <script>
+import addCategoryDialog from '../components/TambahKategori';
+import editCategoryDialog from '../components/EditKategori';
 import { createNamespacedHelpers } from "vuex";
 const product = createNamespacedHelpers("product");
 
 export default {
+  components: {
+    addCategoryDialog,
+    editCategoryDialog
+  },
   data() {
     return {
       search: null,
-      nameCategory: null,
       selectedCategory: {
         id: null,
         name: null
@@ -118,6 +84,14 @@ export default {
   },
   methods: {
     ...product.mapActions(['getCategory', 'postCategory', 'deleteCategory']),
+    closeDialogAdd(e) {
+      this.getCategory()
+      this.dialogAddCategory = e
+    },
+    closeDialogEdit(e) {
+      this.getCategory()
+      this.dialogEditCategory = e
+    },
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
       var uniqid = 'cat-' + randLetter + Date.now();
@@ -133,27 +107,6 @@ export default {
     goToEdit(item) {
       this.selectedCategory = item;
       this.dialogEditCategory = true;
-    },
-    editCategory() {
-      this.postCategory(this.selectedCategory)
-        .then(result => {
-          console.log(result);
-          this.dialogEditCategory = false;
-          this.getCategory();
-        })
-    },
-    addCategory() {
-      let dataForm = {
-        id: this.randomId(),
-        name: this.nameCategory
-      };
-      this.postCategory(dataForm)
-        .then(result => {
-          console.log(result);
-          this.dialogAddCategory = false
-          this.getCategory()
-          this.nameCategory = null
-        });
     }
   },
   created() {
