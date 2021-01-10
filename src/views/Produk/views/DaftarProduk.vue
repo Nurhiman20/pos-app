@@ -174,6 +174,7 @@ export default {
       priceProduct: null,
       categoryProduct: null,
       descriptionProduct: null,
+      imageProduct: 'https://picsum.photos/400/300?random',
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Nama', value: 'name', sortable: true },
@@ -227,7 +228,8 @@ export default {
         name: this.nameProduct,
         price: this.priceProduct,
         category: this.categoryProduct,
-        description: this.descriptionProduct
+        description: this.descriptionProduct,
+        image: this.imageProduct
       };
       this.postProduct(dataForm)
         .then(result => {
