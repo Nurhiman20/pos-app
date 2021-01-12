@@ -13,7 +13,11 @@ const routes = [
       {
         path: '/dashboard',
         name: 'Dashboard',
-        component: () => import('@/views/Dashboard')
+        component: () => import('@/views/Dashboard'),
+        meta: {
+          title: 'Dashboard | POS App',
+          // requireAuth: true
+        }
       },
     ]
   },
@@ -26,12 +30,19 @@ const routes = [
       {
         path: '/produk/daftar-produk',
         name: 'Daftar Produk',
-        component: () => import('@/views/Produk/views/DaftarProduk.vue')
+        component: () => import('@/views/Produk/views/DaftarProduk.vue'),
+        meta: {
+          title: 'Daftar Produk | POS App'
+        }
       },
       {
         path: '/produk/daftar-kategori',
         name: 'Daftar Kategori',
-        component: () => import('@/views/Produk/views/DaftarKategori.vue')
+        component: () => import('@/views/Produk/views/DaftarKategori.vue'),
+        meta: {
+          title: 'Daftar Kategori | POS App',
+          requireAuth: true
+        }
       }
     ]
   }
@@ -41,6 +52,22 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // if (to.matched.some(record => record.meta.requireAuth)) {
+  //   if (checkToken()) {
+  //     next()
+  //   } else {
+  //     next('/explore')
+  //     return
+  //   }
+  // }
+
+  const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
+  if(nearestWithTitle) document.title = nearestWithTitle.meta.title;
+
+  next()
 })
 
 export default router
