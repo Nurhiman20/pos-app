@@ -9,7 +9,7 @@
       <v-btn
         :outlined="isActiveCategory({ id: 'all', name: 'all'})"
         color="#2B81D6"
-        class="mr-1"
+        class="mr-1 mt-1"
         dark
         @click="changeView({ id: 'all', name: 'all'})"
       >All</v-btn>
@@ -18,7 +18,7 @@
         :key="index"
         :outlined="isActiveCategory(cat)"
         color="#2B81D6"
-        class="mr-1"
+        class="mr-1 mt-1"
         dark
         @click="changeView(cat)"
       >{{ cat.name }}</v-btn>
@@ -33,7 +33,7 @@
       <div class="mt-2">
         <p v-if="resultSearch.length === 0">Mohon maaf.. Produk tidak tersedia</p>
         <v-row v-else>
-          <v-col cols="4" md="4" lg="4" v-for="(item, i) in resultSearch" :key="i">
+          <v-col cols="12" md="4" lg="4" xl="4" v-for="(item, i) in resultSearch" :key="i">
             <v-card class="cursor-pointer" @click="selectProduct(item)">
               <div class="d-flex flex-column">
                 <v-img src="https://picsum.photos/400/300?random" :aspect-ratio="4/3"></v-img>

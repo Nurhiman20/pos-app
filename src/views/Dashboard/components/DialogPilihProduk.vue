@@ -5,7 +5,7 @@
         <v-card-title class="ml-0">Pilih Produk</v-card-title>
         <v-card-subtitle>{{ selectedProduct.name }}</v-card-subtitle>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(addProduct)">
+          <v-form @submit.prevent="handleSubmit(selectProduct)">
             <v-row no-gutters>
               <v-col cols="6">
                 <ValidationProvider v-slot="{ errors }" name="Kuantitas" rules="required|integer">
@@ -28,6 +28,8 @@
                   x-small
                   color="success"
                   @click="minQuantity"
+                  :disabled="quantity < 2 ? true : false"
+                  :dark="quantity < 2 ? false : true"
                 >
                   <v-icon dark>
                     mdi-minus
@@ -39,8 +41,8 @@
                   x-small
                   color="success"
                   @click="addQuantity"
-                  :disabled="quantity === selectedProduct.stock ? true : false"
-                  :dark="quantity === selectedProduct.stock ? false : true"
+                  :disabled="quantity > parseInt(selectedProduct.stock) - 1 ? true : false"
+                  :dark="quantity > parseInt(selectedProduct.stock) - 1 ? false : true"
                 >
                   <v-icon dark>
                     mdi-plus
@@ -82,13 +84,49 @@ export default {
   },
   methods: {
     closeDialog() {
-      this.$emit('close', false)
+      this.$emit('close', false);
     },
     minQuantity() {
-      this.quantity -= 1
+      this.quantity = parseInt(this.quantity) - 1;
     },
     addQuantity() {
-      this.quantity += 1
+      this.quantity = parseInt(this.quantity) + 1;
+    },
+    checkQuantity() {
+      if (this.quantity > parseInt(this.selectedProduct.stock)) {
+        this.$refs.form.setErrors({
+          Kuantitas: "Kuantitas yang diinput melebihi stok"
+        });
+        return false;
+      } else if (this.quantity < 1) {
+        this.$refs.form.setErrors({
+          Kuantitas: "Kuantitas yang diinput tidak sesuai"
+        });
+        return false;
+      } else {
+        return true;
+      }
+    },
+    checkDiscount() {
+      if (parseInt(this.selectedProduct.total) < 0) {
+        this.$refs.form.setErrors({
+          Diskon: "Diskon yang diinput melebihi total harga produk"
+        });
+        return false;
+      } else {
+        return true;
+      }
+    },
+    selectProduct() {
+      this.selectedProduct.qty = this.quantity;
+      this.selectedProduct.discount = this.discount;
+      this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.price) - parseInt(this.discount);
+      if (this.checkQuantity() && this.checkDiscount()) {
+        this.$emit('addSelected', this.selectedProduct);
+        this.quantity = 1;
+        this.discount = 0;
+        this.closeDialog();
+      }
     }
   },
 }

@@ -2,7 +2,7 @@
   <div class="app-content">
     <v-container>
       <v-row>
-        <v-col cols="7" md="7" lg="7">
+        <v-col cols="12" md="7" lg="7" xl="7">
           <product-catalog
             :categories="listCategory"
             :products="listViewProduct"
@@ -10,8 +10,10 @@
             @productSelected="openSelectDialog"
           ></product-catalog>
         </v-col>
-        <v-col cols="5" md="5" lg="5">
-          <product-sale></product-sale>
+        <v-col cols="12" md="5" lg="5" xl="5">
+          <product-sale
+            :products="selectedProduct"
+          ></product-sale>
         </v-col>
       </v-row>
     </v-container>
@@ -20,6 +22,7 @@
       :show="selectDialog"
       :selectedProduct="selectedItem"
       @close="closeSelectDialog"
+      @addSelected="addSelectedProduct"
     ></select-product-dialog>
   </div>
 </template>
@@ -40,7 +43,8 @@ export default {
   data() {
     return {
       selectedItem: {},
-      selectDialog: false
+      selectDialog: false,
+      selectedProduct: []
     }
   },
   computed: {
@@ -62,12 +66,12 @@ export default {
       this.selectedMenu = []
       this.tunai = 0
     },
-    addMenu(item) {
-      const found = this.selectedMenu.some(el => el.nama === item.nama);
+    addSelectedProduct(item) {
+      const found = this.selectedProduct.some(el => el.name === item.name);
       if (!found) {
-        this.selectedMenu.push(item)
+        this.selectedProduct.push(item)
       } else {
-        alert('Menu sudah ditambahkan')
+        alert('Produk sudah ditambahkan')
       }
     },
     deleteMenu(item) {

@@ -9,7 +9,7 @@
       <div class="table mb-auto w-full">
         <v-data-table
           :headers="headers"
-          :items="selectedMenu"
+          :items="products"
           class="elevation-1 scrollbar-custom"
           hide-default-footer
         >
@@ -32,13 +32,13 @@
           </v-col>
           <v-col cols="6" md="6" lg="6" class="py-0">
             <div class="d-flex flex-row justify-end">
-              <p class="text-bold mr-2">Rp. {{ discount }}</p>
+              <p class="text-bold mr-2">Rp. {{ formatCurrency(discount) }},00</p>
             </div>
           </v-col>
           <v-col cols="12" md="12" lg="12" class="py-0">
             <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
               <p>Total</p>
-              <p class="text-bold">Rp. {{ total }}</p>
+              <p class="text-bold">Rp. {{ formatCurrency(total) }},00</p>
             </div>
           </v-col>
           <v-col cols="12" md="6" lg="6" class="py-0">
@@ -55,11 +55,11 @@
           <v-col cols="12" md="12" lg="12" class="py-0">
             <div class="d-flex flex-row justify-space-between pa-2 pb-0 kembali">
               <p>Kembali</p>
-              <p class="text-bold">Rp. {{ moneyChange }}</p>
+              <p class="text-bold">Rp. {{ formatCurrency(moneyChange) }},00</p>
             </div>
           </v-col>
           <v-col cols="12" md="12" lg="12" class="py-0">
-            <v-btn class="mt-3" block color="primary" dark @click="submitTransaksi">Transaksi</v-btn>
+            <v-btn class="mt-3" block color="primary" dark @click="submitTransaction">Transaksi</v-btn>
           </v-col>
         </v-row>
       </div>
@@ -69,29 +69,28 @@
 
 <script>
 export default {
+  props: ['products'],
   data() {
     return {
       cash: 0,
-      discount: 0,
-      selectedMenu: [],
       headers: [
-        { text: 'Produk', value: 'nama', sortable: false },        
-        { text: 'Harga', value: 'harga', sortable: false },
+        { text: 'Produk', value: 'name', sortable: false },        
+        { text: 'Harga', value: 'price', sortable: false },
         { text: 'Qty', value: 'qty', sortable: false },
-        { text: 'Diskon', value: 'diskon', sortable: false },
+        { text: 'Diskon', value: 'discount', sortable: false },
         { text: 'Total', value: 'total', sortable: false },
-        { text: 'Aksi', value: 'actions', sortable: false }
+        { text: '', value: 'actions', sortable: false }
       ]
     }
   },
   computed: {    
     total() {
-      const totalPrice = this.selectedMenu.map(tot => tot.total);
-      let totalAll = 0;
-      totalPrice.forEach(element => {
-        totalAll += element;
-      });
+      const totalAll = this.products.reduce((acc, product) => acc + parseInt(product.total), 0);
       return totalAll;
+    },
+    discount() {
+      const disc = this.products.reduce((acc, product) => acc + parseInt(product.discount), 0);
+      return disc
     },
     moneyChange() {
       if (this.cash === 0) {
@@ -99,6 +98,12 @@ export default {
       } else {
         return this.cash - this.total;
       }
+    }
+  },
+  methods: {
+    submitTransaction() {},
+    formatCurrency(val) {
+      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     }
   }
 }
