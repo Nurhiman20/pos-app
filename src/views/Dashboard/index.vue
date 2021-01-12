@@ -3,190 +3,37 @@
     <v-container>
       <v-row>
         <v-col cols="7" md="7" lg="7">
-          <v-card
-            outlined
-            flat
-            class="pa-4"
-            min-height="90vh"
-          >
-            <v-btn
-              :outlined="isActiveCategory({ id: 'all', name: 'all'})"
-              color="#2B81D6"
-              class="mr-1"
-              dark
-              @click="changeView({ id: 'all', name: 'all'})"
-            >All</v-btn>
-            <v-btn
-              v-for="(cat, index) in listCategory"
-              :key="index"
-              :outlined="isActiveCategory(cat)"
-              color="#2B81D6"
-              class="mr-1"
-              dark
-              @click="changeView(cat)"
-            >{{ cat.name }}</v-btn>
-            <v-text-field
-              v-model="search"
-              outlined
-              dense
-              label="Cari..."
-              append-icon="mdi-magnify"
-              class="mb-0 mt-4"
-            ></v-text-field>
-            <div class="mt-2">
-              <p v-if="resultSearch.length === 0">Mohon maaf.. Produk tidak tersedia</p>
-              <v-row v-else>
-                <v-col cols="4" md="4" lg="4" v-for="(item, i) in resultSearch" :key="i">
-                  <v-card class="cursor-pointer" @click="addMenu(item)">
-                    <div class="d-flex flex-column">
-                      <v-img src="https://picsum.photos/400/300?random" :aspect-ratio="4/3"></v-img>
-                      <div class="mt-n2">
-                        <v-card-title>{{ item.name }}</v-card-title>
-                        <v-card-subtitle>{{ item.description }}</v-card-subtitle>
-                        <p class="ml-4 mt-n3 text-bold">Rp{{ formatCurrency(item.price) }},00</p>
-                      </div>
-                    </div>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </div>
-          </v-card>
+          <product-catalog
+            :categories="listCategory"
+            :products="listViewProduct"
+            @setFilter=setFilterProduct
+          ></product-catalog>
         </v-col>
         <v-col cols="5" md="5" lg="5">
-          <v-card
-            outlined
-            flat
-            min-height="90vh"
-            class="d-flex align-start flex-column pb-8"
-          >
-            <div class="table mb-auto w-full">
-              <v-data-table
-                :headers="headers"
-                :items="selectedMenu"
-                class="elevation-1 scrollbar-custom"
-                hide-default-footer
-              >
-                <template v-slot:item.actions="{item}">
-                  <div class="d-flex flex-row align-center justify-end">
-                    <v-btn icon color="success" @click="goToEdit(item)">
-                      <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                    <v-btn icon color="error" @click="deleteMenu(item)">
-                      <v-icon>mdi-delete</v-icon>
-                    </v-btn>
-                  </div>
-                </template>
-              </v-data-table>
-            </div>
-            <div class="w-full px-3 mt-4">
-              <v-row>
-                <v-col cols="6" md="6" lg="6" class="py-0">
-                  Diskon
-                </v-col>
-                <v-col cols="6" md="6" lg="6" class="py-0">
-                  <div class="d-flex flex-row justify-end">
-                    <p class="text-bold mr-2">Rp. 0</p>
-                  </div>
-                </v-col>
-                <v-col cols="12" md="12" lg="12" class="py-0">
-                  <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
-                    <p>Total</p>
-                    <p class="text-bold">Rp. {{ total }}</p>
-                  </div>
-                </v-col>
-                <v-col cols="12" md="6" lg="6" class="py-0">
-                  <p class="mt-2">Tunai</p>
-                </v-col>
-                <v-col cols="12" md="6" lg="6" class="py-0">
-                  <v-text-field
-                    v-model="tunai"
-                    outlined
-                    dense
-                    class="mb-0 mt-2"
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12" md="12" lg="12" class="py-0">
-                  <div class="d-flex flex-row justify-space-between pa-2 pb-0 kembali">
-                    <p>Kembali</p>
-                    <p class="text-bold">Rp. {{ kembali }}</p>
-                  </div>
-                </v-col>
-                <v-col cols="12" md="12" lg="12" class="py-0">
-                  <v-btn class="mt-3" block color="primary" dark @click="submitTransaksi">Transaksi</v-btn>
-                </v-col>
-              </v-row>
-            </div>
-          </v-card>
+          <product-sale></product-sale>
         </v-col>
       </v-row>
     </v-container>
-
-    <!-- dialog edit -->
-    <v-dialog v-model="dialogEdit" persistent max-width="290">
-      <v-card class="pa-3 pt-0">
-        <v-card-title>Edit Qty {{ selectedItem.nama }}</v-card-title>
-        <v-text-field
-          v-model="selectedItem.qty"
-          outlined
-          dense
-          class="mb-0 mt-2"
-        ></v-text-field>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error darken-1" text @click="dialogEdit = false">Cancel</v-btn>
-          <v-btn color="success" dark @click="editQty">Edit</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- dialog sukses -->
-    <v-dialog persistent v-model="dialogSuccess" max-width="400px">
-      <v-card class="pt-8 pb-6 px-4">
-        <v-card-text>
-          <div class='dialog'>
-            <v-icon size="140" color="success" class="mb-4">mdi-checkbox-marked-circle</v-icon>
-            <p class="paragraph-3">Sukses!</p>
-            <p class="paragraph-4">Transaksi berhasil disimpan</p>
-            <v-btn color="primary" block @click="closeDialogSuccess">
-              Tutup
-            </v-btn>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
+import productCatalog from './components/KatalogProduk'
+import productSale from './components/PenjualanProduk'
 import { createNamespacedHelpers } from "vuex";
 const product = createNamespacedHelpers("product");
 
 export default {
+  components: {
+    productCatalog,
+    productSale
+  },
   data() {
     return {
-      dialogEdit: false,
-      dialogSuccess: false,
-      search: null,
-      nomorMeja: 0,
-      potonganHarga: 0,
-      tunai: 0,
       selectedItem: {
         nama: null,
         qty: 1
-      },
-      activeView: {
-        id: 'all',
-        name: 'all'
-      },
-      headers: [
-        { text: 'Produk', value: 'nama', sortable: false },        
-        { text: 'Harga', value: 'harga', sortable: false },
-        { text: 'Qty', value: 'qty', sortable: false },
-        { text: 'Diskon', value: 'diskon', sortable: false },
-        { text: 'Total', value: 'total', sortable: false },
-        { text: 'Aksi', value: 'actions', sortable: false }
-      ],
-      selectedMenu: []
+      }
     }
   },
   computed: {
@@ -200,44 +47,15 @@ export default {
       } else {
         return this.listViewProduct;
       }
-    },
-    total() {
-      const totalHarga = this.selectedMenu.map(tot => tot.total)
-      let totalAll = 0
-      totalHarga.forEach(element => {
-        totalAll += element
-      });
-      return totalAll
-    },
-    kembali() {
-      if (this.tunai === 0) {
-        return 0
-      } else {
-        return this.tunai - this.total
-      }
     }
   },
   methods: {
     ...product.mapMutations(['SET_FILTER_CATEGORY']),
     ...product.mapActions(['getProduct', 'getCategory']),
-    formatCurrency(val) {
-      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
-    },
-    isActiveCategory(val) {
-      if (this.activeView.name === val.name) {
-        return false
-      } else {
-        return true
-      }
-    },
     closeDialogSuccess() {
       this.dialogSuccess = false
       this.selectedMenu = []
       this.tunai = 0
-    },
-    changeView(val) {
-      this.activeView = val;
-      this.SET_FILTER_CATEGORY(val);
     },
     addMenu(item) {
       const found = this.selectedMenu.some(el => el.nama === item.nama);
@@ -253,6 +71,9 @@ export default {
     goToEdit(item) {
       this.dialogEdit = true
       this.selectedItem = item
+    },
+    setFilterProduct(e) {
+      this.SET_FILTER_CATEGORY(e)
     },
     editQty() {
       const dataEdit = {
@@ -274,6 +95,9 @@ export default {
     },
     submitTransaksi() {
       this.dialogSuccess = true
+    },
+    formatCurrency(val) {
+      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     }
   },
   created() {
@@ -286,16 +110,6 @@ export default {
 <style scoped lang="scss">
 .app-content {
   min-height: 100vh;
-}
-
-.total {
-  background-color: #2B81D6;
-  color: white;
-}
-
-.kembali {
-  background-color:#FF4F4F;
-  color: white;
 }
 
 .dialog {

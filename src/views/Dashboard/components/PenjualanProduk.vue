@@ -1,0 +1,117 @@
+<template>
+  <div>
+    <v-card
+      outlined
+      flat
+      min-height="90vh"
+      class="d-flex align-start flex-column pb-8"
+    >
+      <div class="table mb-auto w-full">
+        <v-data-table
+          :headers="headers"
+          :items="selectedMenu"
+          class="elevation-1 scrollbar-custom"
+          hide-default-footer
+        >
+          <template v-slot:item.actions="{item}">
+            <div class="d-flex flex-row align-center justify-end">
+              <v-btn icon color="success" @click="goToEdit(item)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn icon color="error" @click="deleteMenu(item)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </div>
+          </template>
+        </v-data-table>
+      </div>
+      <div class="w-full px-3 mt-4">
+        <v-row>
+          <v-col cols="6" md="6" lg="6" class="py-0">
+            Diskon
+          </v-col>
+          <v-col cols="6" md="6" lg="6" class="py-0">
+            <div class="d-flex flex-row justify-end">
+              <p class="text-bold mr-2">Rp. {{ discount }}</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="12" lg="12" class="py-0">
+            <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
+              <p>Total</p>
+              <p class="text-bold">Rp. {{ total }}</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" lg="6" class="py-0">
+            <p class="mt-2">Tunai</p>
+          </v-col>
+          <v-col cols="12" md="6" lg="6" class="py-0">
+            <v-text-field
+              v-model="cash"
+              outlined
+              dense
+              class="mb-0 mt-2"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" md="12" lg="12" class="py-0">
+            <div class="d-flex flex-row justify-space-between pa-2 pb-0 kembali">
+              <p>Kembali</p>
+              <p class="text-bold">Rp. {{ moneyChange }}</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="12" lg="12" class="py-0">
+            <v-btn class="mt-3" block color="primary" dark @click="submitTransaksi">Transaksi</v-btn>
+          </v-col>
+        </v-row>
+      </div>
+    </v-card>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      cash: 0,
+      discount: 0,
+      selectedMenu: [],
+      headers: [
+        { text: 'Produk', value: 'nama', sortable: false },        
+        { text: 'Harga', value: 'harga', sortable: false },
+        { text: 'Qty', value: 'qty', sortable: false },
+        { text: 'Diskon', value: 'diskon', sortable: false },
+        { text: 'Total', value: 'total', sortable: false },
+        { text: 'Aksi', value: 'actions', sortable: false }
+      ]
+    }
+  },
+  computed: {    
+    total() {
+      const totalPrice = this.selectedMenu.map(tot => tot.total);
+      let totalAll = 0;
+      totalPrice.forEach(element => {
+        totalAll += element;
+      });
+      return totalAll;
+    },
+    moneyChange() {
+      if (this.cash === 0) {
+        return 0;
+      } else {
+        return this.cash - this.total;
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.total {
+  background-color: #2B81D6;
+  color: white;
+}
+
+.kembali {
+  background-color:#FF4F4F;
+  color: white;
+}
+</style>
