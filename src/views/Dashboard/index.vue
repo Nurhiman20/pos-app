@@ -7,6 +7,7 @@
             :categories="listCategory"
             :products="listViewProduct"
             @setFilter=setFilterProduct
+            @productSelected="openSelectDialog"
           ></product-catalog>
         </v-col>
         <v-col cols="5" md="5" lg="5">
@@ -14,44 +15,48 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <select-product-dialog
+      :show="selectDialog"
+      :selectedProduct="selectedItem"
+      @close="closeSelectDialog"
+    ></select-product-dialog>
   </div>
 </template>
 
 <script>
 import productCatalog from './components/KatalogProduk'
 import productSale from './components/PenjualanProduk'
+import selectProductDialog from './components/DialogPilihProduk'
 import { createNamespacedHelpers } from "vuex";
 const product = createNamespacedHelpers("product");
 
 export default {
   components: {
     productCatalog,
-    productSale
+    productSale,
+    selectProductDialog
   },
   data() {
     return {
-      selectedItem: {
-        nama: null,
-        qty: 1
-      }
+      selectedItem: {},
+      selectDialog: false
     }
   },
   computed: {
     ...product.mapState(['listCategory']),
-    ...product.mapGetters(['listViewProduct']),
-    resultSearch() {
-      if(this.search) {
-        return this.listViewProduct.filter((item) => {
-          return this.search.toLowerCase().split(' ').every(v => item.name.toLowerCase().includes(v))
-        })
-      } else {
-        return this.listViewProduct;
-      }
-    }
+    ...product.mapGetters(['listViewProduct'])
   },
   methods: {
     ...product.mapMutations(['SET_FILTER_CATEGORY']),
     ...product.mapActions(['getProduct', 'getCategory']),
+    closeSelectDialog(e) {
+      this.selectDialog = e
+    },
+    openSelectDialog(e) {
+      this.selectedItem = e
+      this.selectDialog = true
+    },
     closeDialogSuccess() {
       this.dialogSuccess = false
       this.selectedMenu = []
@@ -110,24 +115,5 @@ export default {
 <style scoped lang="scss">
 .app-content {
   min-height: 100vh;
-}
-
-.dialog {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  .paragraph-3 {
-    font-weight: bold;
-    font-size: 25px;
-    line-height: 18px;
-  }
-  .paragraph-4 {
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 25px;
-    text-align: center;
-  }
 }
 </style>

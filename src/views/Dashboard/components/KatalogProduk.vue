@@ -34,7 +34,7 @@
         <p v-if="resultSearch.length === 0">Mohon maaf.. Produk tidak tersedia</p>
         <v-row v-else>
           <v-col cols="4" md="4" lg="4" v-for="(item, i) in resultSearch" :key="i">
-            <v-card class="cursor-pointer" @click="addMenu(item)">
+            <v-card class="cursor-pointer" @click="selectProduct(item)">
               <div class="d-flex flex-column">
                 <v-img src="https://picsum.photos/400/300?random" :aspect-ratio="4/3"></v-img>
                 <div class="mt-n2">
@@ -78,7 +78,9 @@ export default {
     changeView(val) {
       this.activeView = val;
       this.$emit('setFilter', val);
-      // this.SET_FILTER_CATEGORY(val);
+    },
+    selectProduct(item) {
+      this.$emit('productSelected', item)
     },
     isActiveCategory(val) {
       if (this.activeView.name === val.name) {
