@@ -13,6 +13,7 @@
         <v-col cols="12" md="5" lg="5" xl="5">
           <product-sale
             :products="selectedProduct"
+            @removeProduct="removeSelectedProduct"
           ></product-sale>
         </v-col>
       </v-row>
@@ -65,6 +66,10 @@ export default {
       this.dialogSuccess = false
       this.selectedMenu = []
       this.tunai = 0
+    },
+    removeSelectedProduct(e) {
+      let indexProduct = this.selectedProduct.indexOf(e);
+      this.selectedProduct.splice(indexProduct, 1);
     },
     addSelectedProduct(item) {
       const found = this.selectedProduct.some(el => el.name === item.name);

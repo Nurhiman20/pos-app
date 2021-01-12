@@ -18,7 +18,7 @@
               <v-btn icon color="success" @click="goToEdit(item)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn icon color="error" @click="deleteMenu(item)">
+              <v-btn icon color="error" @click="removeFromCart(item)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </div>
@@ -101,6 +101,9 @@ export default {
     }
   },
   methods: {
+    removeFromCart(item) {
+      this.$emit('removeProduct', item);
+    },
     submitTransaction() {},
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
