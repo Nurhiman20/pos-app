@@ -26,6 +26,17 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Stok produk" rules="required|integer">
+              <v-text-field
+                :error-messages="errors"
+                v-model="stockProduct"
+                label="Stok Produk"
+                placeholder="150"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Kategori produk" rules="required">
               <v-select
                 v-model="categoryProduct"
@@ -71,6 +82,7 @@ export default {
   data() {
     return {
       nameProduct: null,
+      stockProduct: null,
       priceProduct: null,
       categoryProduct: null,
       descriptionProduct: null,
@@ -101,6 +113,7 @@ export default {
         id: this.randomId(),
         name: this.nameProduct,
         price: this.priceProduct,
+        stock: this.stockProduct,
         category: this.categoryProduct,
         description: this.descriptionProduct,
         image: this.imageProduct
@@ -110,6 +123,7 @@ export default {
           console.log(result);
           this.nameProduct = null;
           this.priceProduct = null;
+          this.stockProduct = null
           this.categoryProduct = null;
           this.descriptionProduct = null;
           this.closeDialog()
