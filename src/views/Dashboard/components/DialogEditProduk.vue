@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Pilih Produk</v-card-title>
+        <v-card-title class="ml-0">Edit Produk</v-card-title>
         <v-card-subtitle>{{ selectedProduct.name }}</v-card-subtitle>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(selectProduct)">
@@ -63,8 +63,8 @@
             </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit">Tambahkan</v-btn>
+              <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
+              <v-btn color="primary" dark type="submit">Edit</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -79,15 +79,23 @@ import { createNamespacedHelpers } from "vuex";
 const product = createNamespacedHelpers("product");
 
 export default {
-  props: ['show', 'selectedProduct'],
+  props: ['show', 'selected'],
   data() {
     return {
       quantity: 1,
-      discount: 0
+      discount: 0,
+      selectedProduct: {}
+    }
+  },
+  watch: {
+    selected(val) {
+      this.selectedProduct = val;
+      this.quantity = this.selected.qty;
+      this.discount = this.selected.discount;
     }
   },
   methods: {
-    ...product.mapMutations(['ADD_SELECTED_PRODUCT']),
+    ...product.mapMutations(['EDIT_SELECTED_PRODUCT']),
     closeDialog() {
       this.$emit('close', false);
     },
@@ -125,11 +133,10 @@ export default {
     selectProduct() {
       this.selectedProduct.qty = this.quantity;
       this.selectedProduct.discount = this.discount;
-      this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.price) - parseInt(this.discount);
+      this.selectedProduct.total = parseInt(this.selectedProduct.qty) * parseInt(this.selectedProduct.price) - parseInt(this.selectedProduct.discount);
       if (this.checkQuantity() && this.checkDiscount()) {
-        this.ADD_SELECTED_PRODUCT(this.selectedProduct);
-        this.quantity = 1;
-        this.discount = 0;
+        this.EDIT_SELECTED_PRODUCT(this.selectedProduct)
+        this.selectedProduct = {};
         this.closeDialog();
       }
     }

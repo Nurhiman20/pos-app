@@ -9,7 +9,8 @@ const state = {
   filterCategory: {
     id: 'all',
     name: 'all'
-  }
+  },
+  selectedProduct: []
 }
 
 export default {

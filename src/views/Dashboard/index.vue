@@ -12,8 +12,7 @@
         </v-col>
         <v-col cols="12" md="5" lg="5" xl="5">
           <product-sale
-            :products="selectedProduct"
-            @removeProduct="removeSelectedProduct"
+            @editProduct="editProduct"
           ></product-sale>
         </v-col>
       </v-row>
@@ -23,92 +22,63 @@
       :show="selectDialog"
       :selectedProduct="selectedItem"
       @close="closeSelectDialog"
-      @addSelected="addSelectedProduct"
     ></select-product-dialog>
+
+    <edit-product-dialog
+      :show="editDialog"
+      :selected="editSelected"
+      @close="closeEditDialog"
+    ></edit-product-dialog>
   </div>
 </template>
 
 <script>
-import productCatalog from './components/KatalogProduk'
-import productSale from './components/PenjualanProduk'
-import selectProductDialog from './components/DialogPilihProduk'
+import productCatalog from './components/KatalogProduk';
+import productSale from './components/PenjualanProduk';
+import selectProductDialog from './components/DialogPilihProduk';
+import editProductDialog from './components/DialogEditProduk';
 import { createNamespacedHelpers } from "vuex";
+
 const product = createNamespacedHelpers("product");
 
 export default {
   components: {
     productCatalog,
     productSale,
-    selectProductDialog
+    selectProductDialog,
+    editProductDialog
   },
   data() {
     return {
       selectedItem: {},
+      editSelected: {},
       selectDialog: false,
-      selectedProduct: []
+      editDialog: false
     }
   },
   computed: {
-    ...product.mapState(['listCategory']),
+    ...product.mapState(['listCategory', 'selectedProduct']),
     ...product.mapGetters(['listViewProduct'])
   },
   methods: {
-    ...product.mapMutations(['SET_FILTER_CATEGORY']),
+    ...product.mapMutations(['SET_FILTER_CATEGORY', 'ADD_SELECTED_PRODUCT']),
     ...product.mapActions(['getProduct', 'getCategory']),
+    closeEditDialog(e) {
+      this.editDialog = e;
+    },
     closeSelectDialog(e) {
-      this.selectDialog = e
+      this.selectDialog = e;
+    },
+    editProduct(e) {
+      this.editSelected = e;
+      this.editDialog = true;
     },
     openSelectDialog(e) {
-      this.selectedItem = e
-      this.selectDialog = true
-    },
-    closeDialogSuccess() {
-      this.dialogSuccess = false
-      this.selectedMenu = []
-      this.tunai = 0
-    },
-    removeSelectedProduct(e) {
-      let indexProduct = this.selectedProduct.indexOf(e);
-      this.selectedProduct.splice(indexProduct, 1);
-    },
-    addSelectedProduct(item) {
-      const found = this.selectedProduct.some(el => el.name === item.name);
-      if (!found) {
-        this.selectedProduct.push(item)
-      } else {
-        alert('Produk sudah ditambahkan')
-      }
-    },
-    deleteMenu(item) {
-      this.selectedMenu.splice(this.selectedMenu.indexOf(item), 1)
-    },
-    goToEdit(item) {
-      this.dialogEdit = true
-      this.selectedItem = item
+      this.selectedItem = e;
+      this.selectDialog = true;
     },
     setFilterProduct(e) {
       this.SET_FILTER_CATEGORY(e)
-    },
-    editQty() {
-      const dataEdit = {
-        nama: this.selectedItem.nama,
-        harga: this.selectedItem.harga,
-        qty: this.selectedItem.qty,
-        diskon: this.selectedItem.diskon,
-        total: this.selectedItem.harga * this.selectedItem.qty
-      }
-      
-      this.selectedMenu.forEach((element) => {
-        if (element.nama === dataEdit.nama) {
-          element['qty'] = dataEdit.qty
-          element['total'] = dataEdit.total
-        }
-      });
-
-      this.dialogEdit = false
-    },
-    submitTransaksi() {
-      this.dialogSuccess = true
     },
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')

@@ -9,7 +9,7 @@
       <div class="table mb-auto w-full">
         <v-data-table
           :headers="headers"
-          :items="products"
+          :items="selectedProduct"
           class="elevation-1 scrollbar-custom"
           hide-default-footer
         >
@@ -68,8 +68,11 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from "vuex";
+
+const product = createNamespacedHelpers("product");
+
 export default {
-  props: ['products'],
   data() {
     return {
       cash: 0,
@@ -83,13 +86,14 @@ export default {
       ]
     }
   },
-  computed: {    
+  computed: {
+    ...product.mapState(['selectedProduct']),
     total() {
-      const totalAll = this.products.reduce((acc, product) => acc + parseInt(product.total), 0);
+      const totalAll = this.selectedProduct.reduce((acc, product) => acc + parseInt(product.total), 0);
       return totalAll;
     },
     discount() {
-      const disc = this.products.reduce((acc, product) => acc + parseInt(product.discount), 0);
+      const disc = this.selectedProduct.reduce((acc, product) => acc + parseInt(product.discount), 0);
       return disc
     },
     moneyChange() {
@@ -101,8 +105,12 @@ export default {
     }
   },
   methods: {
+    ...product.mapMutations(['REMOVE_SELECTED_PRODUCT']),
     removeFromCart(item) {
-      this.$emit('removeProduct', item);
+      this.REMOVE_SELECTED_PRODUCT(item);
+    },
+    goToEdit(item) {
+      this.$emit('editProduct', item);
     },
     submitTransaction() {},
     formatCurrency(val) {
