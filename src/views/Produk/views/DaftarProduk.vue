@@ -7,14 +7,20 @@
     <v-card outlined flat class="pa-4 mt-3">
       <v-row>
         <v-col cols="12" md="4" lg="4">
-          <v-text-field
-            v-model="search"
+          <v-autocomplete
+            v-model="select"
+            :items="itemProducts"
+            :search-input.sync="search"
+            cache-items
+            class="my-4"
             outlined
             dense
-            append-icon="mdi-magnify"
+            hide-no-data
+            hide-details
+            :clearable="true"
             label="Cari..."
-            class="mb-0 mt-4"
-          ></v-text-field>
+            append-icon="mdi-magnify"
+          ></v-autocomplete>
         </v-col>
       </v-row>
       <v-data-table
@@ -65,6 +71,8 @@ export default {
     return {
       selectedProduct: {},
       search: null,
+      select: null,
+      itemProducts: [],
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Produk', value: 'name', sortable: true },
@@ -80,8 +88,19 @@ export default {
   computed: {
     ...product.mapState(['loading', 'listProduct', 'listCategory'])
   },
+  watch: {
+    search(val) {
+      val && val !== this.select && this.querySelections(val);
+    },
+  },
   methods: {
     ...product.mapActions(['getProduct', 'getCategory', 'postProduct']),
+    querySelections(v) {
+      let listProduct = this.listProduct.map(item => item.name);
+      this.itemProducts = listProduct.filter(e => {
+        return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
+      });
+    },
     showImage(item) {
       if (item !== null) {
         return URL.createObjectURL(item);

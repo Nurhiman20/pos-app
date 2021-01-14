@@ -22,15 +22,21 @@
         dark
         @click="changeView(cat)"
       >{{ cat.name }}</v-btn>
-      <v-text-field
-        v-model="search"
+      <v-autocomplete
+        v-model="select"
+        :items="itemProducts"
+        :search-input.sync="search"
+        cache-items
+        class="mb-0 mt-4"
         outlined
         dense
+        hide-no-data
+        hide-details
+        :clearable="true"
         label="Cari..."
         append-icon="mdi-magnify"
-        class="mb-0 mt-4"
-      ></v-text-field>
-      <div class="mt-2">
+      ></v-autocomplete>
+      <div class="mt-4">
         <p v-if="resultSearch.length === 0">Mohon maaf.. Produk tidak tersedia</p>
         <v-row v-else>
           <v-col cols="12" md="4" lg="4" xl="4" v-for="(item, i) in resultSearch" :key="i">
@@ -57,11 +63,18 @@ export default {
   data() {
     return {
       search: null,
+      select: null,
+      itemProducts: [],
       activeView: {
         id: 'all',
         name: 'all'
       }
     }
+  },
+  watch: {
+    search(val) {
+      val && val !== this.select && this.querySelections(val)
+    },
   },
   computed: {
     resultSearch() {
@@ -75,6 +88,12 @@ export default {
     },
   },
   methods: {
+    querySelections(v) {
+      let listProduct = this.products.map(item => item.name);
+      this.itemProducts = listProduct.filter(e => {
+        return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
+      });
+    },
     showImage(item) {
       if (item !== null) {
         return URL.createObjectURL(item);
