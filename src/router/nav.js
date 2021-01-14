@@ -36,6 +36,16 @@ export const mainMenu = [
     ]
   },
   { 
+    icon: 'mdi-store', 
+    text: 'Outlet',
+    children: [
+      {
+        text: 'Daftar Meja',
+        to: '/not-found'
+      }
+    ]
+  },
+  { 
     icon: 'mdi-account-check-outline', 
     text: 'Pelanggan',
     children: [
