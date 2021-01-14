@@ -7,24 +7,6 @@ export const sidebar = [
 ]
 
 export const mainMenu = [
-  {
-    icon: 'mdi-file-document-outline',
-    text: 'Laporan',
-    children: [
-      {
-        text: 'Laporan Penjualan',
-        to: '/not-found'
-      },
-      {
-        text: 'Laporan Piutang',
-        to: '/not-found'
-      },
-      {
-        text: 'Laporan Pengeluaran',
-        to: '/not-found'
-      }
-    ]
-  },
   { 
     icon: 'mdi-package-variant', 
     text: 'Produk',
@@ -67,6 +49,24 @@ export const mainMenu = [
       }
     ]
   },
+  {
+    icon: 'mdi-file-document-outline',
+    text: 'Laporan',
+    children: [
+      {
+        text: 'Laporan Penjualan',
+        to: '/not-found'
+      },
+      {
+        text: 'Laporan Piutang',
+        to: '/not-found'
+      },
+      {
+        text: 'Laporan Pengeluaran',
+        to: '/not-found'
+      }
+    ]
+  },
   { 
     icon: 'mdi-alert-octagram-outline', 
     text: 'Promosi',
@@ -86,85 +86,11 @@ export const mainMenu = [
     ]
   },
   { 
-    icon: 'mdi-format-list-checks', 
-    text: 'Transaksi',
-    children: [
-      {
-        text: 'Penjualan',
-        to: '/transaksi/penjualan/tambah-transaksi'
-      },
-      {
-        text: 'Pengeluaran',
-        to: '/not-found'
-      }
-    ]
-  },
-  { 
-    icon: 'mdi-swap-horizontal', 
-    text: 'Arus Kas',
-    children: [
-      {
-        text: 'Buku Kas',
-        to: '/not-found'
-      },
-      {
-        text: 'Daftar Penerimaan',
-        to: '/not-found'
-      },
-      {
-        text: 'Daftar Pengeluaran',
-        to: '/not-found'
-      },
-      {
-        text: 'Daftar Tagihan Rutin',
-        to: '/not-found'
-      },
-      {
-        text: 'Laporan Rugi Laba',
-        to: '/not-found'
-      },
-      {
-        text: 'Daftar Akun',
-        to: '/not-found'
-      }
-    ]
-  },
-  { 
-    icon: 'mdi-crosshairs', 
-    text: 'Tracking'
-  },
-  { 
-    icon: 'mdi-check-outline', 
-    text: 'Absensi',
-    children: [
-      {
-        text: 'Data Absensi',
-        to: '/not-found'
-      },
-      {
-        text: 'Shift Karyawan',
-        to: '/not-found'
-      }
-    ]
-  },
-  { 
     icon: 'mdi-cog-outline', 
     text: 'Pengaturan',
     children: [
       {
-        text: 'Kategori Usaha',
-        to: '/not-found'
-      },
-      {
-        text: 'Profile',
-        to: '/not-found'
-      },
-      {
-        text: 'Metode Pembayaran',
-        to: '/not-found'
-      },
-      {
-        text: 'Biaya',
+        text: 'Tampilan',
         to: '/not-found'
       }
     ]
