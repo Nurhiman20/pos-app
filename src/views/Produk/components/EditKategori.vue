@@ -2,7 +2,12 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Edit Kategori</v-card-title>
+        <div class="d-flex flex-row justify-space-between align-center">
+          <v-card-title class="ml-0">Edit Kategori</v-card-title>
+          <v-btn color="error" outlined @click="goDelete">
+            <v-icon class="mr-1">mdi-delete</v-icon>Delete
+          </v-btn>
+        </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editCategory)">
             <ValidationProvider v-slot="{ errors }" name="Nama kategori" rules="required">
@@ -47,14 +52,20 @@ export default {
     }
   },
   methods: {
-    ...product.mapActions(['postCategory']),
+    ...product.mapActions(['postCategory', 'deleteCategory']),
     closeDialog() {
       this.$emit('closeDialog', false);
     },
+    goDelete() {
+      this.deleteCategory(this.selectedCategory)
+        .then(() => {
+          this.closeDialog();
+          this.$emit('successDelete', true);
+        })
+    },
     editCategory() {
       this.postCategory(this.selectedCategory)
-        .then(result => {
-          console.log(result);
+        .then(() => {
           this.closeDialog();
         })
     }

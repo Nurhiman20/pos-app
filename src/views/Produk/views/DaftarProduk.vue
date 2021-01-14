@@ -23,18 +23,8 @@
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
-      >
-        <template v-slot:item.actions="{item}">
-          <div class="d-flex flex-row align-center justify-end">
-            <v-btn icon color="success" @click="goToEdit(item)">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn icon color="error" @click="goDelete(item)">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </div>
-        </template>
-      </v-data-table>
+        @click:row="goToEdit"
+      ></v-data-table>
     </v-card>
 
     <!-- dialog add product -->
@@ -48,6 +38,7 @@
       :show="dialogEditProduct"
       :selected="selectedProduct"
       @closeDialog="closeDialogEdit"
+      @successDelete="getProduct"
     ></edit-product-dialog>
   </div>
 </template>
@@ -83,7 +74,7 @@ export default {
     ...product.mapState(['loading', 'listProduct', 'listCategory'])
   },
   methods: {
-    ...product.mapActions(['getProduct', 'getCategory', 'postProduct', 'deleteProduct']),
+    ...product.mapActions(['getProduct', 'getCategory', 'postProduct']),
     closeDialogAdd(e) {
       this.getProduct()
       this.dialogAddProduct = e
@@ -95,13 +86,6 @@ export default {
     goToEdit(item) {
       this.selectedProduct = item;
       this.dialogEditProduct = true;
-    },
-    goDelete(item) {
-      this.deleteProduct(item)
-        .then(result => {
-          console.log(result);
-          this.getProduct()
-        })
     }
   },
   created() {

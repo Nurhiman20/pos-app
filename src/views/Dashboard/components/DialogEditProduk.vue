@@ -2,7 +2,12 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Edit Produk</v-card-title>
+        <div class="d-flex flex-row justify-space-between align-center">
+          <v-card-title class="ml-0">Edit Produk</v-card-title>
+          <v-btn color="error" outlined @click="removeFromCart">
+            <v-icon class="mr-1">mdi-delete</v-icon>Delete
+          </v-btn>
+        </div>
         <v-card-subtitle>{{ selectedProduct.name }}</v-card-subtitle>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(selectProduct)">
@@ -95,7 +100,7 @@ export default {
     }
   },
   methods: {
-    ...product.mapMutations(['EDIT_SELECTED_PRODUCT']),
+    ...product.mapMutations(['EDIT_SELECTED_PRODUCT', 'REMOVE_SELECTED_PRODUCT']),
     closeDialog() {
       this.$emit('close', false);
     },
@@ -129,6 +134,10 @@ export default {
       } else {
         return true;
       }
+    },
+    removeFromCart() {
+      this.REMOVE_SELECTED_PRODUCT(this.selectedProduct);
+      this.closeDialog();
     },
     selectProduct() {
       this.selectedProduct.qty = this.quantity;

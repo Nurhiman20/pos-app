@@ -23,18 +23,8 @@
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
-      >
-        <template v-slot:item.actions="{item}">
-          <div class="d-flex flex-row align-center justify-end">
-            <v-btn icon color="success" @click="goToEdit(item)">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn icon color="error" @click="goDelete(item)">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </div>
-        </template>
-      </v-data-table>
+        @click:row="goToEdit"
+      ></v-data-table>
     </v-card>
     
     <!-- dialog add category -->
@@ -48,6 +38,7 @@
       :show="dialogEditCategory"
       :selected="selectedCategory"
       @closeDialog="closeDialogEdit"
+      @successDelete="getCategory"
     ></edit-category-dialog>
   </div>
 </template>
@@ -83,7 +74,7 @@ export default {
     ...product.mapState(['loading', 'listCategory'])
   },
   methods: {
-    ...product.mapActions(['getCategory', 'postCategory', 'deleteCategory']),
+    ...product.mapActions(['getCategory', 'postCategory']),
     closeDialogAdd(e) {
       this.getCategory()
       this.dialogAddCategory = e

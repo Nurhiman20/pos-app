@@ -12,18 +12,8 @@
           :items="selectedProduct"
           class="elevation-1 scrollbar-custom"
           hide-default-footer
-        >
-          <template v-slot:item.actions="{item}">
-            <div class="d-flex flex-row align-center justify-end">
-              <v-btn icon color="success" @click="goToEdit(item)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn icon color="error" @click="removeFromCart(item)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </div>
-          </template>
-        </v-data-table>
+          @click:row="goToEdit"
+        ></v-data-table>
       </div>
       <div class="w-full px-3 mt-4">
         <v-row>
@@ -105,10 +95,6 @@ export default {
     }
   },
   methods: {
-    ...product.mapMutations(['REMOVE_SELECTED_PRODUCT']),
-    removeFromCart(item) {
-      this.REMOVE_SELECTED_PRODUCT(item);
-    },
     goToEdit(item) {
       this.$emit('editProduct', item);
     },
