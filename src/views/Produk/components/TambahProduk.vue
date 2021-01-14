@@ -61,9 +61,28 @@
                 auto-grow
               ></v-textarea>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Foto produk" rules="required">
+              <v-file-input
+                v-model="imageProduct"
+                label="Foto Produk"
+                class="mb-0 mt-2 px-4"
+                prepend-icon="mdi-camera"
+                accept="image/*"
+                ref="inputImage"
+                outlined
+                dense
+                @change="setPreviewImage"
+                :rules="rulesImage"
+                :error-messages="errors"
+              ></v-file-input>
+            </ValidationProvider>
+            <div class="px-4 mb-3" v-if="previewImage !== null">
+              <p>Preview Foto</p>
+              <v-img :src="previewImage" :aspect-ratio="4/3"></v-img>
+            </div>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error darken-1" text @click="closeDialog">Batal</v-btn>
+              <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
               <v-btn color="primary" dark type="submit" :loading="loading">Tambahkan</v-btn>
             </v-card-actions>
           </v-form>
@@ -86,7 +105,11 @@ export default {
       priceProduct: null,
       categoryProduct: null,
       descriptionProduct: null,
-      imageProduct: 'https://picsum.photos/400/300?random',
+      imageProduct: null,
+      rulesImage: [
+        value => !value || value.size < 2000000 || 'Ukuran foto tidak boleh lebih dari 2 MB',
+      ],
+      previewImage: null
     }
   },
   computed: {
@@ -108,6 +131,13 @@ export default {
     valueCategory(item) {
       return item
     },
+    setPreviewImage(e) {
+      if (e !== null) {
+        this.previewImage = URL.createObjectURL(e);
+      } else {
+        this.previewImage = null;
+      }
+    },
     addProduct() {
       let dataForm = {
         id: this.randomId(),
@@ -119,8 +149,7 @@ export default {
         image: this.imageProduct
       };
       this.postProduct(dataForm)
-        .then(result => {
-          console.log(result);
+        .then(() => {
           this.nameProduct = null;
           this.priceProduct = null;
           this.stockProduct = null

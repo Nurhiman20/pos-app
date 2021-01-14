@@ -5,7 +5,7 @@
         <div class="d-flex flex-row justify-space-between align-center">
           <v-card-title class="ml-0">Edit Kategori</v-card-title>
           <v-btn color="error" outlined @click="goDelete">
-            <v-icon class="mr-1">mdi-delete</v-icon>Delete
+            <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">

@@ -24,7 +24,14 @@
         class="elevation-1 scrollbar-custom"
         hide-default-footer
         @click:row="goToEdit"
-      ></v-data-table>
+      >
+        <template v-slot:item.name="{item}">
+          <div class="d-flex flex-row align-center py-2">
+            <v-img :src="showImage(item.image)" max-width="60" :aspect-ratio="4/3"></v-img>
+            <p class="ml-3 my-auto">{{ item.name }}</p>
+          </div>
+        </template>
+      </v-data-table>
     </v-card>
 
     <!-- dialog add product -->
@@ -60,7 +67,7 @@ export default {
       search: null,
       headers: [
         { text: 'ID', value: 'id', sortable: false },
-        { text: 'Nama', value: 'name', sortable: true },
+        { text: 'Produk', value: 'name', sortable: true },
         { text: 'Harga', value: 'price', sortable: false },
         { text: 'Kategori', value: 'category.name', sortable: false },
         { text: 'Deskripsi', value: 'description', sortable: false },
@@ -75,6 +82,13 @@ export default {
   },
   methods: {
     ...product.mapActions(['getProduct', 'getCategory', 'postProduct']),
+    showImage(item) {
+      if (item !== null) {
+        return URL.createObjectURL(item);
+      } else {
+        return null;
+      }
+    },
     closeDialogAdd(e) {
       this.getProduct()
       this.dialogAddProduct = e

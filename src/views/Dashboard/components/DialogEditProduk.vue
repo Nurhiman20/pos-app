@@ -5,7 +5,7 @@
         <div class="d-flex flex-row justify-space-between align-center">
           <v-card-title class="ml-0">Edit Produk</v-card-title>
           <v-btn color="error" outlined @click="removeFromCart">
-            <v-icon class="mr-1">mdi-delete</v-icon>Delete
+            <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>
         </div>
         <v-card-subtitle>{{ selectedProduct.name }}</v-card-subtitle>

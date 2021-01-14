@@ -5,7 +5,7 @@
         <div class="d-flex flex-row justify-space-between align-center">
           <v-card-title class="ml-0">Edit Produk</v-card-title>
           <v-btn color="error" outlined @click="goDelete">
-            <v-icon class="mr-1">mdi-delete</v-icon>Delete
+            <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
@@ -66,6 +66,25 @@
                 auto-grow
               ></v-textarea>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Foto produk" rules="required">
+              <v-file-input
+                v-model="selectedProduct.image"
+                label="Foto Produk"
+                class="mb-0 mt-2 px-4"
+                prepend-icon="mdi-camera"
+                accept="image/*"
+                ref="inputImage"
+                outlined
+                dense
+                @change="setPreviewImage"
+                :rules="rulesImage"
+                :error-messages="errors"
+              ></v-file-input>
+            </ValidationProvider>
+            <div class="px-4 mb-3" v-if="previewImage !== null">
+              <p>Preview Foto</p>
+              <v-img :src="previewImage" :aspect-ratio="4/3"></v-img>
+            </div>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
@@ -86,7 +105,11 @@ export default {
   props: ['show', 'selected'],
   data() {
     return {
-      selectedProduct: {}
+      selectedProduct: {},
+      rulesImage: [
+        value => !value || value.size < 2000000 || 'Ukuran foto tidak boleh lebih dari 2 MB',
+      ],
+      previewImage: null
     }
   },
   computed: {
@@ -95,7 +118,8 @@ export default {
   watch: {
     selected(val) {
       this.selectedProduct = val
-    }
+      this.previewImage = URL.createObjectURL(val.image)
+    },
   },
   methods: {
     ...product.mapActions(['postProduct', 'deleteProduct']),
@@ -107,6 +131,13 @@ export default {
     },
     valueCategory(item) {
       return item
+    },
+    setPreviewImage(e) {
+      if (e !== null) {
+        this.previewImage = URL.createObjectURL(e);
+      } else {
+        this.previewImage = null;
+      }
     },
     goDelete() {
       this.deleteProduct(this.selectedProduct)
