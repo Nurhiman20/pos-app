@@ -5,11 +5,11 @@
     permanent
     app
     clipped
-    color="white lighten-4"
+    color="background lighten-1"
   >
     <v-list
       dense
-      class="white lighten-4"
+      class="background lighten-1"
     >
       <template v-for="(item, i) in sidebarData">
         <v-list-item

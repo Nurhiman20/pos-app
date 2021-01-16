@@ -3,7 +3,7 @@
     <v-app-bar
       app
       clipped-left
-      color="white"
+      color="background lighten-1"
       height="50px"
     >
       <div class="logo d-flex align-center">
@@ -61,8 +61,6 @@ export default {
         }
       ]
     }
-  },
-  methods: {
   }
 }
 </script>

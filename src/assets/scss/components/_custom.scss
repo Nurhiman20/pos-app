@@ -31,8 +31,8 @@
 .table {
   .v-application {
     .primary--text {
-      color: #105ca9 !important;
-      caret-color: #105ca9 !important;
+      color: var(--v-primary-base) !important;
+      caret-color: var(--v-primary-base) !important;
     }
     .elevation-1 {
       box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.05) !important;
@@ -49,7 +49,23 @@
       }
       tr:last-child {
         th {
-          background-color: #2B81D6;
+          background-color: var(--v-primary-base);
+        }
+      }
+    }
+  }
+  .theme--dark.v-data-table {
+    thead {
+      tr {
+        th {
+          font-size: 14px;
+          line-height: 20px;
+          color: #ffffff !important;
+        }
+      }
+      tr:last-child {
+        th {
+          background-color: var(--v-primary-darken1);
         }
       }
     }

@@ -17,6 +17,5 @@ export default {
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
-  background-color: #F4F5F6;
 }
 </style>

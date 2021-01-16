@@ -59,7 +59,14 @@ export default {
       }
     }
   },
-  methods: {
+  created() {
+    const dark = localStorage.getItem('darkTheme');
+    
+    if (dark === 'true') {
+      this.$vuetify.theme.dark = true;
+    } else {
+      this.$vuetify.theme.dark = false;
+    }
   }
 }
 </script>
@@ -68,7 +75,7 @@ export default {
 .app-content {
   position: relative;
   min-height: 100vh;
-  background-color: #F4F5F6;
+  background-color: var(--v-background-base);
 }
 #keep .v-navigation-drawer__border {
   display: none

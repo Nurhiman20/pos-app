@@ -101,7 +101,7 @@ export const mainMenu = [
     children: [
       {
         text: 'Tampilan',
-        to: '/not-found'
+        to: '/pengaturan/tampilan'
       }
     ]
   }

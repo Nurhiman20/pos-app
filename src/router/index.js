@@ -45,6 +45,22 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: '/pengaturan',
+    name: 'Pengaturan',
+    redirect: '/pengaturan/tampilan',
+    component: () => import('@/layouts/Home'),
+    children: [
+      {
+        path: '/pengaturan/tampilan',
+        name: 'Tampilan',
+        component: () => import('@/views/Pengaturan/Tampilan.vue'),
+        meta: {
+          title: 'Tampilan | POS App'
+        }
+      }
+    ]
   }
 ]
 
