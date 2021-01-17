@@ -9,7 +9,7 @@
       <div class="table mb-auto w-full">
         <v-data-table
           :headers="headers"
-          :items="selectedProduct"
+          :items="$store.state.selectedProduct"
           class="elevation-1 scrollbar-custom"
           hide-default-footer
           @click:row="goToEdit"
@@ -58,10 +58,6 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
-
-const product = createNamespacedHelpers("product");
-
 export default {
   data() {
     return {
@@ -77,13 +73,12 @@ export default {
     }
   },
   computed: {
-    ...product.mapState(['selectedProduct']),
     total() {
-      const totalAll = this.selectedProduct.reduce((acc, product) => acc + parseInt(product.total), 0);
+      const totalAll = this.$store.state.selectedProduct.reduce((acc, product) => acc + parseInt(product.total), 0);
       return totalAll;
     },
     discount() {
-      const disc = this.selectedProduct.reduce((acc, product) => acc + parseInt(product.discount), 0);
+      const disc = this.$store.state.selectedProduct.reduce((acc, product) => acc + parseInt(product.discount), 0);
       return disc
     },
     moneyChange() {

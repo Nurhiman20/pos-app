@@ -25,7 +25,7 @@
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="listCategory"
+        :items="$store.state.listCategory"
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
@@ -52,8 +52,6 @@
 <script>
 import addCategoryDialog from '../components/TambahKategori';
 import editCategoryDialog from '../components/EditKategori';
-import { createNamespacedHelpers } from "vuex";
-const product = createNamespacedHelpers("product");
 
 export default {
   components: {
@@ -78,28 +76,27 @@ export default {
       dialogEditCategory: false
     }
   },
-  computed: {
-    ...product.mapState(['loading', 'listCategory'])
-  },
   watch: {
     search(val) {
       val && val !== this.select && this.querySelections(val);
     },
   },
   methods: {
-    ...product.mapActions(['getCategory', 'postCategory']),
     querySelections(v) {
-      let listCategory = this.listCategory.map(item => item.name);
+      let listCategory = this.$store.state.listCategory.map(item => item.name);
       this.itemCategories = listCategory.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
+    successDelete() {
+      this.$store.dispatch("getCategory");
+    },
     closeDialogAdd(e) {
-      this.getCategory()
+      this.$store.dispatch("getCategory")
       this.dialogAddCategory = e
     },
     closeDialogEdit(e) {
-      this.getCategory()
+      this.$store.dispatch("getCategory")
       this.dialogEditCategory = e
     },
     randomId() {
@@ -111,7 +108,7 @@ export default {
       this.deleteCategory(item)
         .then(result => {
           console.log(result);
-          this.getCategory()
+          this.$store.dispatch("getCategory")
         })
     },
     goToEdit(item) {
@@ -120,7 +117,7 @@ export default {
     }
   },
   created() {
-    this.getCategory();
+    this.$store.dispatch("getCategory");
   },
 }
 </script>

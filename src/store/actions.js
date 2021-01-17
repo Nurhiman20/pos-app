@@ -38,7 +38,7 @@ async function getCategory({ commit }) {
   });
 }
 
-async function postProduct({ commit }, dataForm) {
+async function submitProduct({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
   return new Promise((resolve, reject) => {
@@ -57,7 +57,7 @@ async function postProduct({ commit }, dataForm) {
   });
 }
 
-async function postCategory({ commit }, dataForm) {
+async function submitCategory({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
   return new Promise((resolve, reject) => {
@@ -115,8 +115,8 @@ async function deleteCategory({ commit }, dataForm) {
 export default {
   getProduct,
   getCategory,
-  postProduct,
-  postCategory,
+  submitProduct,
+  submitCategory,
   deleteProduct,
   deleteCategory
 }

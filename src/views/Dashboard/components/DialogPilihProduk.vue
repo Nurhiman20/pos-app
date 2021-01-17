@@ -74,10 +74,6 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
-
-const product = createNamespacedHelpers("product");
-
 export default {
   props: ['show', 'selectedProduct'],
   data() {
@@ -87,7 +83,6 @@ export default {
     }
   },
   methods: {
-    ...product.mapMutations(['ADD_SELECTED_PRODUCT']),
     closeDialog() {
       this.$emit('close', false);
     },
@@ -127,7 +122,7 @@ export default {
       this.selectedProduct.discount = this.discount;
       this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.price) - parseInt(this.discount);
       if (this.checkQuantity() && this.checkDiscount()) {
-        this.ADD_SELECTED_PRODUCT(this.selectedProduct);
+        this.$store.commit("ADD_SELECTED_PRODUCT", this.selectedProduct);
         this.quantity = 1;
         this.discount = 0;
         this.closeDialog();

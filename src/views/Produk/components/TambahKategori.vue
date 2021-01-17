@@ -18,7 +18,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="error darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="loading">Tambahkan</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Tambahkan</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -28,9 +28,6 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
-const product = createNamespacedHelpers("product");
-
 export default {
   props: ['show'],
   data() {
@@ -38,11 +35,7 @@ export default {
       nameCategory: null
     }
   },
-  computed: {
-    ...product.mapState(['loading'])
-  },
   methods: {
-    ...product.mapActions(['postCategory']),
     closeDialog() {
       this.$emit('closeDialog', false);
     },
@@ -56,10 +49,9 @@ export default {
         id: this.randomId(),
         name: this.nameCategory
       };
-      this.postCategory(dataForm)
-        .then(result => {
-          console.log(result);
-          this.nameCategory = null
+      this.$store.dispatch("submitCategory", dataForm)
+        .then(() => {
+          this.nameCategory = null;
           this.closeDialog();
         });
     }

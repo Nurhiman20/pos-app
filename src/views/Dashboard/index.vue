@@ -4,8 +4,8 @@
       <v-row>
         <v-col cols="12" md="7" lg="7" xl="7">
           <product-catalog
-            :categories="listCategory"
-            :products="listViewProduct"
+            :categories="$store.state.listCategory"
+            :products="$store.getters.listViewProduct"
             @setFilter=setFilterProduct
             @productSelected="openSelectDialog"
           ></product-catalog>
@@ -37,9 +37,6 @@ import productCatalog from './components/KatalogProduk';
 import productSale from './components/PenjualanProduk';
 import selectProductDialog from './components/DialogPilihProduk';
 import editProductDialog from './components/DialogEditProduk';
-import { createNamespacedHelpers } from "vuex";
-
-const product = createNamespacedHelpers("product");
 
 export default {
   components: {
@@ -56,13 +53,7 @@ export default {
       editDialog: false
     }
   },
-  computed: {
-    ...product.mapState(['listCategory', 'selectedProduct']),
-    ...product.mapGetters(['listViewProduct'])
-  },
   methods: {
-    ...product.mapMutations(['SET_FILTER_CATEGORY', 'ADD_SELECTED_PRODUCT']),
-    ...product.mapActions(['getProduct', 'getCategory']),
     closeEditDialog(e) {
       this.editDialog = e;
     },
@@ -78,15 +69,15 @@ export default {
       this.selectDialog = true;
     },
     setFilterProduct(e) {
-      this.SET_FILTER_CATEGORY(e)
+      this.$store.commit("SET_FILTER_CATEGORY", e)
     },
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     }
   },
   created() {
-    this.getProduct();
-    this.getCategory();
+    this.$store.dispatch("getProduct");
+    this.$store.dispatch("getCategory");
   },
 }
 </script>

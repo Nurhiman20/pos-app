@@ -79,10 +79,6 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
-
-const product = createNamespacedHelpers("product");
-
 export default {
   props: ['show', 'selected'],
   data() {
@@ -100,7 +96,6 @@ export default {
     }
   },
   methods: {
-    ...product.mapMutations(['EDIT_SELECTED_PRODUCT', 'REMOVE_SELECTED_PRODUCT']),
     closeDialog() {
       this.$emit('close', false);
     },
@@ -136,7 +131,7 @@ export default {
       }
     },
     removeFromCart() {
-      this.REMOVE_SELECTED_PRODUCT(this.selectedProduct);
+      this.$store.commit("REMOVE_SELECTED_PRODUCT", this.selectedProduct);
       this.closeDialog();
     },
     selectProduct() {
@@ -144,7 +139,7 @@ export default {
       this.selectedProduct.discount = this.discount;
       this.selectedProduct.total = parseInt(this.selectedProduct.qty) * parseInt(this.selectedProduct.price) - parseInt(this.selectedProduct.discount);
       if (this.checkQuantity() && this.checkDiscount()) {
-        this.EDIT_SELECTED_PRODUCT(this.selectedProduct)
+        this.$store.commit("EDIT_SELECTED_PRODUCT", this.selectedProduct)
         this.selectedProduct = {};
         this.closeDialog();
       }

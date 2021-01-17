@@ -25,7 +25,7 @@
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="listProduct"
+        :items="$store.state.listProduct"
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
@@ -51,7 +51,7 @@
       :show="dialogEditProduct"
       :selected="selectedProduct"
       @closeDialog="closeDialogEdit"
-      @successDelete="getProduct"
+      @successDelete="successDelete"
     ></edit-product-dialog>
   </div>
 </template>
@@ -59,8 +59,6 @@
 <script>
 import addProductDialog from '../components/TambahProduk';
 import editProductDialog from '../components/EditProduk';
-import { createNamespacedHelpers } from "vuex";
-const product = createNamespacedHelpers("product");
 
 export default {
   components: {
@@ -82,21 +80,20 @@ export default {
         { text: '', value: 'actions', sortable: false }
       ],
       dialogAddProduct: false,
-      dialogEditProduct: false
+      dialogEditProduct: false,
     }
-  },
-  computed: {
-    ...product.mapState(['loading', 'listProduct', 'listCategory'])
   },
   watch: {
     search(val) {
       val && val !== this.select && this.querySelections(val);
     },
+    listProduct(val) {
+      console.log(val);
+    }
   },
   methods: {
-    ...product.mapActions(['getProduct', 'getCategory', 'postProduct']),
     querySelections(v) {
-      let listProduct = this.listProduct.map(item => item.name);
+      let listProduct = this.$store.state.listProduct.map(item => item.name);
       this.itemProducts = listProduct.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
@@ -108,12 +105,15 @@ export default {
         return null;
       }
     },
+    successDelete() {
+      this.$store.dispatch("getProduct");
+    },
     closeDialogAdd(e) {
-      this.getProduct()
+      this.$store.dispatch("getProduct");
       this.dialogAddProduct = e
     },
     closeDialogEdit(e) {
-      this.getProduct()
+      this.$store.dispatch("getProduct");
       this.dialogEditProduct = e
     },
     goToEdit(item) {
@@ -122,8 +122,8 @@ export default {
     }
   },
   created() {
-    this.getCategory();
-    this.getProduct();
+    this.$store.dispatch("getCategory");
+    this.$store.dispatch("getProduct");
   }
 }
 </script>

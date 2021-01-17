@@ -41,7 +41,7 @@
               <v-select
                 v-model="categoryProduct"
                 :error-messages="errors"
-                :items="listCategory"
+                :items="$store.state.listCategory"
                 :item-text="textCategory"
                 :item-value="valueCategory"
                 label="Kategori Produk"
@@ -83,7 +83,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="loading">Tambahkan</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Tambahkan</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -93,9 +93,6 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
-const product = createNamespacedHelpers("product");
-
 export default {
   props: ['show'],
   data() {
@@ -112,11 +109,7 @@ export default {
       previewImage: null
     }
   },
-  computed: {
-    ...product.mapState(['loading', 'listCategory'])
-  },
   methods: {
-    ...product.mapActions(['postProduct']),
     closeDialog() {
       this.$emit('closeDialog', false);
     },
@@ -148,7 +141,7 @@ export default {
         description: this.descriptionProduct,
         image: this.imageProduct
       };
-      this.postProduct(dataForm)
+      this.$store.dispatch("submitProduct", dataForm)
         .then(() => {
           this.nameProduct = null;
           this.priceProduct = null;

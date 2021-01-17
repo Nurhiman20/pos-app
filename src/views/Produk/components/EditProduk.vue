@@ -46,7 +46,7 @@
               <v-select
                 v-model="selectedProduct.category"
                 :error-messages="errors"
-                :items="listCategory"
+                :items="$store.state.listCategory"
                 :item-text="textCategory"
                 :item-value="valueCategory"
                 label="Kategori Produk"
@@ -88,7 +88,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="loading">Perbarui</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Perbarui</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -98,9 +98,6 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from "vuex";
-const product = createNamespacedHelpers("product");
-
 export default {
   props: ['show', 'selected'],
   data() {
@@ -112,17 +109,13 @@ export default {
       previewImage: null
     }
   },
-  computed: {
-    ...product.mapState(['loading', 'listCategory'])
-  },
   watch: {
     selected(val) {
-      this.selectedProduct = val
-      this.previewImage = URL.createObjectURL(val.image)
+      this.selectedProduct = val;
+      this.previewImage = URL.createObjectURL(val.image);
     },
   },
   methods: {
-    ...product.mapActions(['postProduct', 'deleteProduct']),
     closeDialog() {
       this.$emit('closeDialog', false);
     },
@@ -140,14 +133,14 @@ export default {
       }
     },
     goDelete() {
-      this.deleteProduct(this.selectedProduct)
+      this.$store.dispatch("deleteProduct", this.selectedProduct)
         .then(() => {
           this.closeDialog();
           this.$emit('successDelete', true);
         })
     },
     editProduct() {
-      this.postProduct(this.selectedProduct)
+      this.$store.dispatch("submitProduct", this.selectedProduct)
         .then(() => {
           this.closeDialog();
         });
