@@ -1,22 +1,22 @@
 import { openDB } from 'idb';
 
-async function getProduct({ commit }) {
-  commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
-  return new Promise((resolve, reject) => {
-    vuePos
-      .getAll('product')
-      .then(result => {
-        commit('SET_LIST_PRODUCT', result);
-        resolve(result);
-      })
-      .catch(error => {
-        reject(error);
-      })
-      .finally(() => {
-        commit("SET_LOADING", false);
-      });
-  });
+async function getProduct() {
+  // commit("SET_LOADING");
+  // const vuePos = await openDB('vue-pos', 1);
+  // return new Promise((resolve, reject) => {
+  //   vuePos
+  //     .getAll('product')
+  //     .then(result => {
+  //       commit('SET_LIST_PRODUCT', result);
+  //       resolve(result);
+  //     })
+  //     .catch(error => {
+  //       reject(error);
+  //     })
+  //     .finally(() => {
+  //       commit("SET_LOADING", false);
+  //     });
+  // });
 }
 
 async function getCategory({ commit }) {
