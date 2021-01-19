@@ -57,6 +57,25 @@ async function getInventory({ commit }) {
   });
 }
 
+async function getTransaction({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('transaction')
+      .then(result => {
+        commit('SET_LIST_TRANSACTION', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function submitProduct({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
@@ -115,6 +134,25 @@ async function submitInventory({ commit }, dataForm) {
   });
 }
 
+async function submitTransaction({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('transaction', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function deleteProduct({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
@@ -155,9 +193,11 @@ export default {
   getProduct,
   getCategory,
   getInventory,
+  getTransaction,
   submitProduct,
   submitCategory,
   submitInventory,
+  submitTransaction,
   deleteProduct,
   deleteCategory
 }

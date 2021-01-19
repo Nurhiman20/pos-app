@@ -61,7 +61,7 @@ export const mainMenu = [
     children: [
       {
         text: 'Laporan Penjualan',
-        to: '/not-found'
+        to: '/laporan/laporan-penjualan'
       },
       {
         text: 'Laporan Piutang',

@@ -14,6 +14,10 @@ const SET_LIST_INVENTORY = (state, payload) => {
   state.listInventory = payload;
 };
 
+const SET_LIST_TRANSACTION = (state, payload) => {
+  state.listTransaction = payload;
+};
+
 const SET_FILTER_CATEGORY = (state, payload) => {
   state.filterCategory = payload;
 };
@@ -32,6 +36,10 @@ const REMOVE_SELECTED_PRODUCT = (state, payload) => {
   state.selectedProduct.splice(indexProduct, 1);
 };
 
+const CLEAR_SELECTED_PRODUCT = (state, payload) => {
+  state.selectedProduct = payload;
+};
+
 const EDIT_SELECTED_PRODUCT = (state, payload) => {
   let indexProduct = state.selectedProduct.indexOf(payload);
   state.selectedProduct.splice(indexProduct, 1, payload);
@@ -42,8 +50,10 @@ export default {
   SET_LIST_PRODUCT,
   SET_LIST_CATEGORY,
   SET_LIST_INVENTORY,
+  SET_LIST_TRANSACTION,
   SET_FILTER_CATEGORY,
   ADD_SELECTED_PRODUCT,
   REMOVE_SELECTED_PRODUCT,
+  CLEAR_SELECTED_PRODUCT,
   EDIT_SELECTED_PRODUCT
 }

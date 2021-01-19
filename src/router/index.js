@@ -63,6 +63,22 @@ const routes = [
     ]
   },
   {
+    path: '/laporan',
+    name: 'Laporan',
+    redirect: '/laporan/laporan-penjualan',
+    component: () => import('@/layouts/Home'),
+    children: [
+      {
+        path: '/laporan/laporan-penjualan',
+        name: 'Laporan Penjualan',
+        component: () => import('@/views/Laporan/views/LaporanPenjualan.vue'),
+        meta: {
+          title: 'Laporan Penjualan | POS App'
+        }
+      }
+    ]
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     redirect: '/pengaturan/tampilan',

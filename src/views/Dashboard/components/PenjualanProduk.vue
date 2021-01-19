@@ -91,13 +91,35 @@ export default {
   },
   methods: {
     goToEdit(item) {
-      console.log(item);
       this.$emit('editProduct', item);
     },
-    submitTransaction() {},
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
-    }
+    },
+    randomId() {
+      var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+      var uniqid = 'tr-' + randLetter + Date.now();
+      return uniqid
+    },
+    dateTime() {
+      return new Date().toLocaleString();
+    },
+    submitTransaction() {
+      let dataForm = {
+        id: this.randomId(),
+        product: this.$store.state.selectedProduct,
+        time: this.dateTime(),
+        total_discount: this.discount,
+        money_change: this.moneyChange,
+        cash: this.cash,
+        total: this.total
+      }
+      this.$store.dispatch("submitTransaction", dataForm)
+        .then(() => {
+          this.cash = 0;
+          this.$store.commit("CLEAR_SELECTED_PRODUCT", [])
+        });
+    },
   }
 }
 </script>
