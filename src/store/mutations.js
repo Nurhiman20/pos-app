@@ -10,6 +10,10 @@ const SET_LIST_CATEGORY = (state, payload) => {
   state.listCategory = payload;
 };
 
+const SET_LIST_INVENTORY = (state, payload) => {
+  state.listInventory = payload;
+};
+
 const SET_FILTER_CATEGORY = (state, payload) => {
   state.filterCategory = payload;
 };
@@ -37,6 +41,7 @@ export default {
   SET_LOADING,
   SET_LIST_PRODUCT,
   SET_LIST_CATEGORY,
+  SET_LIST_INVENTORY,
   SET_FILTER_CATEGORY,
   ADD_SELECTED_PRODUCT,
   REMOVE_SELECTED_PRODUCT,

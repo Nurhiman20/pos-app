@@ -19,7 +19,8 @@ const state = {
   
   // Data model
   listProduct: [],
-  listCategory: []
+  listCategory: [],
+  listInventory: []
 }
 
 export default new Vuex.Store({

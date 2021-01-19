@@ -38,17 +38,37 @@ async function getCategory({ commit }) {
   });
 }
 
-async function submitProduct({ commit }, dataForm) {
+async function getInventory({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
   return new Promise((resolve, reject) => {
     vuePos
-      .put('product', dataForm)
+      .getAll('inventory')
+      .then(result => {
+        commit('SET_LIST_INVENTORY', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function submitProduct({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    let transaction = vuePos.transaction(['product', 'inventory'], 'readwrite');
+    transaction.objectStore('product').put(dataForm);
+    transaction.objectStore('inventory').put(dataForm);
+    transaction.done
       .then(result => {
         resolve(result);
       })
       .catch(error => {
-        console.log('error');
         reject(error);
       })
       .finally(() => {
@@ -63,6 +83,25 @@ async function submitCategory({ commit }, dataForm) {
   return new Promise((resolve, reject) => {
     vuePos
       .put('category', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function submitInventory({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('inventory', dataForm)
       .then(result => {
         resolve(result);
       })
@@ -115,8 +154,10 @@ async function deleteCategory({ commit }, dataForm) {
 export default {
   getProduct,
   getCategory,
+  getInventory,
   submitProduct,
   submitCategory,
+  submitInventory,
   deleteProduct,
   deleteCategory
 }

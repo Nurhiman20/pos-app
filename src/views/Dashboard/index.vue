@@ -26,7 +26,7 @@
 
     <edit-product-dialog
       :show="editDialog"
-      :selected="editSelected"
+      :selected.sync="editSelected"
       @close="closeEditDialog"
     ></edit-product-dialog>
   </div>
@@ -64,6 +64,9 @@ export default {
       this.editSelected = e;
       this.editDialog = true;
     },
+    editSelectedProduct(e) {
+      this.editSelected = e;
+    },
     openSelectDialog(e) {
       this.selectedItem = e;
       this.selectDialog = true;
@@ -76,7 +79,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getProduct");
+    this.$store.dispatch("getInventory");
     this.$store.dispatch("getCategory");
   },
 }

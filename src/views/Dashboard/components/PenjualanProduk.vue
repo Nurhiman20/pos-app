@@ -91,6 +91,7 @@ export default {
   },
   methods: {
     goToEdit(item) {
+      console.log(item);
       this.$emit('editProduct', item);
     },
     submitTransaction() {},

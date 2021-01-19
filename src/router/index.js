@@ -47,6 +47,22 @@ const routes = [
     ]
   },
   {
+    path: '/inventaris',
+    name: 'Inventaris',
+    redirect: '/inventaris/kelola-stok',
+    component: () => import('@/layouts/Home'),
+    children: [
+      {
+        path: '/inventaris/kelola-stok',
+        name: 'Kelola Stok',
+        component: () => import('@/views/Inventaris/views/KelolaStok.vue'),
+        meta: {
+          title: 'Kelola Stok | POS App'
+        }
+      }
+    ]
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     redirect: '/pengaturan/tampilan',

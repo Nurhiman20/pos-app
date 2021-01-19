@@ -16,6 +16,14 @@ export const SchemaSyncHandler = {
         if (!db.objectStoreNames.contains('category')) {
           db.createObjectStore('category', { keyPath: 'id' });
         }
+
+        if (!db.objectStoreNames.contains('inventory')) {
+          db.createObjectStore('inventory', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('transaction')) {
+          db.createObjectStore('transaction', { keyPath: 'id' });
+        }
       },
     });
   }

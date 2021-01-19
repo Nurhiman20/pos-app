@@ -1,15 +1,15 @@
 <template>
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
-      <h1>Daftar Produk</h1>
-      <v-btn color="primary" small @click="dialogAddProduct = true">Tambah Produk</v-btn>
+      <h1>Kelola Stok</h1>
     </div>
+
     <v-card outlined flat class="pa-4 mt-3">
       <v-row>
         <v-col cols="12" md="4" lg="4">
           <v-autocomplete
             v-model="select"
-            :items="itemProducts"
+            :items="itemInventory"
             :search-input.sync="search"
             cache-items
             class="my-4"
@@ -25,7 +25,7 @@
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="$store.state.listProduct"
+        :items="$store.getters.listViewInventory"
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
@@ -40,46 +40,35 @@
       </v-data-table>
     </v-card>
 
-    <!-- dialog add product -->
-    <add-product-dialog
-      :show="dialogAddProduct"
-      @closeDialog="closeDialogAdd"
-    ></add-product-dialog>
-
-    <!-- dialog add product -->
-    <edit-product-dialog 
-      :show="dialogEditProduct"
-      :selected="selectedProduct"
+    <!-- dialog edit stok -->
+    <edit-stock-dialog 
+      :show="dialogEditStock"
+      :selected.sync="selectedStock"
       @closeDialog="closeDialogEdit"
-      @successDelete="successDelete"
-    ></edit-product-dialog>
+    ></edit-stock-dialog>
   </div>
 </template>
 
 <script>
-import addProductDialog from '../components/TambahProduk';
-import editProductDialog from '../components/EditProduk';
+import editStockDialog from '../components/EditStok';
 
 export default {
   components: {
-    addProductDialog,
-    editProductDialog
+    editStockDialog
   },
   data() {
     return {
-      selectedProduct: {},
-      search: null,
+      itemInventory: [],
+      selectedStock: {},
       select: null,
-      itemProducts: [],
+      search: null,
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Produk', value: 'name', sortable: true },
-        { text: 'Harga', value: 'price', sortable: false },
         { text: 'Kategori', value: 'category.name', sortable: false },
-        { text: 'Deskripsi', value: 'description', sortable: false }
+        { text: 'Stok', value: 'stock', sortable: false }
       ],
-      dialogAddProduct: false,
-      dialogEditProduct: false,
+      dialogEditStock: false
     }
   },
   watch: {
@@ -89,10 +78,14 @@ export default {
   },
   methods: {
     querySelections(v) {
-      let listProduct = this.$store.state.listProduct.map(item => item.name);
-      this.itemProducts = listProduct.filter(e => {
+      let listInventory = this.$store.getters.listViewInventory.map(item => item.name);
+      this.itemInventory = listInventory.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
+    },
+    closeDialogEdit(e) {
+      this.dialogEditStock = e;
+      this.$store.dispatch("getInventory");
     },
     showImage(item) {
       if (item !== null) {
@@ -101,25 +94,13 @@ export default {
         return null;
       }
     },
-    successDelete() {
-      this.$store.dispatch("getProduct");
-    },
-    closeDialogAdd(e) {
-      this.$store.dispatch("getProduct");
-      this.dialogAddProduct = e
-    },
-    closeDialogEdit(e) {
-      this.$store.dispatch("getProduct");
-      this.dialogEditProduct = e
-    },
     goToEdit(item) {
-      this.selectedProduct = item;
-      this.dialogEditProduct = true;
+      this.selectedStock = item;
+      this.dialogEditStock = true;
     }
   },
   created() {
-    this.$store.dispatch("getCategory");
-    this.$store.dispatch("getProduct");
-  }
+    this.$store.dispatch("getInventory");
+  },
 }
 </script>

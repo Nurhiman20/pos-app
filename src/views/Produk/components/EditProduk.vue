@@ -31,17 +31,6 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Stok produk" rules="required|integer">
-              <v-text-field
-                :error-messages="errors"
-                v-model="selectedProduct.stock"
-                label="Stok Produk"
-                placeholder="150"
-                outlined
-                dense
-                class="mb-0 mt-2 px-4"
-              ></v-text-field>
-            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Kategori produk" rules="required">
               <v-select
                 v-model="selectedProduct.category"

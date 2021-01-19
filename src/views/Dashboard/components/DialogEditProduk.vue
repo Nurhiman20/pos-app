@@ -16,49 +16,22 @@
                 <ValidationProvider v-slot="{ errors }" name="Kuantitas" rules="required|integer">
                   <v-text-field
                     :error-messages="errors"
-                    v-model="quantity"
+                    v-model="selectedProduct.qty"
                     label="Kuantitas"
                     outlined
                     dense
+                    type="number"
                     class="mb-0 mt-2 px-4"
                     :hint="'Jumlah stok: ' + selectedProduct.stock"
                     persistent-hint
                   ></v-text-field>
                 </ValidationProvider>
               </v-col>
-              <v-col cols="6">
-                <v-btn
-                  class="mx-2 mt-3"
-                  fab
-                  x-small
-                  color="success"
-                  @click="minQuantity"
-                  :disabled="quantity < 2 ? true : false"
-                  :dark="quantity < 2 ? false : true"
-                >
-                  <v-icon dark>
-                    mdi-minus
-                  </v-icon>
-                </v-btn>
-                <v-btn
-                  class="mx-2 mt-3"
-                  fab
-                  x-small
-                  color="success"
-                  @click="addQuantity"
-                  :disabled="quantity > parseInt(selectedProduct.stock) - 1 ? true : false"
-                  :dark="quantity > parseInt(selectedProduct.stock) - 1 ? false : true"
-                >
-                  <v-icon dark>
-                    mdi-plus
-                  </v-icon>
-                </v-btn>
-              </v-col>
             </v-row>
             <ValidationProvider v-slot="{ errors }" name="Diskon" rules="required|integer">
               <v-text-field
                 :error-messages="errors"
-                v-model="discount"
+                v-model="selectedProduct.discount"
                 label="Diskon"
                 placeholder="1000"
                 outlined
@@ -81,37 +54,27 @@
 <script>
 export default {
   props: ['show', 'selected'],
-  data() {
-    return {
-      quantity: 1,
-      discount: 0,
-      selectedProduct: {}
-    }
-  },
-  watch: {
-    selected(val) {
-      this.selectedProduct = val;
-      this.quantity = this.selected.qty;
-      this.discount = this.selected.discount;
-    }
+  computed: {
+    selectedProduct: {
+      get() {
+        return this.selected
+      },
+      set(val) {
+        this.$emit('update:selected', val);
+      }
+    },
   },
   methods: {
     closeDialog() {
       this.$emit('close', false);
     },
-    minQuantity() {
-      this.quantity = parseInt(this.quantity) - 1;
-    },
-    addQuantity() {
-      this.quantity = parseInt(this.quantity) + 1;
-    },
     checkQuantity() {
-      if (this.quantity > parseInt(this.selectedProduct.stock)) {
+      if (this.selectedProduct.qty > parseInt(this.selectedProduct.stock)) {
         this.$refs.form.setErrors({
           Kuantitas: "Kuantitas yang diinput melebihi stok"
         });
         return false;
-      } else if (this.quantity < 1) {
+      } else if (this.selectedProduct.qty < 1) {
         this.$refs.form.setErrors({
           Kuantitas: "Kuantitas yang diinput tidak sesuai"
         });
@@ -135,8 +98,6 @@ export default {
       this.closeDialog();
     },
     selectProduct() {
-      this.selectedProduct.qty = this.quantity;
-      this.selectedProduct.discount = this.discount;
       this.selectedProduct.total = parseInt(this.selectedProduct.qty) * parseInt(this.selectedProduct.price) - parseInt(this.selectedProduct.discount);
       if (this.checkQuantity() && this.checkDiscount()) {
         this.$store.commit("EDIT_SELECTED_PRODUCT", this.selectedProduct)

@@ -23,15 +23,11 @@ export const mainMenu = [
   },
   { 
     icon: 'mdi-package-variant-closed', 
-    text: 'Inventory',
+    text: 'Inventaris',
     children: [
       {
-        text: 'Kelola Stock',
-        to: '/not-found'
-      },
-      {
-        text: 'Belanja',
-        to: '/not-found'
+        text: 'Kelola Stok',
+        to: '/inventaris/kelola-stok'
       }
     ]
   },
