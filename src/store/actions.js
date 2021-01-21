@@ -19,6 +19,103 @@ async function getProduct() {
   // });
 }
 
+async function submitProduct({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('product', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function updateProduct({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  
+  // search product in table inventory
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let productInventory = {};
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id_product === dataForm.id) {
+      productInventory = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // set updated data
+  let updatedProductInventory = {
+    id: productInventory.id,
+    id_product: dataForm.id,
+    product: dataForm,
+    stock: productInventory.stock
+  }
+
+  // update product in table product and inventory
+  let transaction = await vuePos.transaction(['product', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('product').put(dataForm);    
+    transaction.objectStore('inventory').put(updatedProductInventory);
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function deleteProduct({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+
+  // search product in table inventory
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let productInventory = {};
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id_product === dataForm.id) {
+      productInventory = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // delete product in table product and inventory
+  let transaction = await vuePos.transaction(['product', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('product').delete(dataForm.id);    
+    transaction.objectStore('inventory').delete(productInventory.id);
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getCategory({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
@@ -27,64 +124,6 @@ async function getCategory({ commit }) {
       .getAll('category')
       .then(result => {
         commit('SET_LIST_CATEGORY', result);
-        resolve(result);
-      })
-      .catch(error => {
-        reject(error);
-      })
-      .finally(() => {
-        commit("SET_LOADING", false);
-      });
-  });
-}
-
-async function getInventory({ commit }) {
-  commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
-  return new Promise((resolve, reject) => {
-    vuePos
-      .getAll('inventory')
-      .then(result => {
-        commit('SET_LIST_INVENTORY', result);
-        resolve(result);
-      })
-      .catch(error => {
-        reject(error);
-      })
-      .finally(() => {
-        commit("SET_LOADING", false);
-      });
-  });
-}
-
-async function getTransaction({ commit }) {
-  commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
-  return new Promise((resolve, reject) => {
-    vuePos
-      .getAll('transaction')
-      .then(result => {
-        commit('SET_LIST_TRANSACTION', result);
-        resolve(result);
-      })
-      .catch(error => {
-        reject(error);
-      })
-      .finally(() => {
-        commit("SET_LOADING", false);
-      });
-  });
-}
-
-async function submitProduct({ commit }, dataForm) {
-  commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
-  return new Promise((resolve, reject) => {
-    let transaction = vuePos.transaction(['product', 'inventory'], 'readwrite');
-    transaction.objectStore('product').put(dataForm);
-    transaction.objectStore('inventory').put(dataForm);
-    transaction.done
-      .then(result => {
         resolve(result);
       })
       .catch(error => {
@@ -115,6 +154,43 @@ async function submitCategory({ commit }, dataForm) {
   });
 }
 
+async function deleteCategory({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .delete('category', dataForm.id)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function getInventory({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('inventory')
+      .then(result => {
+        commit('SET_LIST_INVENTORY', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function submitInventory({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
@@ -126,6 +202,25 @@ async function submitInventory({ commit }, dataForm) {
       })
       .catch(error => {
         console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function getTransaction({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('transaction')
+      .then(result => {
+        commit('SET_LIST_TRANSACTION', result);
+        resolve(result);
+      })
+      .catch(error => {
         reject(error);
       })
       .finally(() => {
@@ -153,51 +248,16 @@ async function submitTransaction({ commit }, dataForm) {
   });
 }
 
-async function deleteProduct({ commit }, dataForm) {
-  commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
-  return new Promise((resolve, reject) => {
-    vuePos
-      .delete('product', dataForm.id)
-      .then(result => {
-        resolve(result);
-      })
-      .catch(error => {
-        reject(error);
-      })
-      .finally(() => {
-        commit("SET_LOADING", false);
-      });
-  });
-}
-
-async function deleteCategory({ commit }, dataForm) {
-  commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
-  return new Promise((resolve, reject) => {
-    vuePos
-      .delete('category', dataForm.id)
-      .then(result => {
-        resolve(result);
-      })
-      .catch(error => {
-        reject(error);
-      })
-      .finally(() => {
-        commit("SET_LOADING", false);
-      });
-  });
-}
-
 export default {
   getProduct,
-  getCategory,
-  getInventory,
-  getTransaction,
   submitProduct,
-  submitCategory,
-  submitInventory,
-  submitTransaction,
+  updateProduct,
   deleteProduct,
-  deleteCategory
+  getCategory,
+  submitCategory,
+  deleteCategory,
+  getInventory,
+  submitInventory,
+  getTransaction,
+  submitTransaction
 }

@@ -2,14 +2,25 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Edit Stok</v-card-title>
-        <v-card-subtitle>{{ selectedProduct.product.name }}</v-card-subtitle>
+        <v-card-title class="ml-0">Tambah Stok</v-card-title>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editStock)">
+            <ValidationProvider v-slot="{ errors }" name="Produk" rules="required">
+              <v-select
+                v-model="product"
+                :error-messages="errors"
+                :items="$store.state.listProduct"
+                :item-text="textProduct"
+                :item-value="valueProduct"
+                label="Produk"
+                class="mb-0 mt-2 px-4"
+                outlined
+              ></v-select>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Stok" rules="required|integer">
               <v-text-field
                 :error-messages="errors"
-                v-model="selectedProduct.stock"
+                v-model="stock"
                 label="Stok"
                 outlined
                 dense
@@ -20,7 +31,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Edit</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Tambah</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -31,18 +42,20 @@
 
 <script>
 export default {
-  props: ['show', 'selected'],
-  computed: {
-    selectedProduct: {
-      get() {
-        return this.selected
-      },
-      set(val) {
-        this.$emit('update:selected', val);
-      }
+  props: ['show'],
+  data() {
+    return {
+      product: null,
+      stock: 0,
     }
   },
   methods: {
+    textProduct(item) {
+      return item.name
+    },
+    valueProduct(item) {
+      return item
+    },
     closeDialog() {
       this.$emit('closeDialog', false);
     },    
@@ -54,11 +67,14 @@ export default {
     editStock() {
       let dataForm = {
         id: this.randomId(),
-        product: this.selectedProduct.product,
-        stock: this.selectedProduct.stock
+        id_product: this.product.id,
+        product: this.product,
+        stock: this.stock
       }
       this.$store.dispatch("submitInventory", dataForm)
         .then(() => {
+          this.product = null;
+          this.stock = 0;
           this.closeDialog();
         })
     },

@@ -129,7 +129,7 @@ export default {
         })
     },
     editProduct() {
-      this.$store.dispatch("submitProduct", this.selectedProduct)
+      this.$store.dispatch("updateProduct", this.selectedProduct)
         .then(() => {
           this.closeDialog();
         });

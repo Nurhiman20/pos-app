@@ -8,13 +8,20 @@ const listViewProduct = (state) => {
 }
 
 const listViewInventory = (state) => {
+  let inventory = [];
   state.listInventory.forEach(element => {
     if (element.stock === undefined) {
-      element.stock = 0
+      let invent = {
+        product: element,
+        stock: 0
+      }  
+      inventory.push(invent);
+    } else {
+      inventory.push(element);
     }
   });
 
-  return state.listInventory
+  return inventory;
 }
 
 export default {

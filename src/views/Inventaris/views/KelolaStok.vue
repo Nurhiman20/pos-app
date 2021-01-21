@@ -2,6 +2,7 @@
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Kelola Stok</h1>
+      <v-btn color="primary" small @click="dialogAddStock = true">Tambah Stok</v-btn>
     </div>
 
     <v-card outlined flat class="pa-4 mt-3">
@@ -41,6 +42,12 @@
     </v-card>
 
     <!-- dialog edit stok -->
+    <add-stock-dialog 
+      :show="dialogAddStock"
+      @closeDialog="closeDialogAdd"
+    ></add-stock-dialog>
+
+    <!-- dialog edit stok -->
     <edit-stock-dialog 
       :show="dialogEditStock"
       :selected.sync="selectedStock"
@@ -50,24 +57,33 @@
 </template>
 
 <script>
+import addStockDialog from '../components/TambahStok';
 import editStockDialog from '../components/EditStok';
 
 export default {
   components: {
+    addStockDialog,
     editStockDialog
   },
   data() {
     return {
       itemInventory: [],
-      selectedStock: {},
+      selectedStock: {
+        id: null,
+        product: {
+          name: null
+        },
+        stock: null
+      },
       select: null,
       search: null,
       headers: [
         { text: 'ID', value: 'id', sortable: false },
-        { text: 'Produk', value: 'name', sortable: true },
-        { text: 'Kategori', value: 'category.name', sortable: false },
+        { text: 'Produk', value: 'product.name', sortable: true },
+        { text: 'Kategori', value: 'product.category.name', sortable: false },
         { text: 'Stok', value: 'stock', sortable: false }
       ],
+      dialogAddStock: false,
       dialogEditStock: false
     }
   },
@@ -82,6 +98,10 @@ export default {
       this.itemInventory = listInventory.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
+    },
+    closeDialogAdd(e) {
+      this.dialogAddStock = e;
+      this.$store.dispatch("getInventory");
     },
     closeDialogEdit(e) {
       this.dialogEditStock = e;
@@ -101,6 +121,7 @@ export default {
   },
   created() {
     this.$store.dispatch("getInventory");
+    this.$store.dispatch("getProduct");
   },
 }
 </script>
