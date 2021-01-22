@@ -230,16 +230,24 @@ async function getTransaction({ commit }) {
 }
 
 async function submitTransaction({ commit }, dataForm) {
+  console.log(dataForm);
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
+
+  let transaction = await vuePos.transaction(['transaction', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .put('transaction', dataForm)
+    transaction.objectStore('transaction').put(dataForm);
+    dataForm.products_sold.forEach(element => {
+      delete element.qty;
+      delete element.total;
+      delete element.discount;
+      transaction.objectStore('inventory').put(element);
+    }); 
+    transaction.done
       .then(result => {
         resolve(result);
       })
       .catch(error => {
-        console.log('error');
         reject(error);
       })
       .finally(() => {

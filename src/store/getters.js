@@ -2,7 +2,7 @@ const listViewProduct = (state) => {
   if (state.filterCategory.name === 'all') {
     return state.listInventory
   } else {
-    var viewProduct = state.listInventory.filter(product => product.category.name === state.filterCategory.name);
+    var viewProduct = state.listInventory.filter(prod => prod.product.category.name === state.filterCategory.name);
     return viewProduct
   }
 }

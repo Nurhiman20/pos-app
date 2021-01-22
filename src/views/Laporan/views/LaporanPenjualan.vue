@@ -30,13 +30,13 @@
         class="elevation-1 scrollbar-custom"
         hide-default-footer
       >
-        <template v-slot:item.product="{item}">
-          <div v-for="(prod, index) in item.product" :key="index">
+        <template v-slot:item.products_sold="{item}">
+          <div v-for="(prod, index) in item.products_sold" :key="index">
             <div class="d-flex flex-row align-center py-2">
-              <v-img :src="showImage(prod.image)" max-width="60" :aspect-ratio="4/3"></v-img>
+              <v-img :src="showImage(prod.product.image)" max-width="60" :aspect-ratio="4/3"></v-img>
               <div class="ml-2 mt-4">
-                <p class="text-bold mb-0">{{ prod.name }}</p>
-                <p class="app-subtitle">Rp{{ formatCurrency(prod.price) }},00</p>
+                <p class="text-bold mb-0">{{ prod.product.name }} ({{ prod.qty }})</p>
+                <p class="app-subtitle">Rp{{ formatCurrency(prod.product.price) }},00</p>
               </div>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default {
       headers: [
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'ID', value: 'id', sortable: false },
-        { text: 'Produk', value: 'product', sortable: false },
+        { text: 'Produk', value: 'products_sold', sortable: false },
         { text: 'Diskon', value: 'total_discount', sortable: false },
         { text: 'Total Harga', value: 'total', sortable: false },
         { text: 'Tunai', value: 'cash', sortable: false },
@@ -92,7 +92,6 @@ export default {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     },
     showImage(item) {
-      console.log(item);
       if (item !== null) {
         return URL.createObjectURL(item);
       } else {

@@ -23,7 +23,7 @@ const SET_FILTER_CATEGORY = (state, payload) => {
 };
 
 const ADD_SELECTED_PRODUCT = (state, payload) => {
-  const found = state.selectedProduct.some(el => el.name === payload.name);
+  const found = state.selectedProduct.some(el => el.product.name === payload.product.name);
   if (!found) {
     state.selectedProduct.push(payload);
   } else {

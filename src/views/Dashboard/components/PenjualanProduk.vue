@@ -63,8 +63,8 @@ export default {
     return {
       cash: 0,
       headers: [
-        { text: 'Produk', value: 'name', sortable: false },        
-        { text: 'Harga', value: 'price', sortable: false },
+        { text: 'Produk', value: 'product.name', sortable: false },        
+        { text: 'Harga', value: 'product.price', sortable: false },
         { text: 'Qty', value: 'qty', sortable: false },
         { text: 'Diskon', value: 'discount', sortable: false },
         { text: 'Total', value: 'total', sortable: false },
@@ -74,11 +74,11 @@ export default {
   },
   computed: {
     total() {
-      const totalAll = this.$store.state.selectedProduct.reduce((acc, product) => acc + parseInt(product.total), 0);
+      const totalAll = this.$store.state.selectedProduct.reduce((acc, prod) => acc + parseInt(prod.total), 0);
       return totalAll;
     },
     discount() {
-      const disc = this.$store.state.selectedProduct.reduce((acc, product) => acc + parseInt(product.discount), 0);
+      const disc = this.$store.state.selectedProduct.reduce((acc, prod) => acc + parseInt(prod.discount), 0);
       return disc
     },
     moneyChange() {
@@ -105,9 +105,14 @@ export default {
       return new Date().toLocaleString();
     },
     submitTransaction() {
+      let prod = this.$store.state.selectedProduct;
+      prod.forEach(element => {
+        element.stock -= element.qty
+      });
+
       let dataForm = {
         id: this.randomId(),
-        product: this.$store.state.selectedProduct,
+        products_sold: prod,
         time: this.dateTime(),
         total_discount: this.discount,
         money_change: this.moneyChange,

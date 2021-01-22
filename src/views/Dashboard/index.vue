@@ -47,8 +47,18 @@ export default {
   },
   data() {
     return {
-      selectedItem: {},
-      editSelected: {},
+      selectedItem: {
+        id: null,
+        product: {
+          name: null
+        }
+      },
+      editSelected: {
+        id: null,
+        product: {
+          name: null
+        }
+      },
       selectDialog: false,
       editDialog: false
     }

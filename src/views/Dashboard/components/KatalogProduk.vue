@@ -42,11 +42,11 @@
           <v-col cols="12" md="4" lg="4" xl="4" v-for="(item, i) in resultSearch" :key="i">
             <v-card class="cursor-pointer" @click="selectProduct(item)">
               <div class="d-flex flex-column">
-                <v-img :src="showImage(item.image)" :aspect-ratio="4/3"></v-img>
+                <v-img :src="showImage(item.product.image)" :aspect-ratio="4/3"></v-img>
                 <div class="mt-n2">
-                  <v-card-title>{{ item.name }}</v-card-title>
-                  <v-card-subtitle>{{ item.description }}</v-card-subtitle>
-                  <p class="ml-4 mt-n3 text-bold">Rp{{ formatCurrency(item.price) }},00</p>
+                  <v-card-title>{{ item.product.name }}</v-card-title>
+                  <v-card-subtitle>{{ item.product.description }}</v-card-subtitle>
+                  <p class="ml-4 mt-n3 text-bold">Rp{{ formatCurrency(item.product.price) }},00</p>
                 </div>
               </div>
             </v-card>
@@ -80,7 +80,7 @@ export default {
     resultSearch() {
       if(this.search) {
         return this.products.filter((item) => {
-          return this.search.toLowerCase().split(' ').every(v => item.name.toLowerCase().includes(v));
+          return this.search.toLowerCase().split(' ').every(v => item.product.name.toLowerCase().includes(v));
         })
       } else {
         return this.products;
@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     querySelections(v) {
-      let listProduct = this.products.map(item => item.name);
+      let listProduct = this.products.map(item => item.product.name);
       this.itemProducts = listProduct.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });

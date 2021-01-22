@@ -3,7 +3,7 @@
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
         <v-card-title class="ml-0">Pilih Produk</v-card-title>
-        <v-card-subtitle>{{ selectedProduct.name }}</v-card-subtitle>
+        <v-card-subtitle>{{ selectedProduct.product.name }}</v-card-subtitle>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(selectProduct)">
             <v-row no-gutters>
@@ -108,7 +108,7 @@ export default {
       }
     },
     checkDiscount() {
-      if (parseInt(this.selectedProduct.total) < 0) {
+      if (parseInt(this.selectedProduct.product.total) < 0) {
         this.$refs.form.setErrors({
           Diskon: "Diskon yang diinput melebihi total harga produk"
         });
@@ -120,7 +120,7 @@ export default {
     selectProduct() {
       this.selectedProduct.qty = this.quantity;
       this.selectedProduct.discount = this.discount;
-      this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.price) - parseInt(this.discount);
+      this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.product.price) - parseInt(this.discount);
       if (this.checkQuantity() && this.checkDiscount()) {
         this.$store.commit("ADD_SELECTED_PRODUCT", this.selectedProduct);
         this.quantity = 1;
