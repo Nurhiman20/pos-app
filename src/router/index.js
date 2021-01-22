@@ -63,6 +63,22 @@ const routes = [
     ]
   },
   {
+    path: '/pelanggan',
+    name: 'Pelanggan',
+    redirect: '/pelanggan/list',
+    component: () => import('@/layouts/Home'),
+    children: [
+      {
+        path: '/pelanggan/list',
+        name: 'Data Pelanggan',
+        component: () => import('@/views/Pelanggan/views/DataPelanggan.vue'),
+        meta: {
+          title: 'Data Pelanggan | POS App'
+        }
+      }
+    ]
+  },
+  {
     path: '/laporan',
     name: 'Laporan',
     redirect: '/laporan/laporan-penjualan',

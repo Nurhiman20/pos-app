@@ -36,8 +36,8 @@ export const mainMenu = [
     text: 'Outlet',
     children: [
       {
-        text: 'Daftar Meja',
-        to: '/not-found'
+        text: 'Manajemen Meja',
+        to: '/outlet/manajemen-meja'
       }
     ]
   },
@@ -47,11 +47,7 @@ export const mainMenu = [
     children: [
       {
         text: 'Data Pelanggan',
-        to: '/not-found'
-      },
-      {
-        text: 'Grup Pelanggan',
-        to: '/not-found'
+        to: '/pelanggan/list'
       }
     ]
   },
@@ -63,34 +59,34 @@ export const mainMenu = [
         text: 'Laporan Penjualan',
         to: '/laporan/laporan-penjualan'
       },
-      {
-        text: 'Laporan Piutang',
-        to: '/not-found'
-      },
-      {
-        text: 'Laporan Pengeluaran',
-        to: '/not-found'
-      }
+      // {
+      //   text: 'Laporan Piutang',
+      //   to: '/not-found'
+      // },
+      // {
+      //   text: 'Laporan Pengeluaran',
+      //   to: '/not-found'
+      // }
     ]
   },
-  { 
-    icon: 'mdi-alert-octagram-outline', 
-    text: 'Promosi',
-    children: [
-      {
-        text: 'Per Total Pembelian',
-        to: '/not-found'
-      },
-      {
-        text: 'Per Produk',
-        to: '/not-found'
-      },
-      {
-        text: 'Kupon',
-        to: '/not-found'
-      }
-    ]
-  },
+  // { 
+  //   icon: 'mdi-alert-octagram-outline', 
+  //   text: 'Promosi',
+  //   children: [
+  //     {
+  //       text: 'Per Total Pembelian',
+  //       to: '/not-found'
+  //     },
+  //     {
+  //       text: 'Per Produk',
+  //       to: '/not-found'
+  //     },
+  //     {
+  //       text: 'Kupon',
+  //       to: '/not-found'
+  //     }
+  //   ]
+  // },
   { 
     icon: 'mdi-cog-outline', 
     text: 'Pengaturan',
