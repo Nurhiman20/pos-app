@@ -63,6 +63,22 @@ const routes = [
     ]
   },
   {
+    path: '/outlet',
+    name: 'Outlet',
+    redirect: '/outlet/manajemen-meja',
+    component: () => import('@/layouts/Home'),
+    children: [
+      {
+        path: '/outlet/manajemen-meja',
+        name: 'Manajemen Meja',
+        component: () => import('@/views/Outlet/views/ManajemenMeja.vue'),
+        meta: {
+          title: 'Manajemen Meja | POS App'
+        }
+      }
+    ]
+  },
+  {
     path: '/pelanggan',
     name: 'Pelanggan',
     redirect: '/pelanggan/list',

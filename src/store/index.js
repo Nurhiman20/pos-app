@@ -22,7 +22,8 @@ const state = {
   listCategory: [],
   listInventory: [],
   listTransaction: [],
-  listCustomer: []
+  listCustomer: [],
+  listTable: []
 }
 
 export default new Vuex.Store({

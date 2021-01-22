@@ -294,6 +294,43 @@ async function submitCustomer({ commit }, dataForm) {
   });
 }
 
+async function getTable({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('table')
+      .then(result => {
+        commit('SET_LIST_TABLE', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function submitTable({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('table', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 export default {
   getProduct,
   submitProduct,
@@ -307,5 +344,7 @@ export default {
   getTransaction,
   submitTransaction,
   getCustomer,
-  submitCustomer
+  submitCustomer,
+  getTable,
+  submitTable
 }
