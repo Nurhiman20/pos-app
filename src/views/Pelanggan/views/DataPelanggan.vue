@@ -30,6 +30,7 @@
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
+        @click:row="goToEdit"
       >
       </v-data-table>
     </v-card>
@@ -39,19 +40,30 @@
       :show="dialogAddCustomer"
       @closeDialog="closeDialogCustomer"
     ></add-customer-dialog>
+
+    <!-- dialog edit customer -->
+    <edit-customer-dialog 
+      :show="dialogEditCustomer"
+      :selected.sync="selectedCustomer"
+      @closeDialog="closeDialogEdit"
+      @successDelete="successDelete"
+    ></edit-customer-dialog>
   </div>
 </template>
 
 <script>
-import addCustomerDialog from '../components/TambahPelanggan'
+import addCustomerDialog from '../components/TambahPelanggan';
+import editCustomerDialog from '../components/EditPelanggan';
 
 export default {
   components: {
-    addCustomerDialog
+    addCustomerDialog,
+    editCustomerDialog
   },
   data() {
     return {
       itemCustomers: [],
+      selectedCustomer: {},
       select: null,
       search: null,
       headers: [
@@ -59,7 +71,8 @@ export default {
         { text: 'Nama', value: 'name', sortable: false },
         { text: 'Nomor HP', value: 'phone_number', sortable: false }
       ],
-      dialogAddCustomer: false
+      dialogAddCustomer: false,
+      dialogEditCustomer: false
     }
   },
   watch: {
@@ -77,6 +90,17 @@ export default {
     closeDialogCustomer(e) {
       this.dialogAddCustomer = e;
       this.$store.dispatch("getCustomer");
+    },
+    closeDialogEdit(e) {
+      this.dialogEditCustomer = e;
+      this.$store.dispatch("getCustomer");
+    },
+    successDelete() {
+      this.$store.dispatch("getCategory");
+    },
+    goToEdit(item) {
+      this.selectedCustomer = item;
+      this.dialogEditCustomer = true;
     }
   },
   created() {
