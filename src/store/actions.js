@@ -349,6 +349,24 @@ async function submitTable({ commit }, dataForm) {
   });
 }
 
+async function deleteTable({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .delete('table', dataForm.id)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 export default {
   getProduct,
   submitProduct,
@@ -365,5 +383,6 @@ export default {
   submitCustomer,
   deleteCustomer,
   getTable,
-  submitTable
+  submitTable,
+  deleteTable
 }

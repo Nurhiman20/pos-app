@@ -2,13 +2,21 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Meja</v-card-title>
+        <div class="d-flex flex-row justify-space-between align-center">
+          <div>
+            <v-card-title class="ml-0">Edit Meja</v-card-title>
+            <v-card-subtitle>{{ selectedTable.name }}</v-card-subtitle>
+          </div>
+          <v-btn color="error" outlined @click="doDelete">
+            <v-icon class="mr-1">mdi-delete</v-icon>Hapus
+          </v-btn>
+        </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(addTable)">
+          <v-form @submit.prevent="handleSubmit(editTable)">
             <ValidationProvider v-slot="{ errors }" name="Nomor Meja" rules="required|integer">
               <v-text-field
                 :error-messages="errors"
-                v-model="tableNumber"
+                v-model="selected.table_number"
                 label="Nomor Meja"
                 outlined
                 dense
@@ -19,7 +27,7 @@
             <ValidationProvider v-slot="{ errors }" name="Kapasitas" rules="required|integer">
               <v-text-field
                 :error-messages="errors"
-                v-model="capacity"
+                v-model="selected.capacity"
                 label="Kapasitas"
                 outlined
                 dense
@@ -31,7 +39,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Tambah</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Edit</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -42,32 +50,31 @@
 
 <script>
 export default {
-  props: ['show'],
-  data() {
-    return {
-      tableNumber: null,
-      capacity: null
+  props: ['show', 'selected'],
+  computed: {
+    selectedTable: {
+      get() {
+        return this.selected
+      },
+      set(val) {
+        this.$emit('update:selected', val);
+      }
     }
   },
   methods: {
     closeDialog() {
       this.$emit('closeDialog', false);
-    },    
-    randomId() {
-      var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = 'tab-' + randLetter + Date.now();
-      return uniqid
     },
-    addTable() {
-      let dataForm = {
-        id: this.randomId(),
-        table_number: this.tableNumber,
-        capacity: this.capacity
-      }
-      this.$store.dispatch("submitTable", dataForm)
+    doDelete() {
+      this.$store.dispatch("deleteTable", this.selectedTable)
         .then(() => {
-          this.tableNumber = null;
-          this.capacity = null;
+          this.closeDialog();
+          this.$emit('successDelete', true);
+        })
+    },
+    editTable() {
+      this.$store.dispatch("submitTable", this.selectedTable)
+        .then(() => {
           this.closeDialog();
         })
     },

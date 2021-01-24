@@ -30,28 +30,40 @@
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
+        @click:row="goToEdit"
       >
       </v-data-table>
     </v-card>
 
-    <!-- dialog add customer -->
-    <add-customer-dialog 
+    <!-- dialog add table -->
+    <add-table-dialog 
       :show="dialogAddTable"
       @closeDialog="closeDialogTable"
-    ></add-customer-dialog>
+    ></add-table-dialog>
+
+    <!-- dialog edit table -->
+    <edit-table-dialog 
+      :show="dialogEditTable"
+      :selected.sync="selectedTable"
+      @closeDialog="closeDialogEdit"
+      @successDelete="successDelete"
+    ></edit-table-dialog>
   </div>
 </template>
 
 <script>
-import addCustomerDialog from '../components/TambahMeja'
+import addTableDialog from '../components/TambahMeja';
+import editTableDialog from '../components/EditMeja';
 
 export default {
   components: {
-    addCustomerDialog
+    addTableDialog,
+    editTableDialog
   },
   data() {
     return {
       itemTable: [],
+      selectedTable: {},
       select: null,
       search: null,
       headers: [
@@ -59,7 +71,8 @@ export default {
         { text: 'Nomor Meja', value: 'table_number', sortable: true },
         { text: 'Kapasitas', value: 'capacity', sortable: true }
       ],
-      dialogAddTable: false
+      dialogAddTable: false,
+      dialogEditTable: false
     }
   },
   watch: {
@@ -74,9 +87,20 @@ export default {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
+    closeDialogEdit(e) {
+      this.dialogEditTable = e;
+      this.$store.dispatch("getTable");
+    },
     closeDialogTable(e) {
       this.dialogAddTable = e;
       this.$store.dispatch("getTable");
+    },
+    successDelete() {
+      this.$store.dispatch("getTable");
+    },
+    goToEdit(item) {
+      this.selectedTable = item;
+      this.dialogEditTable = true;
     }
   },
   created() {
