@@ -108,7 +108,9 @@ export default {
   },
   created() {
     this.$store.dispatch("getInventory");
-    this.$store.dispatch("getCategory");
+    this.$store.dispatch("getCategory");    
+    this.$store.dispatch("getCustomer");
+    this.$store.dispatch("getTable");
   },
 }
 </script>
