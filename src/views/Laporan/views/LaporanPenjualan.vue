@@ -41,6 +41,10 @@
             </div>
           </div>
         </template>
+        <template v-slot:item.customer_name="{item}">
+          <p class="mb-0 mt-4">{{ item.customer_name }}</p>
+          <p class="app-subtitle">{{ item.phone_number }}</p>
+        </template>
         <template v-slot:item.total_discount="{item}">
           <p>Rp{{ formatCurrency(item.total_discount) }},00</p>
         </template>
@@ -67,7 +71,9 @@ export default {
       search: null,
       headers: [
         { text: 'Waktu', value: 'time', sortable: true },
-        { text: 'ID', value: 'id', sortable: false },
+        { text: 'ID Transaksi', value: 'id', sortable: false },
+        { text: 'Pelanggan', value: 'customer_name', sortable: false },
+        { text: 'Nomor Meja', value: 'table_number', sortable: false },
         { text: 'Produk', value: 'products_sold', sortable: false },
         { text: 'Diskon', value: 'total_discount', sortable: false },
         { text: 'Total Harga', value: 'total', sortable: false },

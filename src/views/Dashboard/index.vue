@@ -13,6 +13,7 @@
         <v-col cols="12" md="5" lg="5" xl="5">
           <product-sale
             @editProduct="editProduct"
+            @saveTransaction="saveTransaction"
           ></product-sale>
         </v-col>
       </v-row>
@@ -29,6 +30,12 @@
       :selected.sync="editSelected"
       @close="closeEditDialog"
     ></edit-product-dialog>
+
+    <save-transaction-dialog
+      :show="saveDialog"
+      :transaction="transactionData"      
+      @close="closeSaveDialog"
+    ></save-transaction-dialog>
   </div>
 </template>
 
@@ -37,16 +44,19 @@ import productCatalog from './components/KatalogProduk';
 import productSale from './components/PenjualanProduk';
 import selectProductDialog from './components/DialogPilihProduk';
 import editProductDialog from './components/DialogEditProduk';
+import saveTransactionDialog from './components/DialogSimpanTransaksi';
 
 export default {
   components: {
     productCatalog,
     productSale,
     selectProductDialog,
-    editProductDialog
+    editProductDialog,
+    saveTransactionDialog
   },
   data() {
     return {
+      transactionData: {},
       selectedItem: {
         id: null,
         product: {
@@ -60,7 +70,8 @@ export default {
         }
       },
       selectDialog: false,
-      editDialog: false
+      editDialog: false,
+      saveDialog: false
     }
   },
   methods: {
@@ -69,6 +80,9 @@ export default {
     },
     closeSelectDialog(e) {
       this.selectDialog = e;
+    },
+    closeSaveDialog(e) {
+      this.saveDialog = e;
     },
     editProduct(e) {
       this.editSelected = e;
@@ -86,6 +100,10 @@ export default {
     },
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+    },
+    saveTransaction(e) {
+      this.transactionData = e;
+      this.saveDialog = true;
     }
   },
   created() {

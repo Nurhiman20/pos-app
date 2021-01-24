@@ -119,11 +119,8 @@ export default {
         cash: this.cash,
         total: this.total
       }
-      this.$store.dispatch("submitTransaction", dataForm)
-        .then(() => {
-          this.cash = 0;
-          this.$store.commit("CLEAR_SELECTED_PRODUCT", [])
-        });
+      
+      this.$emit('saveTransaction', dataForm)
     },
   }
 }
