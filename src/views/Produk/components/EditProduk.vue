@@ -122,16 +122,15 @@ export default {
       }
     },
     goDelete() {
-      this.$store.dispatch("deleteProduct", this.selectedProduct)
-        .then(() => {
-          this.closeDialog();
-          this.$emit('successDelete', true);
-        })
+      this.$emit("delete", this.selectedProduct)
     },
     editProduct() {
       this.$store.dispatch("updateProduct", this.selectedProduct)
         .then(() => {
-          this.closeDialog();
+          this.$emit("success", "Produk telah diedit");
+        })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
     }
   }

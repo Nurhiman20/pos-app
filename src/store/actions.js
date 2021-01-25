@@ -45,7 +45,7 @@ async function updateProduct({ commit }, dataForm) {
   // search product in table inventory
   let tx = vuePos.transaction('inventory').store;
   let cursor = await tx.openCursor();
-  let productInventory = {};
+  let productInventory = { id: null, stock: null };
   const loopCursor = true;
   while (loopCursor) {
     if (cursor.value.id_product === dataForm.id) {
@@ -66,8 +66,10 @@ async function updateProduct({ commit }, dataForm) {
   // update product in table product and inventory
   let transaction = await vuePos.transaction(['product', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
-    transaction.objectStore('product').put(dataForm);    
-    transaction.objectStore('inventory').put(updatedProductInventory);
+    transaction.objectStore('product').put(dataForm);
+    if (updatedProductInventory.id !== null) {
+      transaction.objectStore('inventory').put(updatedProductInventory);
+    }
     transaction.done
       .then(result => {
         resolve(result);
@@ -88,7 +90,7 @@ async function deleteProduct({ commit }, dataForm) {
   // search product in table inventory
   let tx = vuePos.transaction('inventory').store;
   let cursor = await tx.openCursor();
-  let productInventory = {};
+  let productInventory = { id: null, stock: null };
   const loopCursor = true;
   while (loopCursor) {
     if (cursor.value.id_product === dataForm.id) {
@@ -101,8 +103,10 @@ async function deleteProduct({ commit }, dataForm) {
   // delete product in table product and inventory
   let transaction = await vuePos.transaction(['product', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
-    transaction.objectStore('product').delete(dataForm.id);    
-    transaction.objectStore('inventory').delete(productInventory.id);
+    transaction.objectStore('product').delete(dataForm.id);
+    if (productInventory.id !== null) {   
+      transaction.objectStore('inventory').delete(productInventory.id);
+    }
     transaction.done
       .then(result => {
         resolve(result);

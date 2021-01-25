@@ -136,7 +136,10 @@ export default {
           this.descriptionProduct = null;
           this.imageProduct = null;
           this.previewImage = null;
-          this.closeDialog()
+          this.$emit("success", "Produk telah disimpan");
+        })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
     }
   }

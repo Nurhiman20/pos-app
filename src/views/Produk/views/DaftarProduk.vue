@@ -44,6 +44,8 @@
     <add-product-dialog
       :show="dialogAddProduct"
       @closeDialog="closeDialogAdd"
+      @success="successAddProduct"
+      @error="failedAddProduct"
     ></add-product-dialog>
 
     <!-- dialog add product -->
@@ -51,23 +53,41 @@
       :show="dialogEditProduct"
       :selected="selectedProduct"
       @closeDialog="closeDialogEdit"
+      @success="successAddProduct"
+      @error="failedAddProduct"
+      @delete="deleteProduct"
       @successDelete="successDelete"
     ></edit-product-dialog>
+    
+    <!-- response dialog -->
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :confirm="dialogConfirm"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+      @closeConfirm="closeDialogConfirm"
+      @deleteConfirmed="doDelete"
+    ></response-dialog>
   </div>
 </template>
 
 <script>
 import addProductDialog from '../components/TambahProduk';
 import editProductDialog from '../components/EditProduk';
+import responseDialog from '../../../components/ResponseDialog';
 
 export default {
   components: {
     addProductDialog,
-    editProductDialog
+    editProductDialog,
+    responseDialog
   },
   data() {
     return {
       selectedProduct: {},
+      selectedDelete: {},
       search: null,
       select: null,
       itemProducts: [],
@@ -80,6 +100,10 @@ export default {
       ],
       dialogAddProduct: false,
       dialogEditProduct: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      dialogConfirm: false,
+      messageDialog: null
     }
   },
   watch: {
@@ -93,6 +117,17 @@ export default {
       this.itemProducts = listProduct.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
+    },
+    closeDialogSuccess(e) {
+      this.dialogAddProduct = false;
+      this.dialogEditProduct = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    closeDialogConfirm(e) {
+      this.dialogConfirm = e;
     },
     showImage(item) {
       if (item !== null) {
@@ -111,6 +146,34 @@ export default {
     closeDialogEdit(e) {
       this.$store.dispatch("getProduct");
       this.dialogEditProduct = e
+    },
+    successAddProduct(e) {
+      this.$store.dispatch("getProduct");
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedAddProduct(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
+    },
+    deleteProduct(e) {
+      this.selectedDelete = e;
+      this.messageDialog = "Kamu yakin akan menghapus produk ini?"
+      this.dialogConfirm = true;
+    },
+    doDelete() {
+      this.$store.dispatch("deleteProduct", this.selectedDelete)
+        .then(() => {          
+          this.$store.dispatch("getProduct");
+          this.dialogConfirm = false;
+          this.messageDialog = "Berhasil menghapus produk";
+          this.dialogSuccess = true;
+        })
+        .catch(() => {
+          this.dialogConfirm = false;
+          this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
+          this.dialogFailed = true;
+        })
     },
     goToEdit(item) {
       this.selectedProduct = item;
