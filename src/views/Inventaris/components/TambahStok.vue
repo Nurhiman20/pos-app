@@ -75,8 +75,11 @@ export default {
         .then(() => {
           this.product = null;
           this.stock = 0;
-          this.closeDialog();
+          this.$emit("success", "Stok telah diperbarui");
         })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     },
   }
 }

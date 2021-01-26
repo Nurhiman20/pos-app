@@ -45,22 +45,15 @@ export default {
   methods: {
     closeDialog() {
       this.$emit('closeDialog', false);
-    },    
-    randomId() {
-      var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = 'inv-' + randLetter + Date.now();
-      return uniqid
     },
     editStock() {
-      let dataForm = {
-        id: this.randomId(),
-        product: this.selectedProduct.product,
-        stock: this.selectedProduct.stock
-      }
-      this.$store.dispatch("submitInventory", dataForm)
+      this.$store.dispatch("submitInventory", this.selectedProduct)
         .then(() => {
-          this.closeDialog();
+          this.$emit("success", "Stok telah diperbarui");
         })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     },
   }
 }

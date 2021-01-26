@@ -45,6 +45,8 @@
     <add-stock-dialog 
       :show="dialogAddStock"
       @closeDialog="closeDialogAdd"
+      @success="successPutStock"
+      @error="failedPutStock"
     ></add-stock-dialog>
 
     <!-- dialog edit stok -->
@@ -52,18 +54,32 @@
       :show="dialogEditStock"
       :selected.sync="selectedStock"
       @closeDialog="closeDialogEdit"
+      @success="successPutStock"
+      @error="failedPutStock"
     ></edit-stock-dialog>
+    
+    <!-- response dialog -->
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :confirm="dialogConfirm"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+    ></response-dialog>
   </div>
 </template>
 
 <script>
 import addStockDialog from '../components/TambahStok';
 import editStockDialog from '../components/EditStok';
+import responseDialog from '../../../components/ResponseDialog';
 
 export default {
   components: {
     addStockDialog,
-    editStockDialog
+    editStockDialog,
+    responseDialog
   },
   data() {
     return {
@@ -84,7 +100,11 @@ export default {
         { text: 'Stok', value: 'stock', sortable: false }
       ],
       dialogAddStock: false,
-      dialogEditStock: false
+      dialogEditStock: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      dialogConfirm: false,
+      messageDialog: null
     }
   },
   watch: {
@@ -99,6 +119,17 @@ export default {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
+    closeDialogSuccess(e) {
+      this.dialogAddStock = false;
+      this.dialogEditStock = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    closeDialogConfirm(e) {
+      this.dialogConfirm = e;
+    },
     closeDialogAdd(e) {
       this.dialogAddStock = e;
       this.$store.dispatch("getInventory");
@@ -106,6 +137,15 @@ export default {
     closeDialogEdit(e) {
       this.dialogEditStock = e;
       this.$store.dispatch("getInventory");
+    },
+    successPutStock(e) {
+      this.$store.dispatch("getInventory");
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedPutStock(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
     },
     showImage(item) {
       if (item !== null) {
