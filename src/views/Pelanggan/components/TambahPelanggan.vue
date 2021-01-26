@@ -65,8 +65,11 @@ export default {
         .then(() => {
           this.name = null;
           this.phoneNumber = null;
-          this.closeDialog();
+          this.$emit("success", "Pelanggan telah diperbarui");
         })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     },
   }
 }

@@ -63,17 +63,16 @@ export default {
       this.$emit('closeDialog', false);
     },
     doDelete() {
-      this.$store.dispatch("deleteCustomer", this.selectedCustomer)
-        .then(() => {
-          this.closeDialog();
-          this.$emit('successDelete', true);
-        })
+      this.$emit("delete", this.selectedCustomer);
     },
     editCustomer() {
       this.$store.dispatch("submitCustomer", this.selectedCustomer)
         .then(() => {
-          this.closeDialog();
+          this.$emit("success", "Pelanggan telah diperbarui");
         })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     }
   }
 }

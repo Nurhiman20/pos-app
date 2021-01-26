@@ -39,6 +39,8 @@
     <add-customer-dialog 
       :show="dialogAddCustomer"
       @closeDialog="closeDialogCustomer"
+      @success="successPutCustomer"
+      @error="failedPutCustomer"
     ></add-customer-dialog>
 
     <!-- dialog edit customer -->
@@ -46,24 +48,42 @@
       :show="dialogEditCustomer"
       :selected.sync="selectedCustomer"
       @closeDialog="closeDialogEdit"
+      @success="successPutCustomer"
+      @error="failedPutCustomer"
+      @delete="deleteCustomer"
       @successDelete="successDelete"
     ></edit-customer-dialog>
+
+    <!-- response dialog -->
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :confirm="dialogConfirm"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+      @closeConfirm="closeDialogConfirm"
+      @deleteConfirmed="doDelete"
+    ></response-dialog>
   </div>
 </template>
 
 <script>
 import addCustomerDialog from '../components/TambahPelanggan';
 import editCustomerDialog from '../components/EditPelanggan';
+import responseDialog from '../../../components/ResponseDialog';
 
 export default {
   components: {
     addCustomerDialog,
-    editCustomerDialog
+    editCustomerDialog,
+    responseDialog
   },
   data() {
     return {
       itemCustomers: [],
       selectedCustomer: {},
+      selectedDelete: {},
       select: null,
       search: null,
       headers: [
@@ -72,7 +92,11 @@ export default {
         { text: 'Nomor HP', value: 'phone_number', sortable: false }
       ],
       dialogAddCustomer: false,
-      dialogEditCustomer: false
+      dialogEditCustomer: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      dialogConfirm: false,
+      messageDialog: null
     }
   },
   watch: {
@@ -87,6 +111,17 @@ export default {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
+    closeDialogSuccess(e) {
+      this.dialogAddCustomer = false;
+      this.dialogEditCustomer = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    closeDialogConfirm(e) {
+      this.dialogConfirm = e;
+    },
     closeDialogCustomer(e) {
       this.dialogAddCustomer = e;
       this.$store.dispatch("getCustomer");
@@ -96,7 +131,35 @@ export default {
       this.$store.dispatch("getCustomer");
     },
     successDelete() {
-      this.$store.dispatch("getCategory");
+      this.$store.dispatch("getCustomer");
+    },
+    successPutCustomer(e) {
+      this.$store.dispatch("getCustomer");
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedPutCustomer(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
+    },
+    deleteCustomer(e) {
+      this.selectedDelete = e;
+      this.messageDialog = "Kamu yakin akan menghapus pelanggan ini?"
+      this.dialogConfirm = true;
+    },
+    doDelete() {
+      this.$store.dispatch("deleteCustomer", this.selectedDelete)
+        .then(() => {          
+          this.$store.dispatch("getCustomer");
+          this.dialogConfirm = false;
+          this.messageDialog = "Berhasil menghapus pelanggan";
+          this.dialogSuccess = true;
+        })
+        .catch(() => {
+          this.dialogConfirm = false;
+          this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
+          this.dialogFailed = true;
+        })
     },
     goToEdit(item) {
       this.selectedCustomer = item;
