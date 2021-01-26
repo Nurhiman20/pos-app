@@ -39,7 +39,7 @@
           <div class="dialog">
             <v-icon size="140" color="error" class="mb-4">mdi-alert-circle-outline</v-icon>
             <p class="message">{{ message }}</p>
-            <v-btn color="error" block @click="deleteConfirmed">
+            <v-btn color="error" block @click="deleteConfirmed" :loading="$store.state.loading">
               Hapus
             </v-btn>
             <v-btn color="warning" class="mt-2" block text @click="closeDialogConfirm">

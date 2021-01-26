@@ -51,8 +51,11 @@ export default {
       };
       this.$store.dispatch("submitCategory", dataForm)
         .then(() => {
-          this.nameCategory = null;
-          this.closeDialog();
+          this.nameCategory = null;          
+          this.$emit("success", "Kategori telah disimpan");
+        })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
     }
   }

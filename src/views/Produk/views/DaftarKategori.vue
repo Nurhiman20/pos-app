@@ -37,6 +37,8 @@
     <add-category-dialog
       :show="dialogAddCategory"
       @closeDialog="closeDialogAdd"
+      @success="successPutCategory"
+      @error="failedAddCategory"
     ></add-category-dialog>
 
     <!-- dialog edit category -->
@@ -44,19 +46,36 @@
       :show="dialogEditCategory"
       :selected="selectedCategory"
       @closeDialog="closeDialogEdit"
-      @successDelete="getCategory"
+      @success="successPutCategory"
+      @error="failedAddCategory"
+      @delete="deleteCategory"
+      @successDelete="successDelete"
     ></edit-category-dialog>
+
+    <!-- response dialog -->
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :confirm="dialogConfirm"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+      @closeConfirm="closeDialogConfirm"
+      @deleteConfirmed="doDelete"
+    ></response-dialog>
   </div>
 </template>
 
 <script>
 import addCategoryDialog from '../components/TambahKategori';
 import editCategoryDialog from '../components/EditKategori';
+import responseDialog from '../../../components/ResponseDialog';
 
 export default {
   components: {
     addCategoryDialog,
-    editCategoryDialog
+    editCategoryDialog,
+    responseDialog
   },
   data() {
     return {
@@ -67,13 +86,18 @@ export default {
         id: null,
         name: null
       },
+      selectedDelete: {},
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Nama', value: 'name', sortable: true },
         { text: '', value: 'actions', sortable: false }
       ],
       dialogAddCategory: false,
-      dialogEditCategory: false
+      dialogEditCategory: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      dialogConfirm: false,
+      messageDialog: null
     }
   },
   watch: {
@@ -88,6 +112,17 @@ export default {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
+    closeDialogSuccess(e) {
+      this.dialogAddCategory = false;
+      this.dialogEditCategory = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    closeDialogConfirm(e) {
+      this.dialogConfirm = e;
+    },
     successDelete() {
       this.$store.dispatch("getCategory");
     },
@@ -98,6 +133,34 @@ export default {
     closeDialogEdit(e) {
       this.$store.dispatch("getCategory")
       this.dialogEditCategory = e
+    },
+    successPutCategory(e) {
+      this.$store.dispatch("getCategory");
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedAddCategory(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
+    },
+    deleteCategory(e) {
+      this.selectedDelete = e;
+      this.messageDialog = "Kamu yakin akan menghapus kategori ini?"
+      this.dialogConfirm = true;
+    },
+    doDelete() {
+      this.$store.dispatch("deleteCategory", this.selectedDelete)
+        .then(() => {          
+          this.$store.dispatch("getCategory");
+          this.dialogConfirm = false;
+          this.messageDialog = "Berhasil menghapus kategori";
+          this.dialogSuccess = true;
+        })
+        .catch(() => {
+          this.dialogConfirm = false;
+          this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
+          this.dialogFailed = true;
+        })
     },
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));

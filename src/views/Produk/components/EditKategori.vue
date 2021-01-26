@@ -50,17 +50,16 @@ export default {
       this.$emit('closeDialog', false);
     },
     goDelete() {
-      this.$store.dispatch("deleteCategory", this.selectedCategory)
-        .then(() => {
-          this.closeDialog();
-          this.$emit('successDelete', true);
-        })
+      this.$emit("delete", this.selectedCategory)
     },
     editCategory() {
       this.$store.dispatch("submitCategory", this.selectedCategory)
         .then(() => {
-          this.closeDialog();
+          this.$emit("success", "Kategori telah diedit");
         })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     }
   }
 }
