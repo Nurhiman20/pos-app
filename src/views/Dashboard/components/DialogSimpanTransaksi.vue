@@ -153,10 +153,13 @@ export default {
       this.$store.dispatch("submitTransaction", dataForm)
         .then(() => {
           this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
-          this.closeDialog();
           this.customerName = null;
           this.phoneNumber = null;
           this.tableNumber = null;
+          this.$emit("success", "Transaksi telah disimpan");
+        })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
     }
   }

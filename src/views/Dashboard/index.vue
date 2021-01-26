@@ -35,7 +35,18 @@
       :show="saveDialog"
       :transaction="transactionData"      
       @close="closeSaveDialog"
+      @success="successSaveTransaction"
+      @error="failedSaveTransaction"
     ></save-transaction-dialog>
+
+    <!-- response dialog -->
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+    ></response-dialog>
   </div>
 </template>
 
@@ -45,6 +56,7 @@ import productSale from './components/PenjualanProduk';
 import selectProductDialog from './components/DialogPilihProduk';
 import editProductDialog from './components/DialogEditProduk';
 import saveTransactionDialog from './components/DialogSimpanTransaksi';
+import responseDialog from '../../components/ResponseDialog';
 
 export default {
   components: {
@@ -52,7 +64,8 @@ export default {
     productSale,
     selectProductDialog,
     editProductDialog,
-    saveTransactionDialog
+    saveTransactionDialog,
+    responseDialog
   },
   data() {
     return {
@@ -71,7 +84,10 @@ export default {
       },
       selectDialog: false,
       editDialog: false,
-      saveDialog: false
+      saveDialog: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      messageDialog: null
     }
   },
   methods: {
@@ -83,6 +99,21 @@ export default {
     },
     closeSaveDialog(e) {
       this.saveDialog = e;
+    },
+    closeDialogSuccess(e) {
+      this.saveDialog = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    successSaveTransaction(e) {
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedSaveTransaction(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
     },
     editProduct(e) {
       this.editSelected = e;
