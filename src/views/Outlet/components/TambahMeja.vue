@@ -68,8 +68,11 @@ export default {
         .then(() => {
           this.tableNumber = null;
           this.capacity = null;
-          this.closeDialog();
+          this.$emit("success", "Daftar meja telah diperbarui");
         })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     },
   }
 }

@@ -66,17 +66,16 @@ export default {
       this.$emit('closeDialog', false);
     },
     doDelete() {
-      this.$store.dispatch("deleteTable", this.selectedTable)
-        .then(() => {
-          this.closeDialog();
-          this.$emit('successDelete', true);
-        })
+      this.$emit("delete", this.selectedTable);
     },
     editTable() {
       this.$store.dispatch("submitTable", this.selectedTable)
         .then(() => {
-          this.closeDialog();
+          this.$emit("success", "Daftar meja telah diperbarui");
         })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     },
   }
 }

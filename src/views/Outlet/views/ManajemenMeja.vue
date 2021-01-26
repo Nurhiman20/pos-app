@@ -39,6 +39,8 @@
     <add-table-dialog 
       :show="dialogAddTable"
       @closeDialog="closeDialogTable"
+      @success="successPutTable"
+      @error="failedPutTable"
     ></add-table-dialog>
 
     <!-- dialog edit table -->
@@ -46,24 +48,42 @@
       :show="dialogEditTable"
       :selected.sync="selectedTable"
       @closeDialog="closeDialogEdit"
+      @success="successPutTable"
+      @error="failedPutTable"
+      @delete="deleteTable"
       @successDelete="successDelete"
     ></edit-table-dialog>
+    
+    <!-- response dialog -->
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :confirm="dialogConfirm"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+      @closeConfirm="closeDialogConfirm"
+      @deleteConfirmed="doDelete"
+    ></response-dialog>
   </div>
 </template>
 
 <script>
 import addTableDialog from '../components/TambahMeja';
 import editTableDialog from '../components/EditMeja';
+import responseDialog from '../../../components/ResponseDialog';
 
 export default {
   components: {
     addTableDialog,
-    editTableDialog
+    editTableDialog,
+    responseDialog
   },
   data() {
     return {
       itemTable: [],
       selectedTable: {},
+      selectedDelete: {},
       select: null,
       search: null,
       headers: [
@@ -72,7 +92,11 @@ export default {
         { text: 'Kapasitas', value: 'capacity', sortable: true }
       ],
       dialogAddTable: false,
-      dialogEditTable: false
+      dialogEditTable: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      dialogConfirm: false,
+      messageDialog: null
     }
   },
   watch: {
@@ -87,6 +111,17 @@ export default {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
+    closeDialogSuccess(e) {
+      this.dialogAddTable = false;
+      this.dialogEditTable = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    closeDialogConfirm(e) {
+      this.dialogConfirm = e;
+    },
     closeDialogEdit(e) {
       this.dialogEditTable = e;
       this.$store.dispatch("getTable");
@@ -97,6 +132,34 @@ export default {
     },
     successDelete() {
       this.$store.dispatch("getTable");
+    },
+    successPutTable(e) {
+      this.$store.dispatch("getTable");
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedPutTable(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
+    },
+    deleteTable(e) {
+      this.selectedDelete = e;
+      this.messageDialog = "Kamu yakin akan menghapus meja ini?"
+      this.dialogConfirm = true;
+    },
+    doDelete() {
+      this.$store.dispatch("deleteTable", this.selectedDelete)
+        .then(() => {          
+          this.$store.dispatch("getTable");
+          this.dialogConfirm = false;
+          this.messageDialog = "Berhasil menghapus meja";
+          this.dialogSuccess = true;
+        })
+        .catch(() => {
+          this.dialogConfirm = false;
+          this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
+          this.dialogFailed = true;
+        })
     },
     goToEdit(item) {
       this.selectedTable = item;
