@@ -150,6 +150,9 @@ export default {
       dataForm.customer_name = this.customerName;
       dataForm.phone_number = this.phoneNumber;
       dataForm.table_number = this.tableNumber;
+      if (this.$store.state.selectedTx.id !== undefined) {
+        dataForm.id = this.$store.state.selectedTx.id;
+      }
       this.$store.dispatch("submitTransaction", dataForm)
         .then(() => {
           this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
@@ -162,6 +165,11 @@ export default {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
     }
-  }
+  },
+  created() {
+    if (this.$store.state.selectedTx.customer_name !== undefined) {
+      this.phoneNumber = this.$store.state.selectedTx.phone_number;
+    }
+  },
 }
 </script>

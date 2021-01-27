@@ -29,11 +29,12 @@
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
+        @click:row="goToEdit"
       >
         <template v-slot:item.products_sold="{item}">
           <div v-for="(prod, index) in item.products_sold" :key="index">
             <div class="d-flex flex-row align-center py-2">
-              <v-img :src="showImage(prod.product.image)" max-width="60" :aspect-ratio="4/3"></v-img>
+              <v-img :src="showImage(prod.product.image)" min-width="60" max-width="60" :aspect-ratio="4/3"></v-img>
               <div class="ml-2 mt-4">
                 <p class="text-bold mb-0">{{ prod.product.name }} ({{ prod.qty }})</p>
                 <p class="app-subtitle">Rp{{ formatCurrency(prod.product.price) }},00</p>
@@ -103,6 +104,10 @@ export default {
       } else {
         return null;
       }
+    },
+    goToEdit(e) {
+      this.$store.commit("SET_EDIT_TX", e);
+      this.$router.push('/dashboard');
     }
   },
   created() {

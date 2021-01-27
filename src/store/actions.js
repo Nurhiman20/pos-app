@@ -234,7 +234,6 @@ async function getTransaction({ commit }) {
 }
 
 async function submitTransaction({ commit }, dataForm) {
-  console.log(dataForm);
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
 

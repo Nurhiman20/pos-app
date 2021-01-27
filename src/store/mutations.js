@@ -53,6 +53,13 @@ const EDIT_SELECTED_PRODUCT = (state, payload) => {
   state.selectedProduct.splice(indexProduct, 1, payload);
 };
 
+const SET_EDIT_TX = (state, payload) => {
+  state.selectedTx = payload;
+  if (payload.products_sold !== undefined) {
+    state.selectedProduct = payload.products_sold;
+  }
+};
+
 export default {
   SET_LOADING,
   SET_LIST_PRODUCT,
@@ -65,5 +72,6 @@ export default {
   ADD_SELECTED_PRODUCT,
   REMOVE_SELECTED_PRODUCT,
   CLEAR_SELECTED_PRODUCT,
-  EDIT_SELECTED_PRODUCT
+  EDIT_SELECTED_PRODUCT,
+  SET_EDIT_TX
 }

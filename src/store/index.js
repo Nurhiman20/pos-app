@@ -16,6 +16,7 @@ const state = {
     id: 'all',
     name: 'all'
   },
+  selectedTx: {},
   
   // Data model
   listProduct: [],

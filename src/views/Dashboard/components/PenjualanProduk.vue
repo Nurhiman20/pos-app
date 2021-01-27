@@ -122,7 +122,12 @@ export default {
       
       this.$emit('saveTransaction', dataForm)
     },
-  }
+  },
+  created() {
+    if (this.$store.state.selectedTx.cash !== undefined) {
+      this.cash = this.$store.state.selectedTx.cash;
+    }
+  },
 }
 </script>
 
