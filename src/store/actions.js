@@ -297,6 +297,48 @@ async function submitCustomer({ commit }, dataForm) {
   });
 }
 
+async function updateCustomer({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 1);
+  
+  // search product in table inventory
+  let tx = vuePos.transaction('transaction').store;
+  let cursor = await tx.openCursor();
+  let customerTx = { id: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.customer.id === dataForm.id) {
+      customerTx = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // set updated data
+  customerTx.customer = dataForm;
+
+  // update customer in table customer and transaction
+  let transaction = await vuePos.transaction(['customer', 'transaction'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('customer').put(dataForm);
+    if (customerTx.id !== null) {
+      transaction.objectStore('transaction').put(customerTx);
+    }
+    transaction.done
+      .then(result => {
+        console.log(result);
+        resolve(result);
+      })
+      .catch(error => {
+        console.log(error);
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function deleteCustomer({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 1);
@@ -384,6 +426,7 @@ export default {
   submitTransaction,
   getCustomer,
   submitCustomer,
+  updateCustomer,
   deleteCustomer,
   getTable,
   submitTable,

@@ -66,7 +66,7 @@ export default {
       this.$emit("delete", this.selectedCustomer);
     },
     editCustomer() {
-      this.$store.dispatch("submitCustomer", this.selectedCustomer)
+      this.$store.dispatch("updateCustomer", this.selectedCustomer)
         .then(() => {
           this.$emit("success", "Pelanggan telah diperbarui");
         })
