@@ -10,9 +10,10 @@
                 <v-col cols="10">
                   <v-autocomplete
                     :error-messages="errors"
-                    v-model="selectCustomerName"
-                    :items="itemCustomer"
-                    :search-input.sync="customerName"
+                    v-model="customer"
+                    :items="$store.state.listCustomer"
+                    :item-text="textCustomer"
+                    :item-value="valueCustomer"
                     label="Nama Pelanggan"
                     cache-items
                     class="mt-2 px-4"
@@ -38,16 +39,6 @@
                 </v-col>
               </v-row>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Nomor HP" rules="integer">
-              <v-text-field
-                :error-messages="errors"
-                v-model="phoneNumber"
-                label="Nomor HP"
-                outlined
-                dense
-                class="mb-0 mt-8 px-4"
-              ></v-text-field>
-            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Nomor Meja" rules="required|integer">
               <v-autocomplete
                 :error-messages="errors"
@@ -56,7 +47,7 @@
                 :search-input.sync="tableNumber"
                 label="Nomor Meja"
                 cache-items
-                class="mt-2 px-4"
+                class="mt-6 px-4"
                 outlined
                 dense
                 hide-no-data
@@ -92,9 +83,7 @@ export default {
   },
   data() {
     return {
-      customerName: null,
-      selectCustomerName: null,
-      phoneNumber: null,
+      customer: null,
       selectTableNumber: null,
       tableNumber: null,
       itemCustomer: [],
@@ -103,26 +92,22 @@ export default {
     }
   },
   watch: {
-    customerName(val) {
-      val && val !== this.selectCustomerName && this.querySelections(val);
-      this.checkPhoneNumber(val);
-    },
     tableNumber(val) {
       val && val !== this.selectTableNumber && this.querySelectionsTable(val);
     }
   },
   methods: {
-    querySelections(v) {
-      let listCustomer = this.$store.state.listCustomer.map(item => item.name);
-      this.itemCustomer = listCustomer.filter(e => {
-        return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
-      });
-    },
     querySelectionsTable(v) {
       let listTable = this.$store.state.listTable.map(item => item.table_number);
       this.itemTable = listTable.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
+    },
+    textCustomer(item) {
+      return item.name + ' - ' + item.phone_number
+    },
+    valueCustomer(item) {
+      return item
     },
     closeDialog() {
       this.$emit('close', false);
@@ -135,20 +120,12 @@ export default {
       this.selectCustomerName = e.name;
       this.newCustomerDialog = false;
     },
-    checkPhoneNumber(val) {
-      this.$store.state.listCustomer.forEach(element => {
-        if (element.name === val) {
-          this.phoneNumber = element.phone_number
-        }
-      });
-    },
     addNewCustomer() {
       this.newCustomerDialog = true;
     },
     saveTransaction() {
       let dataForm = this.transaction;
-      dataForm.customer_name = this.customerName;
-      dataForm.phone_number = this.phoneNumber;
+      dataForm.customer = this.customer;
       dataForm.table_number = this.tableNumber;
       if (this.$store.state.selectedTx.id !== undefined) {
         dataForm.id = this.$store.state.selectedTx.id;

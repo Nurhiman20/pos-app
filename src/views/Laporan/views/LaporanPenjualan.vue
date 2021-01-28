@@ -43,8 +43,8 @@
           </div>
         </template>
         <template v-slot:item.customer_name="{item}">
-          <p class="mb-0 mt-4">{{ item.customer_name }}</p>
-          <p class="app-subtitle">{{ item.phone_number }}</p>
+          <p class="mb-0 mt-4">{{ item.customer.name }}</p>
+          <p class="app-subtitle">{{ item.customer.phone_number }}</p>
         </template>
         <template v-slot:item.total_discount="{item}">
           <p>Rp{{ formatCurrency(item.total_discount) }},00</p>
