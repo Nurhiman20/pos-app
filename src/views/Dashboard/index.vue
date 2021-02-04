@@ -104,7 +104,7 @@ export default {
       this.saveDialog = false;
       this.dialogSuccess = e;
       if (this.$store.state.selectedTx.id !== undefined) {
-        this.$router.push('/laporan/laporan-penjualan');
+        this.$router.push('/laporan/transaksi');
       }      
       this.$store.commit("SET_EDIT_TX", {});
     },

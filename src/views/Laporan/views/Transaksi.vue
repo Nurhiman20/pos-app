@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
-      <h1>Laporan Penjualan</h1>
+      <h1>Transaksi</h1>
     </div>
 
     <v-card outlined flat class="pa-4 mt-3">
@@ -60,14 +60,27 @@
         </template>
       </v-data-table>
     </v-card>
+
+    <!-- dialog receipt -->
+    <receipt-app
+      :show="dialogReceipt"
+      :selected="selectedTransaction"
+      @closeDialog="closeDialogReceipt"
+    ></receipt-app>
   </div>
 </template>
 
 <script>
+import receiptApp from '../components/Receipt';
+
 export default {
+  components: {
+    receiptApp
+  },
   data() {
     return {
       itemTransaction: [],
+      selectedTransaction: {},
       select: null,
       search: null,
       headers: [
@@ -81,6 +94,7 @@ export default {
         { text: 'Tunai', value: 'cash', sortable: false },
         { text: 'Kembali', value: 'money_change', sortable: false },
       ],
+      dialogReceipt: false
     }
   },
   watch: {
@@ -98,6 +112,9 @@ export default {
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     },
+    closeDialogReceipt(e) {
+      this.dialogReceipt = e;
+    },
     showImage(item) {
       if (item !== null) {
         return URL.createObjectURL(item);
@@ -106,8 +123,8 @@ export default {
       }
     },
     goToEdit(e) {
-      this.$store.commit("SET_EDIT_TX", e);
-      this.$router.push('/dashboard');
+      this.selectedTransaction = e;
+      this.dialogReceipt = true;
     }
   },
   created() {

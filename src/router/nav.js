@@ -56,8 +56,8 @@ export const mainMenu = [
     text: 'Laporan',
     children: [
       {
-        text: 'Laporan Penjualan',
-        to: '/laporan/laporan-penjualan'
+        text: 'Transaksi',
+        to: '/laporan/transaksi'
       },
       // {
       //   text: 'Laporan Piutang',

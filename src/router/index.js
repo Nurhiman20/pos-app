@@ -97,15 +97,15 @@ const routes = [
   {
     path: '/laporan',
     name: 'Laporan',
-    redirect: '/laporan/laporan-penjualan',
+    redirect: '/laporan/transaksi',
     component: () => import('@/layouts/Home'),
     children: [
       {
-        path: '/laporan/laporan-penjualan',
-        name: 'Laporan Penjualan',
-        component: () => import('@/views/Laporan/views/LaporanPenjualan.vue'),
+        path: '/laporan/transaksi',
+        name: 'Transaksi',
+        component: () => import('@/views/Laporan/views/Transaksi.vue'),
         meta: {
-          title: 'Laporan Penjualan | POS App'
+          title: 'Transaksi | POS App'
         }
       }
     ]
