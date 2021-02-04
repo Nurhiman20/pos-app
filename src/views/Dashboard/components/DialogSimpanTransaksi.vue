@@ -55,9 +55,19 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
+
+            <div class="px-4 mt-6" v-if="selectTableNumber !== null">
+              <h3>E-Receipt</h3>
+              <receipt-app :selected="transaction"></receipt-app>
+            </div>
+
             <v-card-actions class="mt-6">
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
+              <v-btn color="success" dark :loading="$store.state.loading">
+                <v-icon class="mr-2">mdi-printer</v-icon>
+                Cetak
+              </v-btn>
               <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Simpan</v-btn>
             </v-card-actions>
           </v-form>
@@ -75,11 +85,13 @@
 
 <script>
 import newCustomerDialog from './DialogTambahPelanggan';
+import receiptApp from '@/components/ReceiptApp';
 
 export default {
   props: ['show', 'transaction'],
   components: {
-    newCustomerDialog
+    newCustomerDialog,
+    receiptApp
   },
   data() {
     return {
@@ -94,6 +106,13 @@ export default {
   watch: {
     tableNumber(val) {
       val && val !== this.selectTableNumber && this.querySelectionsTable(val);
+    },
+    selectTableNumber(val) {
+      if (val !== null) {
+        let dataForm = this.transaction;
+        dataForm.customer = this.customer;
+        dataForm.table_number = this.tableNumber;
+      }
     }
   },
   methods: {
