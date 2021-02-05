@@ -6,9 +6,10 @@ import store from './store'
 import './assets/scss/main.scss'
 import './plugins/VeeValidate'
 import { SchemaSyncHandler } from './plugins/schemasync.js'
+import JsonExcel from "vue-json-excel"
 
 SchemaSyncHandler.sync()
-
+Vue.component("downloadExcel", JsonExcel);
 Vue.config.productionTip = false
 
 new Vue({

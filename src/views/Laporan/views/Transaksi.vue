@@ -2,6 +2,14 @@
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Transaksi</h1>
+      <download-excel
+        :data="$store.state.listTransaction"
+        :fields="jsonFields"
+        worksheet="Transaction"
+        name="Transaksi.xls"
+      >
+        <v-btn color="success" small>Export</v-btn>
+      </download-excel>
     </div>
 
     <v-card outlined flat class="pa-4 mt-3">
@@ -94,6 +102,41 @@ export default {
         { text: 'Tunai', value: 'cash', sortable: false },
         { text: 'Kembali', value: 'money_change', sortable: false },
       ],
+      jsonFields: {
+        ID: 'id',
+        Waktu: 'time',
+        // Pelanggan: {
+        //   'Nama': 'customer.name',
+        //   'Nomor HP': 'customer.phone_number',
+        //   'Nomor Meja': 'table_number',
+        // },
+        // Produk: {
+        //   'Nama': 'products_sold.product.name',
+        //   'Qty': 'products_sold.qty',
+        //   'Harga': 'products_sold.product.price'
+        // },
+        Pelanggan: {
+          field: 'customer',
+          callback: (value) => {
+            let strText = `Nama: ${value.name}\nNomor HP: ${value.phone_number}`
+            return strText
+          }
+        },
+        Produk: {
+          field: 'products_sold',
+          callback: (value) => {
+            let strText = '';
+            for (let i = 0; i < value.length; i++) {
+              strText += `Nama: ${value[i].product.name}\nQty: ${value[i].qty}\nHarga: ${value[i].product.price}\n\n`
+            }            
+            return strText
+          }
+        },
+        Diskon: 'total_discount',
+        'Total Harga': 'total',
+        Tunai: 'cash',
+        Kembali: 'money_change'
+      },
       dialogReceipt: false
     }
   },

@@ -2,7 +2,18 @@
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Data Pelanggan</h1>
-      <v-btn color="primary" small @click="dialogAddCustomer = true">Tambah Pelanggan</v-btn>
+      <div class="d-flex flex-row flex-wrap justify-end">
+        <download-excel
+          :data="$store.state.listCustomer"
+          :fields="jsonFields"
+          worksheet="Customer"
+          name="Pelanggan.xls"
+          class="mb-1"
+        >
+          <v-btn color="success" small>Export</v-btn>
+        </download-excel>
+        <v-btn class="ml-2" color="primary" small @click="dialogAddCustomer = true">Tambah Pelanggan</v-btn>
+      </div>
     </div>
 
     <v-card outlined flat class="pa-4 mt-3">
@@ -91,6 +102,11 @@ export default {
         { text: 'Nama', value: 'name', sortable: false },
         { text: 'Nomor HP', value: 'phone_number', sortable: false }
       ],
+      jsonFields: {
+        ID: 'id',
+        'Nama Pelanggan': 'name',
+        'Nomor HP': 'phone_number'
+      },
       dialogAddCustomer: false,
       dialogEditCustomer: false,
       dialogSuccess: false,

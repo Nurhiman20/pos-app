@@ -2,7 +2,18 @@
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Daftar Kategori</h1>
-      <v-btn color="primary" small @click="dialogAddCategory = true">Tambah Kategori</v-btn>
+      <div class="d-flex flex-row flex-wrap justify-end">
+        <download-excel
+          :data="$store.state.listCategory"
+          :fields="jsonFields"
+          worksheet="Category"
+          name="Kategori.xls"
+          class="mb-1"
+        >
+          <v-btn color="success" small>Export</v-btn>
+        </download-excel>
+        <v-btn class="ml-2" color="primary" small @click="dialogAddCategory = true">Tambah Kategori</v-btn>
+      </div>
     </div>
     <v-card outlined flat class="pa-4 mt-3">
       <v-row>
@@ -92,6 +103,10 @@ export default {
         { text: 'Nama', value: 'name', sortable: true },
         { text: '', value: 'actions', sortable: false }
       ],
+      jsonFields: {
+        ID: 'id',
+        'Nama Kategori': 'name',
+      },
       dialogAddCategory: false,
       dialogEditCategory: false,
       dialogSuccess: false,

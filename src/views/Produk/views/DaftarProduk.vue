@@ -2,7 +2,18 @@
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Daftar Produk</h1>
-      <v-btn color="primary" small @click="dialogAddProduct = true">Tambah Produk</v-btn>
+      <div class="d-flex flex-row flex-wrap justify-end">
+        <download-excel
+          :data="$store.state.listProduct"
+          :fields="jsonFields"
+          worksheet="Product"
+          name="Produk.xls"
+          class="mb-1"
+        >
+          <v-btn color="success" small>Export</v-btn>
+        </download-excel>
+        <v-btn class="ml-2" color="primary" small @click="dialogAddProduct = true">Tambah Produk</v-btn>
+      </div>
     </div>
     <v-card outlined flat class="pa-4 mt-3">
       <v-row>
@@ -98,6 +109,13 @@ export default {
         { text: 'Kategori', value: 'category.name', sortable: false },
         { text: 'Deskripsi', value: 'description', sortable: false }
       ],
+      jsonFields: {
+        ID: 'id',
+        Produk: 'name',
+        Harga: 'price',
+        Kategori: 'category.name',
+        Deskripsi: 'description'
+      },
       dialogAddProduct: false,
       dialogEditProduct: false,
       dialogSuccess: false,

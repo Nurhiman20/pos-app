@@ -2,7 +2,18 @@
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Kelola Stok</h1>
-      <v-btn color="primary" small @click="dialogAddStock = true">Tambah Stok</v-btn>
+      <div class="d-flex flex-row flex-wrap justify-end">
+        <download-excel
+          :data="$store.getters.listViewInventory"
+          :fields="jsonFields"
+          worksheet="Stock"
+          name="Stok.xls"
+          class="mb-1"
+        >
+          <v-btn color="success" small>Export</v-btn>
+        </download-excel>
+        <v-btn class="ml-2" color="primary" small @click="dialogAddStock = true">Tambah Stok</v-btn>
+      </div>
     </div>
 
     <v-card outlined flat class="pa-4 mt-3">
@@ -99,6 +110,12 @@ export default {
         { text: 'Kategori', value: 'product.category.name', sortable: false },
         { text: 'Stok', value: 'stock', sortable: false }
       ],
+      jsonFields: {
+        ID: 'id',
+        Produk: 'product.name',
+        Kategori: 'product.category.name',
+        Stok: 'stock'
+      },
       dialogAddStock: false,
       dialogEditStock: false,
       dialogSuccess: false,
