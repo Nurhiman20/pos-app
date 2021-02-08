@@ -35,7 +35,7 @@ export default {
     },
     editTransaction() {
       this.$store.commit("SET_EDIT_TX", this.selected);
-      this.$router.push('/dashboard');
+      this.$router.push('/pos');
     }
   },
 }

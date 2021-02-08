@@ -3,6 +3,11 @@ export const sidebar = [
     icon: 'mdi-view-dashboard', 
     text: 'Dashboard',
     to: '/dashboard'
+  },
+  { 
+    icon: 'mdi-calculator', 
+    text: 'POS',
+    to: '/pos'
   }
 ]
 

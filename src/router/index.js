@@ -19,6 +19,15 @@ const routes = [
           // requireAuth: true
         }
       },
+      {
+        path: '/pos',
+        name: 'POS',
+        component: () => import('@/views/POS'),
+        meta: {
+          title: 'POS | POS App',
+          // requireAuth: true
+        }
+      }
     ]
   },
   {
