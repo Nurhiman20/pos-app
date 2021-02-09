@@ -7,6 +7,21 @@ import './assets/scss/main.scss'
 import './plugins/VeeValidate'
 import { SchemaSyncHandler } from './plugins/schemasync.js'
 import JsonExcel from "vue-json-excel"
+import VueHtmlToPaper from 'vue-html-to-paper'
+
+const options = {
+  name: '_blank',
+  specs: [
+    'fullscreen=yes',
+    'titlebar=yes',
+    'scrollbars=yes'
+  ],
+  styles: [
+    'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
+  ]
+}
+
+Vue.use(VueHtmlToPaper, options);
 
 SchemaSyncHandler.sync()
 Vue.component("downloadExcel", JsonExcel);

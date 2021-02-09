@@ -58,13 +58,13 @@
 
             <div class="px-4 mt-6" v-if="selectTableNumber !== null">
               <h3>E-Receipt</h3>
-              <receipt-app :selected="transaction"></receipt-app>
+              <receipt-app :selected="transaction" :print="print" @receiptPrinted="finishPrint"></receipt-app>
             </div>
 
             <v-card-actions class="mt-6">
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="success" dark :loading="$store.state.loading">
+              <v-btn color="success" dark :loading="$store.state.loading" @click="doPrint">
                 <v-icon class="mr-2">mdi-printer</v-icon>
                 Cetak
               </v-btn>
@@ -100,6 +100,7 @@ export default {
       tableNumber: null,
       itemCustomer: [],
       itemTable: [],
+      print: false,
       newCustomerDialog: false
     }
   },
@@ -133,6 +134,12 @@ export default {
     },
     closeDialogCustomer(e) {
       this.newCustomerDialog = e;
+    },
+    finishPrint(e) {
+      this.print = e;
+    },
+    doPrint() {
+      this.print = true;
     },
     setCustomer(e) {
       this.customerName = e.name;
