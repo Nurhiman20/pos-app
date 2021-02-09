@@ -23,13 +23,13 @@
       <div class="mt-2 pb-2 product border-bottom">
         <v-row v-for="(prod, i) in this.selected.products_sold" :key="i" no-gutters>
           <v-col cols="4">
-            <p class="mb-1" style="font-size: 1.3em;">{{ prod.product.name }}</p>
+            <p class="mb-1">{{ prod.product.name }}</p>
           </v-col>
           <v-col cols="4">
-            <p class="mb-1 text-center" style="font-size: 1.3em;">x{{ prod.qty }}</p>
+            <p class="mb-1 text-center">{{ prod.qty }} x {{ formatCurrency(prod.product.price) }}</p>
           </v-col>
           <v-col cols="4">
-            <p class="mb-1 text-right" style="font-size: 1.3em;">Rp{{ formatCurrency(prod.product.price) }},00</p>
+            <p class="mb-1 text-right">Rp{{ formatCurrency(prod.product.price*prod.qty) }},00</p>
           </v-col>
         </v-row>
       </div>
