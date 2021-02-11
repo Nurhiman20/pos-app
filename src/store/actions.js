@@ -2,7 +2,7 @@ import { openDB } from 'idb';
 
 async function getProduct() {
   // commit("SET_LOADING");
-  // const vuePos = await openDB('vue-pos', 1);
+  // const vuePos = await openDB('vue-pos', 2);
   // return new Promise((resolve, reject) => {
   //   vuePos
   //     .getAll('product')
@@ -21,7 +21,7 @@ async function getProduct() {
 
 async function submitProduct({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .put('product', dataForm)
@@ -40,7 +40,7 @@ async function submitProduct({ commit }, dataForm) {
 
 async function updateProduct({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   
   // search product in table inventory
   let tx = vuePos.transaction('inventory').store;
@@ -85,7 +85,7 @@ async function updateProduct({ commit }, dataForm) {
 
 async function deleteProduct({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
 
   // search product in table inventory
   let tx = vuePos.transaction('inventory').store;
@@ -122,7 +122,7 @@ async function deleteProduct({ commit }, dataForm) {
 
 async function getCategory({ commit }) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .getAll('category')
@@ -141,7 +141,7 @@ async function getCategory({ commit }) {
 
 async function submitCategory({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .put('category', dataForm)
@@ -160,7 +160,7 @@ async function submitCategory({ commit }, dataForm) {
 
 async function deleteCategory({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .delete('category', dataForm.id)
@@ -178,7 +178,7 @@ async function deleteCategory({ commit }, dataForm) {
 
 async function getInventory({ commit }) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .getAll('inventory')
@@ -197,7 +197,7 @@ async function getInventory({ commit }) {
 
 async function submitInventory({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .put('inventory', dataForm)
@@ -216,7 +216,7 @@ async function submitInventory({ commit }, dataForm) {
 
 async function getSupplier({ commit }) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .getAll('supplier')
@@ -235,7 +235,7 @@ async function getSupplier({ commit }) {
 
 async function getTransaction({ commit }) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .getAll('transaction')
@@ -254,7 +254,7 @@ async function getTransaction({ commit }) {
 
 async function submitTransaction({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
 
   let transaction = await vuePos.transaction(['transaction', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
@@ -280,7 +280,7 @@ async function submitTransaction({ commit }, dataForm) {
 
 async function getCustomer({ commit }) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .getAll('customer')
@@ -299,7 +299,7 @@ async function getCustomer({ commit }) {
 
 async function submitCustomer({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .put('customer', dataForm)
@@ -318,7 +318,7 @@ async function submitCustomer({ commit }, dataForm) {
 
 async function updateCustomer({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   
   // search product in table inventory
   let tx = vuePos.transaction('transaction').store;
@@ -360,7 +360,7 @@ async function updateCustomer({ commit }, dataForm) {
 
 async function deleteCustomer({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .delete('customer', dataForm.id)
@@ -378,7 +378,7 @@ async function deleteCustomer({ commit }, dataForm) {
 
 async function getTable({ commit }) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .getAll('table')
@@ -397,7 +397,7 @@ async function getTable({ commit }) {
 
 async function submitTable({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .put('table', dataForm)
@@ -415,7 +415,7 @@ async function submitTable({ commit }, dataForm) {
 
 async function deleteTable({ commit }, dataForm) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .delete('table', dataForm.id)

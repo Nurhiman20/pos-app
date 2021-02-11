@@ -7,7 +7,7 @@ export const SchemaSyncHandler = {
       throw new Error('Browser does not support IndexedDB')
     }
 
-    openDB('vue-pos', 1, {
+    openDB('vue-pos', 2, {
       upgrade(db) {
         if (!db.objectStoreNames.contains('product')) {
           db.createObjectStore('product', { keyPath: 'id' });
@@ -31,6 +31,30 @@ export const SchemaSyncHandler = {
 
         if (!db.objectStoreNames.contains('table')) {
           db.createObjectStore('table', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('ingredient')) {
+          db.createObjectStore('ingredient', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('recipe')) {
+          db.createObjectStore('recipe', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('supplier')) {
+          db.createObjectStore('supplier', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('purchase_order')) {
+          db.createObjectStore('purchase_order', { keyPath: 'id' });
+        }
+        
+        if (!db.objectStoreNames.contains('transfer')) {
+          db.createObjectStore('transfer', { keyPath: 'id' });
+        }
+        
+        if (!db.objectStoreNames.contains('adjustment')) {
+          db.createObjectStore('adjustment', { keyPath: 'id' });
         }
       },
     });

@@ -16,7 +16,7 @@ export const idbPlugin = store => {
 }
 
 async function getProduct() {
-  const vuePos = await openDB('vue-pos', 1);
+  const vuePos = await openDB('vue-pos', 2);
   return new Promise((resolve, reject) => {
     vuePos
       .getAll('product')
