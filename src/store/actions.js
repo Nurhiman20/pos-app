@@ -233,6 +233,44 @@ async function getSupplier({ commit }) {
   });
 }
 
+async function submitSupplier({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('supplier', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+
+async function deleteSupplier({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .delete('supplier', dataForm.id)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getTransaction({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
@@ -442,6 +480,8 @@ export default {
   getInventory,
   submitInventory,
   getSupplier,
+  submitSupplier,
+  deleteSupplier,
   getTransaction,
   submitTransaction,
   getCustomer,

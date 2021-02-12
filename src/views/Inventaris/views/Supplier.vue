@@ -44,24 +44,24 @@
       ></v-data-table>
     </v-card>
     
-    <!-- dialog add category -->
-    <add-category-dialog
+    <!-- dialog add supplier -->
+    <add-supplier-dialog
       :show="dialogAddSupplier"
       @closeDialog="closeDialogAdd"
-      @success="successPutCategory"
-      @error="failedAddCategory"
-    ></add-category-dialog>
+      @success="successPutSupplier"
+      @error="failedAddSupplier"
+    ></add-supplier-dialog>
 
-    <!-- dialog edit category -->
-    <edit-category-dialog 
+    <!-- dialog edit supplier -->
+    <edit-supplier-dialog 
       :show="dialogEditSupplier"
       :selected="selectedSupplier"
       @closeDialog="closeDialogEdit"
-      @success="successPutCategory"
-      @error="failedAddCategory"
-      @delete="deleteCategory"
+      @success="successPutSupplier"
+      @error="failedAddSupplier"
+      @delete="deleteSupplier"
       @successDelete="successDelete"
-    ></edit-category-dialog>
+    ></edit-supplier-dialog>
 
     <!-- response dialog -->
     <response-dialog 
@@ -153,22 +153,22 @@ export default {
       this.$store.dispatch("getSupplier")
       this.dialogEditSupplier = e
     },
-    successPutCategory(e) {
+    successPutSupplier(e) {
       this.$store.dispatch("getSupplier");
       this.messageDialog = e;
       this.dialogSuccess = true;
     },
-    failedAddCategory(e) {
+    failedAddSupplier(e) {
       this.messageDialog = e;
       this.dialogFailed = true;
     },
-    deleteCategory(e) {
+    deleteSupplier(e) {
       this.selectedDelete = e;
       this.messageDialog = "Kamu yakin akan menghapus supplier ini?"
       this.dialogConfirm = true;
     },
     doDelete() {
-      this.$store.dispatch("deleteCategory", this.selectedDelete)
+      this.$store.dispatch("deleteSupplier", this.selectedDelete)
         .then(() => {          
           this.$store.dispatch("getSupplier");
           this.dialogConfirm = false;
@@ -187,7 +187,7 @@ export default {
       return uniqid
     },
     goDelete(item) {
-      this.deleteCategory(item)
+      this.deleteSupplier(item)
         .then(result => {
           console.log(result);
           this.$store.dispatch("getSupplier")

@@ -10,15 +10,47 @@
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editSupplier)">
-            <ValidationProvider v-slot="{ errors }" name="Nama kategori" rules="required">
+            <ValidationProvider v-slot="{ errors }" name="Nama supplier" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedSupplier.name"
-                label="Nama Kategori"
+                label="Nama Supplier"
                 outlined
                 dense
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
+            </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Nomor HP" rules="integer">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedSupplier.phone_number"
+                label="Nomor HP"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Email supplier" rules="email">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedSupplier.email"
+                label="Email Supplier"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Alamat supplier" rules="max:200">
+              <v-textarea
+                v-model="selectedSupplier.address"
+                :error-messages="errors"
+                label="Alamat Supplier"
+                class="mb-0 mt-2 px-4"
+                rows="3"
+                outlined
+                counter
+                auto-grow
+              ></v-textarea>
             </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>

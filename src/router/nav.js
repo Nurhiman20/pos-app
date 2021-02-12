@@ -33,6 +33,10 @@ export const mainMenu = [
       {
         text: 'Kelola Stok',
         to: '/inventaris/kelola-stok'
+      },
+      {
+        text: 'Supplier',
+        to: '/inventaris/supplier'
       }
     ]
   },

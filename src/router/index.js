@@ -68,6 +68,14 @@ const routes = [
         meta: {
           title: 'Kelola Stok | POS App'
         }
+      },
+      {
+        path: '/inventaris/supplier',
+        name: 'Supplier',
+        component: () => import('@/views/Inventaris/views/Supplier.vue'),
+        meta: {
+          title: 'Supplier | POS App'
+        }
       }
     ]
   },
