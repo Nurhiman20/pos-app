@@ -23,6 +23,14 @@ export const mainMenu = [
       {
         text: 'Daftar Kategori',
         to: '/produk/daftar-kategori'
+      },
+      {
+        text: 'Daftar Bahan',
+        to: '/produk/daftar-bahan'
+      },
+      {
+        text: 'Resep',
+        to: '/produk/resep'
       }
     ]
   },
@@ -37,6 +45,18 @@ export const mainMenu = [
       {
         text: 'Supplier',
         to: '/inventaris/supplier'
+      },
+      {
+        text: 'Purchase Order',
+        to: '/inventaris/purchase-order'
+      },
+      {
+        text: 'Transfer',
+        to: '/inventaris/transfer'
+      },
+      {
+        text: 'Adjustment',
+        to: '/inventaris/adjustment'
       }
     ]
   },

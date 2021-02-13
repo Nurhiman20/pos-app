@@ -52,6 +52,24 @@ const routes = [
           title: 'Daftar Kategori | POS App',
           requireAuth: true
         }
+      },
+      {
+        path: '/produk/daftar-bahan',
+        name: 'Daftar Bahan',
+        component: () => import('@/views/Produk/views/DaftarBahan.vue'),
+        meta: {
+          title: 'Daftar Bahan | POS App',
+          requireAuth: true
+        }
+      },
+      {
+        path: '/produk/resep',
+        name: 'Resep',
+        component: () => import('@/views/Produk/views/Resep.vue'),
+        meta: {
+          title: 'Resep | POS App',
+          requireAuth: true
+        }
       }
     ]
   },
@@ -75,6 +93,30 @@ const routes = [
         component: () => import('@/views/Inventaris/views/Supplier.vue'),
         meta: {
           title: 'Supplier | POS App'
+        }
+      },
+      {
+        path: '/inventaris/purchase-order',
+        name: 'Purchase Order',
+        component: () => import('@/views/Inventaris/views/PurchaseOrder.vue'),
+        meta: {
+          title: 'Purchase Order | POS App'
+        }
+      },
+      {
+        path: '/inventaris/transfer',
+        name: 'Transfer',
+        component: () => import('@/views/Inventaris/views/Transfer.vue'),
+        meta: {
+          title: 'Transfer | POS App'
+        }
+      },
+      {
+        path: '/inventaris/adjustment',
+        name: 'Adjustment',
+        component: () => import('@/views/Inventaris/views/Adjustment.vue'),
+        meta: {
+          title: 'Adjustment | POS App'
         }
       }
     ]
