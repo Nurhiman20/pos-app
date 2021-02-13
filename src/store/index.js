@@ -21,6 +21,7 @@ const state = {
   // Data model
   listProduct: [],
   listCategory: [],
+  listIngredient: [],
   listInventory: [],
   listTransaction: [],
   listCustomer: [],

@@ -176,6 +176,62 @@ async function deleteCategory({ commit }, dataForm) {
   });
 }
 
+async function getIngredient({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('ingredient')
+      .then(result => {
+        commit('SET_LIST_INGREDIENT', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function submitIngredient({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('ingredient', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function deleteIngredient({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .delete('ingredient', dataForm.id)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getInventory({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
@@ -477,6 +533,9 @@ export default {
   getCategory,
   submitCategory,
   deleteCategory,
+  getIngredient,
+  submitIngredient,
+  deleteIngredient,
   getInventory,
   submitInventory,
   getSupplier,
