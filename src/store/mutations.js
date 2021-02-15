@@ -22,6 +22,10 @@ const SET_LIST_SUPPLIER = (state, payload) => {
   state.listSupplier = payload;
 };
 
+const SET_LIST_ADJUSTMENT = (state, payload) => {
+  state.listAdjustment = payload;
+};
+
 const SET_LIST_TRANSACTION = (state, payload) => {
   state.listTransaction = payload;
 };
@@ -75,6 +79,7 @@ export default {
   SET_LIST_INGREDIENT,
   SET_LIST_INVENTORY,
   SET_LIST_SUPPLIER,
+  SET_LIST_ADJUSTMENT,
   SET_LIST_TRANSACTION,
   SET_LIST_CUSTOMER,
   SET_LIST_TABLE,

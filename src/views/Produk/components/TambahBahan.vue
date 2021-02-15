@@ -115,7 +115,11 @@ export default {
       };
       this.$store.dispatch("submitIngredient", dataForm)
         .then(() => {
-          this.nameIngredient = null;          
+          this.nameIngredient = null;
+          this.categoryIngredient = null;
+          this.stockIngredient = null;
+          this.unitIngredient = null;
+          this.pricePerUnit = null;   
           this.$emit("success", "Bahan telah disimpan");
         })
         .catch(() => {

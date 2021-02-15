@@ -327,6 +327,62 @@ async function deleteSupplier({ commit }, dataForm) {
   });
 }
 
+async function getAdjustment({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('adjustment')
+      .then(result => {
+        commit('SET_LIST_ADJUSTMENT', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function submitAdjustment({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('adjustment', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function deleteAdjustment({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .delete('adjustment', dataForm.id)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getTransaction({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
@@ -541,6 +597,9 @@ export default {
   getSupplier,
   submitSupplier,
   deleteSupplier,
+  getAdjustment,
+  submitAdjustment,
+  deleteAdjustment,
   getTransaction,
   submitTransaction,
   getCustomer,
