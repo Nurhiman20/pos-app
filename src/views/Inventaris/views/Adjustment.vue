@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     querySelections(v) {
-      let listAdjustment = this.$store.state.listAdjustment.map(item => item.ingredient);
+      let listAdjustment = this.$store.state.listAdjustment.map(item => item.ingredient.name);
       this.itemAdjustments = listAdjustment.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
