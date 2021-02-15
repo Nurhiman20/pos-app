@@ -3,15 +3,15 @@
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Daftar Bahan</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
-        <!-- <download-excel
-          :data="$store.state.listCategory"
+        <download-excel
+          :data="$store.state.listIngredient"
           :fields="jsonFields"
-          worksheet="Category"
-          name="Kategori.xls"
+          worksheet="Ingredient"
+          name="Bahan.xls"
           class="mb-1"
         >
           <v-btn color="success" small>Export</v-btn>
-        </download-excel> -->
+        </download-excel>
         <v-btn class="ml-2" color="primary" small @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
       </div>
     </div>
@@ -103,14 +103,16 @@ export default {
         { text: 'Nama', value: 'name', sortable: true },
         { text: 'Kategori', value: 'category.name', sortable: true },
         { text: 'Stok', value: 'stock', sortable: true },
-        { text: 'Satuan', value: 'unit', sortable: true }
+        { text: 'Satuan', value: 'unit', sortable: true },
+        { text: 'Harga per Satuan', value: 'price', sortable: true }
       ],
       jsonFields: {
         ID: 'id',
         Nama: 'name',
-        Kategori: 'category',
+        Kategori: 'category.name',
         Stok: 'stock',
-        Satuan: 'unit'
+        Satuan: 'unit',
+        'Harga per Satuan': 'price'
       },
       dialogAddIngredient: false,
       dialogEditIngredient: false,

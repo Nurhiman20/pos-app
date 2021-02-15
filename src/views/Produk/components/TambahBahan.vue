@@ -39,14 +39,30 @@
               ></v-text-field>
             </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Satuan" rules="required">
-              <v-select
-                v-model="unitIngredient"
+              <v-autocomplete
                 :error-messages="errors"
+                v-model="unitIngredient"
                 :items="listUnit"
                 label="Satuan"
+                cache-items
                 class="mb-0 mt-2 px-4"
                 outlined
-              ></v-select>
+                dense
+                hide-no-data
+                hide-details
+                :clearable="true"
+              ></v-autocomplete>
+            </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Harga per satuan" rules="required|integer">
+              <v-text-field
+                :error-messages="errors"
+                v-model="pricePerUnit"
+                label="Harga per Satuan"
+                outlined
+                dense
+                type="number" 
+                class="mb-0 mt-8 px-4"
+              ></v-text-field>
             </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -69,7 +85,8 @@ export default {
       categoryIngredient: {},
       stockIngredient: null,
       unitIngredient: null,
-      listUnit: ['botol (btl)', 'bungkus (bks)', 'box (box)', 'centimeter (cm)', 'gram (g)']
+      pricePerUnit: null,
+      listUnit: ['liter (l)', 'mililiter (ml)', 'kilogram (kg)', 'ons (ons)', 'gram (g)', 'miligram (mg)', 'centimeter (cm)', 'meter (m)', 'inch (in)', 'bungkus (bks)', 'botol (btl)', 'box (box)', 'butir (btr)', 'pieces (pcs)']
     }
   },
   methods: {
@@ -93,7 +110,8 @@ export default {
         name: this.nameIngredient,
         category: this.categoryIngredient,
         stock: this.stockIngredient,
-        unit: this.unitIngredient
+        unit: this.unitIngredient,
+        price: this.pricePerUnit
       };
       this.$store.dispatch("submitIngredient", dataForm)
         .then(() => {
