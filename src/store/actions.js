@@ -364,6 +364,24 @@ async function submitOrder({ commit }, dataForm) {
   });
 }
 
+async function deleteOrder({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .delete('purchase_order', dataForm.id)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getAdjustment({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
@@ -635,6 +653,7 @@ export default {
   submitSupplier,
   getOrder,
   submitOrder,
+  deleteOrder,
   deleteSupplier,
   getAdjustment,
   submitAdjustment,

@@ -2,13 +2,18 @@
   <div>
     <v-dialog v-model="show" persistent width="500">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Order</v-card-title>
+        <div class="d-flex flex-row justify-space-between align-center">
+          <v-card-title class="ml-0">Edit Order</v-card-title>
+          <v-btn color="error" outlined @click="goDelete">
+            <v-icon class="mr-1">mdi-delete</v-icon>Hapus
+          </v-btn>
+        </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(addOrder)">
             <ValidationProvider v-slot="{ errors }" name="Supplier" rules="required">
               <v-autocomplete
                 :error-messages="errors"
-                v-model="supplier"
+                v-model="selectedOrder.supplier"
                 :items="$store.state.listSupplier"
                 :item-text="textSupplier"
                 :item-value="valueSupplier"
@@ -22,10 +27,10 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
-            <div class="px-4 mt-6" v-if="listSelectedIngredient.length !== 0">
+            <div class="px-4 mt-6" v-if="selectedOrder.ingredients.length !== 0">
               <v-data-table
                 :headers="headers"
-                :items="listSelectedIngredient"
+                :items="selectedOrder.ingredients"
                 class="elevation-1 scrollbar-custom"
                 hide-default-footer
                 @click:row="goToEdit"
@@ -40,7 +45,7 @@
             </div>
             <ValidationProvider v-slot="{ errors }" name="Keterangan" rules="max:200">
               <v-textarea
-                v-model="notes"
+                v-model="selectedOrder.notes"
                 :error-messages="errors"
                 label="Keterangan"
                 class="mb-0 mt-2 px-4"
@@ -53,7 +58,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Tambahkan</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Edit</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -79,21 +84,18 @@
 </template>
 
 <script>
-import * as moment from 'moment';
 import addIngredientDialog from '../components/TambahBahanOrder';
 import editIngredientDialog from '../components/EditBahanOrder';
 
 export default {
-  props: ['show'],
+  props: ['show', 'selected'],
   components: {
     addIngredientDialog,
     editIngredientDialog
   },
   data() {
     return {
-      supplier: null,
-      notes: null,
-      listSelectedIngredient: [],
+      selectedOrder: {},
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
@@ -105,6 +107,11 @@ export default {
       ],
       dialogAddIngredient: false,      
       dialogEditIngredient: false
+    }
+  },
+  watch: {
+    selected(val) {
+      this.selectedOrder = val
     }
   },
   methods: {
@@ -137,18 +144,18 @@ export default {
     },
     deleteIngredient(e) {
       let listIngredient = [];
-      this.listSelectedIngredient.forEach(element => {
+      this.selectedOrder.ingredients.forEach(element => {
         if (element.id_ingredient !== e.id_ingredient) {
           listIngredient.push(element);
         }
       });
 
-      this.listSelectedIngredient = listIngredient;
+      this.selectedOrder.ingredients = listIngredient;
       this.dialogEditIngredient = false;
     },
     editIngredient(e) {
       let listIngredient = [];
-      this.listSelectedIngredient.forEach(element => {
+      this.selectedOrder.ingredients.forEach(element => {
         if (element.id_ingredient === e.id_ingredient) {
           listIngredient.push(e);
         } else {
@@ -156,42 +163,43 @@ export default {
         }
       });
 
-      this.listSelectedIngredient = listIngredient;
+      this.selectedOrder.ingredients = listIngredient;
       this.dialogEditIngredient = false;
     },
     addIngredient(e) {
-      this.listSelectedIngredient.push(e);
+      this.selectedOrder.ingredients.push(e);
       this.dialogAddIngredient = false;
     },
     checkStatus() {
       let countUnfulfilled = 0;
-      this.listSelectedIngredient.forEach(item => {
+      this.selectedOrder.ingredients.forEach(item => {
         if (item.order > item.received) {
           countUnfulfilled += 1;
         }
       });
 
       if (countUnfulfilled > 0) {
-        return 'Belum terpenuhi'
+        this.selectedOrder.status = 'Belum terpenuhi';
       } else {
-        return 'Terpenuhi'
+        this.selectedOrder.status = 'Terpenuhi';
       }
+    },    
+    goDelete() {
+      this.$emit("delete", this.selectedOrder);
     },
     addOrder() {
-      let dataForm = {
-        id: this.randomId(),
-        ingredients: this.listSelectedIngredient,
-        supplier: this.supplier,
-        notes: this.notes,
-        status: this.checkStatus(),
-        time: moment().format('MM/DD/YYYY, h:mm:ss a')
-      };
-      this.$store.dispatch("submitOrder", dataForm)
+      // let dataForm = {
+      //   id: this.randomId(),
+      //   ingredients: this.selectedOrder.ingredients,
+      //   supplier: this.supplier,
+      //   notes: this.notes,
+      //   status: this.checkStatus(),
+      //   time: moment().format('MM/DD/YYYY, h:mm:ss a')
+      // };
+      this.checkStatus();
+      this.$store.dispatch("submitOrder", this.selectedOrder)
         .then(() => {
-          this.supplier = null;
-          this.notes = null;
-          this.listSelectedIngredient = [];
-          this.$emit("success", "Order telah disimpan");
+          this.$emit("success", "Order telah diedit");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

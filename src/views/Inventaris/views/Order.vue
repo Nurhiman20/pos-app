@@ -47,20 +47,30 @@
         </template>
         <template v-slot:item.status="{item}">
           <div class="d-flex flex-row">
-            <v-icon color="success" v-if="item.status === 'Fulfilled'">mdi-check-decagram</v-icon>
+            <v-icon color="success" v-if="item.status === 'Terpenuhi'">mdi-check-decagram</v-icon>
             <v-icon color="error" v-else>mdi-alert-decagram</v-icon>
             <p class="my-auto ml-1">{{ item.status }}</p>
           </div>
         </template>
       </v-data-table>
     </v-card>
-
+  
     <add-order-dialog
       :show="dialogAddOrder"
       @closeDialog="closeDialogAdd"
       @success="successPutOrder"
       @error="failedAddOrder"
     ></add-order-dialog>
+
+    <edit-order-dialog 
+      :show="dialogEditOrder"
+      :selected="selectedOrder"
+      @closeDialog="closeDialogEdit"
+      @success="successPutOrder"
+      @error="failedAddOrder"
+      @delete="deleteOrder"
+      @successDelete="successDelete"
+    ></edit-order-dialog>
 
     <!-- response dialog -->
     <response-dialog 
@@ -70,20 +80,21 @@
       :message="messageDialog"
       @closeSuccess="closeDialogSuccess"
       @closeFailed="closeDialogFailed"
+      @closeConfirm="closeDialogConfirm"
+      @deleteConfirmed="doDelete"
     ></response-dialog>
-  
-      <!-- @closeConfirm="closeDialogConfirm"
-      @deleteConfirmed="doDelete" -->
   </div>
 </template>
 
 <script>
 import addOrderDialog from '../components/TambahOrder';
+import editOrderDialog from '../components/EditOrder';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
     addOrderDialog,
+    editOrderDialog,
     responseDialog
   },
   data() {
@@ -91,6 +102,7 @@ export default {
       search: null,
       select: null,
       itemOrder: [],
+      selectedOrder: {},
       headers: [
         { text: 'ID Order', value: 'id', sortable: false },
         { text: 'Time', value: 'time', sortable: true },
@@ -138,8 +150,12 @@ export default {
       this.dialogConfirm = e;
     },
     closeDialogAdd(e) {
-      this.$store.dispatch("getOrder")
-      this.dialogAddOrder = e
+      this.$store.dispatch("getOrder");
+      this.dialogAddOrder = e;
+    },
+    closeDialogEdit(e) {
+      this.$store.dispatch("getOrder");
+      this.dialogEditOrder = e;
     },
     successPutOrder(e) {
       this.$store.dispatch("getOrder");
@@ -150,8 +166,31 @@ export default {
       this.messageDialog = e;
       this.dialogFailed = true;
     },
+    successDelete() {
+      this.$store.dispatch("getOrder");
+    },
+    deleteOrder(e) {
+      this.selectedDelete = e;
+      this.messageDialog = "Kamu yakin akan menghapus order ini?"
+      this.dialogConfirm = true;
+    },
+    doDelete() {
+      this.$store.dispatch("deleteOrder", this.selectedDelete)
+        .then(() => {          
+          this.$store.dispatch("getOrder");
+          this.dialogConfirm = false;
+          this.messageDialog = "Berhasil menghapus order";
+          this.dialogSuccess = true;
+        })
+        .catch(() => {
+          this.dialogConfirm = false;
+          this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
+          this.dialogFailed = true;
+        })
+    },
     goToEdit(item) {
-      console.log(item);
+      this.selectedOrder = item;
+      this.dialogEditOrder = true;
     }
   },
   created() {
