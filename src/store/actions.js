@@ -308,7 +308,6 @@ async function submitSupplier({ commit }, dataForm) {
   });
 }
 
-
 async function deleteSupplier({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
@@ -319,6 +318,44 @@ async function deleteSupplier({ commit }, dataForm) {
         resolve(result);
       })
       .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function getOrder({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('purchase_order')
+      .then(result => {
+        commit('SET_LIST_ORDER', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function submitOrder({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('purchase_order', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        console.log('error');
         reject(error);
       })
       .finally(() => {
@@ -596,6 +633,8 @@ export default {
   submitInventory,
   getSupplier,
   submitSupplier,
+  getOrder,
+  submitOrder,
   deleteSupplier,
   getAdjustment,
   submitAdjustment,

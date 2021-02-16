@@ -27,6 +27,7 @@ const state = {
   listCustomer: [],
   listTable: [],
   listSupplier: [],
+  listOrder: [],
   listAdjustment: []
 }
 

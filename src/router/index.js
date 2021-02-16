@@ -96,11 +96,11 @@ const routes = [
         }
       },
       {
-        path: '/inventaris/purchase-order',
-        name: 'Purchase Order',
-        component: () => import('@/views/Inventaris/views/PurchaseOrder.vue'),
+        path: '/inventaris/order',
+        name: 'Order',
+        component: () => import('@/views/Inventaris/views/Order.vue'),
         meta: {
-          title: 'Purchase Order | POS App'
+          title: 'Order | POS App'
         }
       },
       {

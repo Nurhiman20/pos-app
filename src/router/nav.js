@@ -47,8 +47,8 @@ export const mainMenu = [
         to: '/inventaris/supplier'
       },
       {
-        text: 'Purchase Order',
-        to: '/inventaris/purchase-order'
+        text: 'Order',
+        to: '/inventaris/order'
       },
       {
         text: 'Transfer',
