@@ -1,14 +1,19 @@
 <template>
   <div>
-    <v-dialog v-model="show" persistent width="400">
+    <v-dialog v-model="show" persistent width="500">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Resep</v-card-title>
+        <div class="d-flex flex-row justify-space-between align-center">
+          <v-card-title class="ml-0">Edit Order</v-card-title>
+          <v-btn color="error" outlined @click="goDelete">
+            <v-icon class="mr-1">mdi-delete</v-icon>Hapus
+          </v-btn>
+        </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(addRecipe)">
+          <v-form @submit.prevent="handleSubmit(editRecipe)">
             <ValidationProvider v-slot="{ errors }" name="Nama produk" rules="required">
               <v-autocomplete
                 :error-messages="errors"
-                v-model="product"
+                v-model="selectedRecipe.product"
                 :items="$store.state.listProduct"
                 :item-text="textProduct"
                 :item-value="valueProduct"
@@ -25,7 +30,7 @@
             <div class="px-4 mt-6">
               <v-data-table
                 :headers="headers"
-                :items="listIngredient"
+                :items="selectedRecipe.ingredients"
                 class="elevation-1 scrollbar-custom"
                 hide-default-footer
                 @click:row="goToEdit"
@@ -37,7 +42,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Tambahkan</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Edit</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -66,17 +71,15 @@
 import addIngredientDialog from '../components/TambahBahanResep';
 import editIngredientDialog from '../components/EditBahanResep';
 
-
 export default {
-  props: ['show'],
+  props: ['show', 'selected'],
   components: {
     addIngredientDialog,
     editIngredientDialog
   },
   data() {
     return {
-      product: null,
-      listIngredient: [],
+      selectedRecipe: {},
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
@@ -87,21 +90,26 @@ export default {
       dialogEditIngredient: false
     }
   },
+  watch: {
+    selected(val) {
+      this.selectedRecipe = val
+    }
+  },
   methods: {
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     },
-    randomId() {
-      var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = 'cat-' + randLetter + Date.now();
-      return uniqid
-    },    
     textProduct(item) {
       return item.name
     },
     valueProduct(item) {
       return item
-    },    
+    },
+    randomId() {
+      var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+      var uniqid = 'order-' + randLetter + Date.now();
+      return uniqid
+    },
     closeDialogAdd(e) {
       this.dialogAddIngredient = e;
     },
@@ -114,21 +122,21 @@ export default {
     goToEdit(e) {
       this.selectedIngredient = e;
       this.dialogEditIngredient = true;
-    },    
+    },
     deleteIngredient(e) {
       let listIngredient = [];
-      this.listIngredient.forEach(element => {
+      this.selectedRecipe.ingredients.forEach(element => {
         if (element.id_ingredient !== e.id_ingredient) {
           listIngredient.push(element);
         }
       });
 
-      this.listIngredient = listIngredient;
+      this.selectedRecipe.ingredients = listIngredient;
       this.dialogEditIngredient = false;
     },
     editIngredient(e) {
       let listIngredient = [];
-      this.listIngredient.forEach(element => {
+      this.selectedRecipe.ingredients.forEach(element => {
         if (element.id_ingredient === e.id_ingredient) {
           listIngredient.push(e);
         } else {
@@ -136,29 +144,25 @@ export default {
         }
       });
 
-      this.listIngredient = listIngredient;
+      this.selectedRecipe.ingredients = listIngredient;
       this.dialogEditIngredient = false;
     },
     addIngredient(e) {
-      this.listIngredient.push(e);
+      this.selectedRecipe.ingredients.push(e);
       this.dialogAddIngredient = false;
     },
-    addRecipe() {
-      let dataForm = {
-        id: this.randomId(),
-        id_product: this.product.id,
-        product: this.product,
-        ingredients: this.listIngredient
-      };
-      this.$store.dispatch("submitRecipe", dataForm)
+    goDelete() {
+      this.$emit("delete", this.selectedRecipe);
+    },
+    editRecipe() {
+      this.$store.dispatch("submitRecipe", this.selectedRecipe)
         .then(() => {
-          this.nameCategory = null;          
-          this.$emit("success", "Resep telah disimpan");
+          this.$emit("success", "Resep telah diedit");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
     }
-  }
+  },
 }
 </script>

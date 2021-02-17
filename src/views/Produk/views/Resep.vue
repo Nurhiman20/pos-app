@@ -48,13 +48,22 @@
       </v-data-table>
     </v-card>
 
-    <!-- dialog add recipe -->
     <add-recipe-dialog
       :show="dialogAddRecipe"
       @closeDialog="closeDialogAdd"
       @success="successPutRecipe"
       @error="failedAddRecipe"
     ></add-recipe-dialog>
+
+    <edit-recipe-dialog 
+      :show="dialogEditRecipe"
+      :selected="selectedRecipe"
+      @closeDialog="closeDialogEdit"
+      @success="successPutRecipe"
+      @error="failedAddRecipe"
+      @delete="deleteRecipe"
+      @successDelete="successDelete"
+    ></edit-recipe-dialog>
 
     <response-dialog 
       :success="dialogSuccess"
@@ -71,12 +80,13 @@
 
 <script>
 import addRecipeDialog from '../components/TambahResep';
-// import editRecipeDialog from '../components/EditResep';
+import editRecipeDialog from '../components/EditResep';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
     addRecipeDialog,
+    editRecipeDialog,
     responseDialog
   },
   data() {
