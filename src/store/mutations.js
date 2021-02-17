@@ -14,6 +14,10 @@ const SET_LIST_INGREDIENT = (state, payload) => {
   state.listIngredient = payload;
 };
 
+const SET_LIST_RECIPE = (state, payload) => {
+  state.listRecipe = payload;
+};
+
 const SET_LIST_INVENTORY = (state, payload) => {
   state.listInventory = payload;
 };
@@ -81,6 +85,7 @@ export default {
   SET_LIST_PRODUCT,
   SET_LIST_CATEGORY,
   SET_LIST_INGREDIENT,
+  SET_LIST_RECIPE,
   SET_LIST_INVENTORY,
   SET_LIST_SUPPLIER,
   SET_LIST_ORDER,

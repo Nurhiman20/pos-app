@@ -22,6 +22,7 @@ const state = {
   listProduct: [],
   listCategory: [],
   listIngredient: [],
+  listRecipe: [],
   listInventory: [],
   listTransaction: [],
   listCustomer: [],
