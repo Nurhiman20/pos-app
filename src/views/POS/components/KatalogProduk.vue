@@ -8,7 +8,7 @@
     >
       <v-btn
         :outlined="isActiveCategory({ id: 'all', name: 'all'})"
-        color="#2B81D6"
+        color="primary"
         class="mr-1 mt-1"
         dark
         @click="changeView({ id: 'all', name: 'all'})"
@@ -17,7 +17,7 @@
         v-for="(cat, index) in categories"
         :key="index"
         :outlined="isActiveCategory(cat)"
-        color="#2B81D6"
+        color="primary"
         class="mr-1 mt-1"
         dark
         @click="changeView(cat)"

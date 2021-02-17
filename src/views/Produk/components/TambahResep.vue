@@ -32,7 +32,7 @@
               ></v-data-table>
             </div>
             <div class="px-4 mt-3 mb-6">
-              <v-btn color="success" dark block @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
+              <v-btn color="secondary" dark block @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
             </div>
             <v-card-actions>
               <v-spacer></v-spacer>

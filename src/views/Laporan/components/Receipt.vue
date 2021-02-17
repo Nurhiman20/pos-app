@@ -7,7 +7,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="warning darken-1" text @click="closeDialog">Tutup</v-btn>
-          <v-btn color="success" dark :loading="$store.state.loading" @click="doPrint">
+          <v-btn color="secondary" dark :loading="$store.state.loading" @click="doPrint">
             <v-icon class="mr-2">mdi-printer</v-icon>
             Cetak
           </v-btn>

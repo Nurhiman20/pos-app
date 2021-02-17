@@ -85,10 +85,13 @@ export default {
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
     font-size: 20px;
-    color: #3987D5;
+    color: #FFFFFF;
   }
   img {
     height: 50px;
+  }
+  p {
+    color: var(--v-secondary-base);
   }
 }
 </style>

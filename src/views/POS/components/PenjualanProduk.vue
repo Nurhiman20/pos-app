@@ -6,7 +6,7 @@
       min-height="90vh"
       class="d-flex align-start flex-column pb-8"
     >
-      <div class="table mb-auto w-full">
+      <div class="mb-auto w-full">
         <v-data-table
           :headers="headers"
           :items="$store.state.selectedProduct"
@@ -133,12 +133,12 @@ export default {
 
 <style lang="scss">
 .total {
-  background-color: #2B81D6;
-  color: white;
+  background-color: var(--v-primary-base);
+  color: var(--v-secondary-base);
 }
 
 .kembali {
-  background-color:#FF4F4F;
-  color: white;
+  background-color:var(--v-secondary-base);
+  color: var(--v-primary-base);
 }
 </style>

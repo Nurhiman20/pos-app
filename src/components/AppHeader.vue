@@ -3,12 +3,11 @@
     <v-app-bar
       app
       clipped-left
-      color="background lighten-1"
+      color="primary"
       height="50px"
     >
       <div class="logo d-flex align-center">
-        <span class="logo-text ml-2">Test</span>
-        <p class="text-small">POS</p>
+        <span class="logo-text ml-2">21FACTORY</span>
       </div>
       <!-- <v-btn icon color="#717171" @click="hideDrawer" class="ml-12">
         <v-icon>mdi-menu</v-icon>
@@ -23,7 +22,7 @@
             <v-btn
               v-on="on"
               outlined
-              color="primary"
+              color="white"
             >
               Owner
               <v-icon class="ml-1">mdi-chevron-down</v-icon>

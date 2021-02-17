@@ -10,7 +10,7 @@
           name="Bahan.xls"
           class="mb-1"
         >
-          <v-btn color="success" small>Export</v-btn>
+          <v-btn color="secondary" small>Export</v-btn>
         </download-excel>
         <v-btn class="ml-2" color="primary" small @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
       </div>

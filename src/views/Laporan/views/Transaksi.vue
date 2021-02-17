@@ -8,7 +8,7 @@
         worksheet="Transaction"
         name="Transaksi.xls"
       >
-        <v-btn color="success" small>Export</v-btn>
+        <v-btn color="secondary" small>Export</v-btn>
       </download-excel>
     </div>
 

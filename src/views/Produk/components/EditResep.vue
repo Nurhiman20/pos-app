@@ -3,7 +3,7 @@
     <v-dialog v-model="show" persistent width="500">
       <v-card class="pa-3">
         <div class="d-flex flex-row justify-space-between align-center">
-          <v-card-title class="ml-0">Edit Order</v-card-title>
+          <v-card-title class="ml-0">Edit Resep</v-card-title>
           <v-btn color="error" outlined @click="goDelete">
             <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>
@@ -37,7 +37,7 @@
               ></v-data-table>
             </div>
             <div class="px-4 mt-3 mb-6">
-              <v-btn color="success" dark block @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
+              <v-btn color="secondary" dark block @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
             </div>
             <v-card-actions>
               <v-spacer></v-spacer>

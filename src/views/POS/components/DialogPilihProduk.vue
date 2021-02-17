@@ -26,7 +26,7 @@
                   class="mx-2 mt-3"
                   fab
                   x-small
-                  color="success"
+                  color="secondary"
                   @click="minQuantity"
                   :disabled="quantity < 2 ? true : false"
                   :dark="quantity < 2 ? false : true"
@@ -39,7 +39,7 @@
                   class="mx-2 mt-3"
                   fab
                   x-small
-                  color="success"
+                  color="secondary"
                   @click="addQuantity"
                   :disabled="quantity > parseInt(selectedProduct.stock) - 1 ? true : false"
                   :dark="quantity > parseInt(selectedProduct.stock) - 1 ? false : true"
@@ -63,7 +63,7 @@
             </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="error darken-1" text @click="closeDialog">Batal</v-btn>
+              <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
               <v-btn color="primary" dark type="submit">Tambahkan</v-btn>
             </v-card-actions>
           </v-form>
