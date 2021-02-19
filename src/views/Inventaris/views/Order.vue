@@ -3,15 +3,15 @@
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Order</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
-        <!-- <download-excel
-          :data="$store.state.listCategory"
+        <download-excel
+          :data="$store.state.listOrder"
           :fields="jsonFields"
-          worksheet="Category"
-          name="Kategori.xls"
+          worksheet="Order"
+          name="Order.xls"
           class="mb-1"
         >
           <v-btn color="secondary" small>Export</v-btn>
-        </download-excel> -->
+        </download-excel>
         <v-btn class="ml-2" color="primary" small @click="dialogAddOrder = true">Tambah Order</v-btn>
       </div>
     </div>
@@ -105,11 +105,24 @@ export default {
       selectedOrder: {},
       headers: [
         { text: 'ID Order', value: 'id', sortable: false },
-        { text: 'Time', value: 'time', sortable: true },
+        { text: 'Waktu', value: 'time', sortable: true },
         { text: 'Supplier', value: 'supplier.name', sortable: true },
         { text: 'Total', value: 'supplier', sortable: false },
         { text: 'Status', value: 'status', sortable: true }
       ],
+      jsonFields: {
+        ID: 'id',
+        Waktu: 'time',
+        Supplier: 'supplier.name',
+        Total: {
+          field: 'ingredients',
+          callback: (value) => {
+            const total = value.reduce((acc, ing) => acc + (ing.order * ing.unit_cost), 0);       
+            return total
+          }
+        },
+        Status: 'status'
+      },
       dialogAddOrder: false,
       dialogEditOrder: false,
       dialogSuccess: false,
