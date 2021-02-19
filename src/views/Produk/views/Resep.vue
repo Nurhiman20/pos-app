@@ -3,15 +3,15 @@
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Resep</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
-        <!-- <download-excel
-          :data="$store.state.listCategory"
+        <download-excel
+          :data="$store.state.listRecipe"
           :fields="jsonFields"
-          worksheet="Category"
-          name="Kategori.xls"
+          worksheet="Recipe"
+          name="Resep.xls"
           class="mb-1"
         >
           <v-btn color="secondary" small>Export</v-btn>
-        </download-excel> -->
+        </download-excel>
         <v-btn class="ml-2" color="primary" small @click="dialogAddRecipe = true">Tambah Resep</v-btn>
       </div>
     </div>
@@ -42,7 +42,7 @@
         hide-default-footer
         @click:row="goToEdit"
       >
-        <template v-slot:item.ingredient="{item}">
+        <template v-slot:item.ingredients="{item}">
           <p class="my-auto">{{ item.ingredients.length }} bahan</p>
         </template>
       </v-data-table>
@@ -103,8 +103,23 @@ export default {
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Produk', value: 'product.name', sortable: true },
         { text: 'Varian', value: 'variant', sortable: false },
-        { text: 'Bahan', value: 'ingredient', sortable: false }
+        { text: 'Bahan', value: 'ingredients', sortable: false }
       ],
+      jsonFields: {
+        ID: 'id',
+        Produk: 'product.name',
+        Varian: 'variant',
+        Bahan: {
+          field: 'ingredients',
+          callback: (value) => {
+            let strText = '';
+            for (let i = 0; i < value.length; i++) {
+              strText += `Nama: ${value[i].ingredient.name}\nQty: ${value[i].qty} ${value[i].ingredient.unit}\n\n`
+            }            
+            return strText
+          }
+        }
+      },
       dialogAddRecipe: false,
       dialogEditRecipe: false,
       dialogSuccess: false,
