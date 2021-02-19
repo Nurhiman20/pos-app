@@ -3,15 +3,15 @@
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Adjustment</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
-        <!-- <download-excel
-          :data="$store.state.listCategory"
+        <download-excel
+          :data="$store.state.listAdjustment"
           :fields="jsonFields"
-          worksheet="Category"
-          name="Kategori.xls"
+          worksheet="Adjustment"
+          name="Adjustment.xls"
           class="mb-1"
         >
           <v-btn color="secondary" small>Export</v-btn>
-        </download-excel> -->
+        </download-excel>
         <v-btn class="ml-2" color="primary" small @click="dialogAddAdjustment = true">Tambah Adjustment</v-btn>
       </div>
     </div>
@@ -101,17 +101,18 @@ export default {
       selectedAdjustment: {},
       selectedDelete: {},
       headers: [
-        { text: 'Time', value: 'time', sortable: false },
+        { text: 'Waktu', value: 'time', sortable: false },
         { text: 'Bahan', value: 'ingredient.name', sortable: true },
         { text: 'Adjustment', value: 'adjustment', sortable: true },
         { text: 'Expense/Income', value: 'expense_income', sortable: true },
         { text: 'Keterangan', value: 'notes', sortable: true }
       ],
       jsonFields: {
-        Time: 'time',
-        Bahan: 'ingredients',
+        Waktu: 'time',
+        Bahan: 'ingredient.name',
+        'In Stock': 'in_stock',
+        'Actual Stock': 'actual_stock',
         Adjustment: 'adjustment',
-        'Expense/Income': 'expense_income',
         Keterangan: 'notes'
       },
       dialogAddAdjustment: false,
