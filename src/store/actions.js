@@ -198,14 +198,76 @@ async function getIngredient({ commit }) {
 async function submitIngredient({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
+
+  // set inventory data
+  let inv = {
+    ...dataForm,
+    order: 0,
+    usage: 0,
+    transfer: 0,
+    adjustment: 0,
+    ending_stock: 0
+  };
+
+  // submit ingredient to collection ingredient and inventory
+  let transaction = await vuePos.transaction(['ingredient', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .put('ingredient', dataForm)
+    transaction.objectStore('ingredient').put(dataForm);
+    transaction.objectStore('inventory').put(inv);
+    transaction.done
       .then(result => {
         resolve(result);
       })
       .catch(error => {
-        console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function updateIngredient({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 2);
+  
+  // search product in table inventory
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inv = { id: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === dataForm.id) {
+      inv = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // set updated data
+  let updatedInv = {
+    ...inv,
+    name: dataForm.name,
+    category: dataForm.category,
+    price: dataForm.price,
+    stock: dataForm.stock,
+    unit: dataForm.unit
+  };
+
+  // update ingredient in collection inventory and ingredient
+  let transaction = await vuePos.transaction(['ingredient', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('ingredient').put(dataForm);
+    if (inv.id !== null) {
+      transaction.objectStore('inventory').put(updatedInv);
+    }
+    transaction.done
+      .then(result => {
+        console.log(result);
+        resolve(result);
+      })
+      .catch(error => {
+        console.log(error);
         reject(error);
       })
       .finally(() => {
@@ -217,9 +279,13 @@ async function submitIngredient({ commit }, dataForm) {
 async function deleteIngredient({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
+
+  // delete ingredient in collection ingredient and inventory
+  let transaction = await vuePos.transaction(['ingredient', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .delete('ingredient', dataForm.id)
+    transaction.objectStore('ingredient').delete(dataForm.id);
+    transaction.objectStore('inventory').delete(dataForm.id);
+    transaction.done
       .then(result => {
         resolve(result);
       })
@@ -702,6 +768,7 @@ export default {
   deleteCategory,
   getIngredient,
   submitIngredient,
+  updateIngredient,
   deleteIngredient,
   getRecipe,
   submitRecipe,

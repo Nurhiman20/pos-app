@@ -113,6 +113,7 @@ export default {
         ingredient: this.nameIngredient,
         in_stock: this.inStock,
         actual_stock: this.actualStock,
+        adjustment: parseFloat(this.inStock) - parseFloat(this.actualStock),
         notes: this.notes,
         time: moment().format('MM/DD/YYYY, h:mm:ss a')
       };

@@ -39,7 +39,7 @@
                 class="mb-0 mt-8 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Order" rules="required|integer">
+            <ValidationProvider v-slot="{ errors }" name="Order" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedIngredient.order"
@@ -61,7 +61,7 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Diterima" rules="required|integer">
+            <ValidationProvider v-slot="{ errors }" name="Diterima" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedIngredient.received"

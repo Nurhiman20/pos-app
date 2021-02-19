@@ -39,8 +39,8 @@ export const mainMenu = [
     text: 'Inventaris',
     children: [
       {
-        text: 'Kelola Stok',
-        to: '/inventaris/kelola-stok'
+        text: 'Ringkasan',
+        to: '/inventaris/ringkasan'
       },
       {
         text: 'Supplier',

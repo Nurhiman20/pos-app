@@ -42,9 +42,6 @@
         hide-default-footer
         @click:row="goToEdit"
       >
-        <template v-slot:item.in_stock="{item}">
-          <p class="my-auto">{{ item.in_stock - item.actual_stock }}</p>
-        </template>
         <template v-slot:item.expense_income="{item}">
           <p class="text-bold success--text my-auto" v-if="item.in_stock - item.actual_stock > 0">Rp{{ formatCurrency((item.in_stock - item.actual_stock) * item.ingredient.price) }},00</p>
           <p class="text-bold error--text my-auto" v-else>- Rp{{ formatCurrency((item.in_stock - item.actual_stock) * item.ingredient.price * (-1)) }},00</p>
@@ -106,7 +103,7 @@ export default {
       headers: [
         { text: 'Time', value: 'time', sortable: false },
         { text: 'Bahan', value: 'ingredient.name', sortable: true },
-        { text: 'Adjustment', value: 'in_stock', sortable: true },
+        { text: 'Adjustment', value: 'adjustment', sortable: true },
         { text: 'Expense/Income', value: 'expense_income', sortable: true },
         { text: 'Keterangan', value: 'notes', sortable: true }
       ],

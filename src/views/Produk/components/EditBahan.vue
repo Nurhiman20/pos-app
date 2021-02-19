@@ -109,7 +109,7 @@ export default {
       this.$emit("delete", this.selectedIngredient)
     },
     editIngredient() {
-      this.$store.dispatch("submitIngredient", this.selectedIngredient)
+      this.$store.dispatch("updateIngredient", this.selectedIngredient)
         .then(() => {
           this.$emit("success", "Bahan telah diedit");
         })

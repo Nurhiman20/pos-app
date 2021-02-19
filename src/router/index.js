@@ -76,15 +76,15 @@ const routes = [
   {
     path: '/inventaris',
     name: 'Inventaris',
-    redirect: '/inventaris/kelola-stok',
+    redirect: '/inventaris/ringkasan',
     component: () => import('@/layouts/Home'),
     children: [
       {
-        path: '/inventaris/kelola-stok',
-        name: 'Kelola Stok',
-        component: () => import('@/views/Inventaris/views/KelolaStok.vue'),
+        path: '/inventaris/ringkasan',
+        name: 'Ringkasan',
+        component: () => import('@/views/Inventaris/views/Ringkasan.vue'),
         meta: {
-          title: 'Kelola Stok | POS App'
+          title: 'Ringkasan | Inventaris | POS App'
         }
       },
       {
@@ -92,7 +92,7 @@ const routes = [
         name: 'Supplier',
         component: () => import('@/views/Inventaris/views/Supplier.vue'),
         meta: {
-          title: 'Supplier | POS App'
+          title: 'Supplier | Inventaris | POS App'
         }
       },
       {
@@ -100,7 +100,7 @@ const routes = [
         name: 'Order',
         component: () => import('@/views/Inventaris/views/Order.vue'),
         meta: {
-          title: 'Order | POS App'
+          title: 'Order | Inventaris | POS App'
         }
       },
       {
@@ -108,7 +108,7 @@ const routes = [
         name: 'Transfer',
         component: () => import('@/views/Inventaris/views/Transfer.vue'),
         meta: {
-          title: 'Transfer | POS App'
+          title: 'Transfer | Inventaris | POS App'
         }
       },
       {
@@ -116,7 +116,7 @@ const routes = [
         name: 'Adjustment',
         component: () => import('@/views/Inventaris/views/Adjustment.vue'),
         meta: {
-          title: 'Adjustment | POS App'
+          title: 'Adjustment | Inventaris | POS App'
         }
       }
     ]
@@ -132,7 +132,7 @@ const routes = [
         name: 'Manajemen Meja',
         component: () => import('@/views/Outlet/views/ManajemenMeja.vue'),
         meta: {
-          title: 'Manajemen Meja | POS App'
+          title: 'Manajemen Meja | Outlet | POS App'
         }
       }
     ]

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
-      <h1>Kelola Stok</h1>
+      <h1>Ringkasan</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
         <download-excel
           :data="$store.getters.listViewInventory"
@@ -12,7 +12,7 @@
         >
           <v-btn color="secondary" small>Export</v-btn>
         </download-excel>
-        <v-btn class="ml-2" color="primary" small @click="dialogAddStock = true">Tambah Stok</v-btn>
+        <!-- <v-btn class="ml-2" color="primary" small @click="dialogAddStock = true">Tambah Stok</v-btn> -->
       </div>
     </div>
 
@@ -43,12 +43,12 @@
         hide-default-footer
         @click:row="goToEdit"
       >
-        <template v-slot:item.name="{item}">
+        <!-- <template v-slot:item.name="{item}">
           <div class="d-flex flex-row align-center py-2">
             <v-img :src="showImage(item.image)" max-width="60" :aspect-ratio="4/3"></v-img>
             <p class="ml-3 my-auto">{{ item.name }}</p>
           </div>
-        </template>
+        </template> -->
       </v-data-table>
     </v-card>
 
@@ -106,15 +106,27 @@ export default {
       search: null,
       headers: [
         { text: 'ID', value: 'id', sortable: false },
-        { text: 'Produk', value: 'product.name', sortable: true },
-        { text: 'Kategori', value: 'product.category.name', sortable: false },
-        { text: 'Stok', value: 'stock', sortable: false }
+        { text: 'Bahan', value: 'name', sortable: true },
+        { text: 'Kategori', value: 'category.name', sortable: true },
+        { text: 'Stok Awal', value: 'stock', sortable: false },
+        { text: 'Order', value: 'order', sortable: false },
+        { text: 'Usage', value: 'usage', sortable: false },
+        { text: 'Transfer', value: 'transfer', sortable: false },
+        { text: 'Adjustment', value: 'adjustment', sortable: false },
+        { text: 'Stok Akhir', value: 'ending_stock', sortable: false },
+        { text: 'Unit', value: 'unit', sortable: false }
       ],
       jsonFields: {
         ID: 'id',
-        Produk: 'product.name',
-        Kategori: 'product.category.name',
-        Stok: 'stock'
+        Bahan: 'name',
+        Kategori: 'category.name',
+        'Stok Awal': 'stock',
+        Order: 'order',
+        Usage: 'usage',
+        Transfer: 'transfer',
+        Adjustment: 'adjustment',
+        'Stok Akhir': 'ending_stock',
+        Unit: 'unit'
       },
       dialogAddStock: false,
       dialogEditStock: false,
@@ -178,7 +190,8 @@ export default {
   },
   created() {
     this.$store.dispatch("getInventory");
-    this.$store.dispatch("getProduct");
+    this.$store.dispatch("getOrder");
+    this.$store.dispatch("getAdjustment");
   },
 }
 </script>
