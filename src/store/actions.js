@@ -626,15 +626,9 @@ async function submitTransaction({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
 
-  let transaction = await vuePos.transaction(['transaction', 'inventory'], 'readwrite');
+  let transaction = await vuePos.transaction(['transaction'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('transaction').put(dataForm);
-    dataForm.products_sold.forEach(element => {
-      delete element.qty;
-      delete element.total;
-      delete element.discount;
-      transaction.objectStore('inventory').put(element);
-    }); 
     transaction.done
       .then(result => {
         resolve(result);
@@ -690,7 +684,7 @@ async function updateCustomer({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
   
-  // search product in collection inventory
+  // search product in collection transaction
   let tx = vuePos.transaction('transaction').store;
   let cursor = await tx.openCursor();
   let customerTx = { id: null };

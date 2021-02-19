@@ -63,8 +63,8 @@ export default {
     return {
       cash: 0,
       headers: [
-        { text: 'Produk', value: 'product.name', sortable: false },        
-        { text: 'Harga', value: 'product.price', sortable: false },
+        { text: 'Produk', value: 'name', sortable: false },        
+        { text: 'Harga', value: 'price', sortable: false },
         { text: 'Qty', value: 'qty', sortable: false },
         { text: 'Diskon', value: 'discount', sortable: false },
         { text: 'Total', value: 'total', sortable: false },

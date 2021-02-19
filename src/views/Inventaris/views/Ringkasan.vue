@@ -192,6 +192,7 @@ export default {
     this.$store.dispatch("getInventory");
     this.$store.dispatch("getOrder");
     this.$store.dispatch("getAdjustment");
+    this.$store.dispatch("getTransaction");
   },
 }
 </script>

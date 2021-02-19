@@ -72,15 +72,11 @@ export default {
       transactionData: {},
       selectedItem: {
         id: null,
-        product: {
-          name: null
-        }
+        name: null
       },
       editSelected: {
         id: null,
-        product: {
-          name: null
-        }
+        name: null
       },
       selectDialog: false,
       editDialog: false,
@@ -142,7 +138,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getInventory");
+    this.$store.dispatch("getProduct");
     this.$store.dispatch("getCategory");    
     this.$store.dispatch("getCustomer");
     this.$store.dispatch("getTable");

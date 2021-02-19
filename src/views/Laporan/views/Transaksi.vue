@@ -42,10 +42,10 @@
         <template v-slot:item.products_sold="{item}">
           <div v-for="(prod, index) in item.products_sold" :key="index">
             <div class="d-flex flex-row align-center py-2">
-              <v-img :src="showImage(prod.product.image)" min-width="60" max-width="60" :aspect-ratio="4/3"></v-img>
+              <v-img :src="showImage(prod.image)" min-width="60" max-width="60" :aspect-ratio="4/3"></v-img>
               <div class="ml-2 mt-4">
-                <p class="text-bold mb-0">{{ prod.product.name }} ({{ prod.qty }})</p>
-                <p class="app-subtitle">Rp{{ formatCurrency(prod.product.price) }},00</p>
+                <p class="text-bold mb-0">{{ prod.name }} ({{ prod.qty }})</p>
+                <p class="app-subtitle">Rp{{ formatCurrency(prod.price) }},00</p>
               </div>
             </div>
           </div>
@@ -105,16 +105,6 @@ export default {
       jsonFields: {
         ID: 'id',
         Waktu: 'time',
-        // Pelanggan: {
-        //   'Nama': 'customer.name',
-        //   'Nomor HP': 'customer.phone_number',
-        //   'Nomor Meja': 'table_number',
-        // },
-        // Produk: {
-        //   'Nama': 'products_sold.product.name',
-        //   'Qty': 'products_sold.qty',
-        //   'Harga': 'products_sold.product.price'
-        // },
         Pelanggan: {
           field: 'customer',
           callback: (value) => {
@@ -127,7 +117,7 @@ export default {
           callback: (value) => {
             let strText = '';
             for (let i = 0; i < value.length; i++) {
-              strText += `Nama: ${value[i].product.name}\nQty: ${value[i].qty}\nHarga: ${value[i].product.price}\n\n`
+              strText += `Nama: ${value[i].name}\nQty: ${value[i].qty}\nHarga: ${value[i].price}\n\n`
             }            
             return strText
           }

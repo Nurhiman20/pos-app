@@ -2,8 +2,8 @@
   <div>
     <div class="receipt pa-3 mb-3 pb-12" id="receipt">
       <div class="d-flex flex-column justify-center justify-content-start border-bottom">
-        <h2 class="text-center">Lorem Ipsum</h2>
-        <p class="app-subtitle text-center">Jl. Kalijati Indah 6, Antapani, Bandung<br>
+        <h2 class="text-center">21FACTORY</h2>
+        <p class="app-subtitle text-center">Jl. Veteran I No.21, RT.4/RW.2, Jakarta Pusat, DKI Jakarta 10110<br>
           <v-icon class="" color="#9A9A9A" size="15">mdi-phone</v-icon>
           081234567
         </p>
@@ -23,13 +23,13 @@
       <div class="mt-2 pb-2 product border-bottom">
         <v-row v-for="(prod, i) in this.selected.products_sold" :key="i" no-gutters>
           <v-col cols="4">
-            <p class="mb-1">{{ prod.product.name }}</p>
+            <p class="mb-1">{{ prod.name }}</p>
           </v-col>
           <v-col cols="4">
-            <p class="mb-1 text-center">{{ prod.qty }} x {{ formatCurrency(prod.product.price) }}</p>
+            <p class="mb-1 text-center">{{ prod.qty }} x {{ formatCurrency(prod.price) }}</p>
           </v-col>
           <v-col cols="4">
-            <p class="mb-1 text-right">Rp{{ formatCurrency(prod.product.price*prod.qty) }},00</p>
+            <p class="mb-1 text-right">Rp{{ formatCurrency(prod.price*prod.qty) }},00</p>
           </v-col>
         </v-row>
       </div>

@@ -8,7 +8,7 @@
             <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>
         </div>
-        <v-card-subtitle>{{ selectedProduct.product.name }}</v-card-subtitle>
+        <v-card-subtitle>{{ selectedProduct.name }}</v-card-subtitle>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(selectProduct)">
             <v-row no-gutters>
@@ -22,7 +22,6 @@
                     dense
                     type="number"
                     class="mb-0 mt-2 px-4"
-                    :hint="'Jumlah stok: ' + selectedProduct.stock"
                     persistent-hint
                   ></v-text-field>
                 </ValidationProvider>
@@ -98,7 +97,7 @@ export default {
       this.closeDialog();
     },
     selectProduct() {
-      this.selectedProduct.total = parseInt(this.selectedProduct.qty) * parseInt(this.selectedProduct.product.price) - parseInt(this.selectedProduct.discount);
+      this.selectedProduct.total = parseInt(this.selectedProduct.qty) * parseInt(this.selectedProduct.price) - parseInt(this.selectedProduct.discount);
       if (this.checkQuantity() && this.checkDiscount()) {
         this.$store.commit("EDIT_SELECTED_PRODUCT", this.selectedProduct)
         this.closeDialog();

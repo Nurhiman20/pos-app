@@ -2,9 +2,9 @@ import * as moment from 'moment'
 
 const listViewProduct = (state) => {
   if (state.filterCategory.name === 'all') {
-    return state.listInventory
+    return state.listProduct
   } else {
-    var viewProduct = state.listInventory.filter(prod => prod.product.category.name === state.filterCategory.name);
+    var viewProduct = state.listProduct.filter(prod => prod.category.name === state.filterCategory.name);
     return viewProduct
   }
 }
@@ -13,6 +13,7 @@ const listViewInventory = (state) => {
   let inventory = [];
   let orderCount = 0;
   let adjustmentCount = 0;
+  let usageCount = 0;
 
   state.listInventory.forEach(inv => {
     // count total received order
@@ -31,6 +32,18 @@ const listViewInventory = (state) => {
         adjustmentCount += adj.adjustment;
         inv.adjustment = adjustmentCount;
       }
+    });
+
+    // count total usage
+    state.listTransaction.forEach(tx => {
+      tx.products_sold.forEach(prod => {
+        prod.ingredients.forEach(ing => {
+          if (ing.id_ingredient === inv.id) {
+            usageCount += parseFloat(ing.qty * prod.qty);
+            inv.usage = usageCount.toFixed(2);
+          }
+        });
+      });
     });
 
     // count ending stock
