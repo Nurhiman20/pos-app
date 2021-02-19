@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
-      <h1>Daftar Kategori</h1>
+      <h1>Kategori</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
         <download-excel
           :data="$store.state.listCategory"

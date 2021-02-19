@@ -21,12 +21,12 @@ export const mainMenu = [
         to: '/produk/daftar-produk'
       },
       {
-        text: 'Daftar Kategori',
-        to: '/produk/daftar-kategori'
+        text: 'Kategori',
+        to: '/produk/kategori'
       },
       {
-        text: 'Daftar Bahan',
-        to: '/produk/daftar-bahan'
+        text: 'Bahan',
+        to: '/produk/bahan'
       },
       {
         text: 'Resep',

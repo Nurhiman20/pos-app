@@ -32,11 +32,11 @@
                 outlined
               ></v-select>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Stok" rules="required|integer">
+            <ValidationProvider v-slot="{ errors }" name="Stok awal" rules="required|integer">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedIngredient.stock"
-                label="Stok"
+                label="Stok Awal"
                 outlined
                 dense
                 type="number" 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
-      <h1>Daftar Bahan</h1>
+      <h1>Bahan</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
         <download-excel
           :data="$store.state.listIngredient"
@@ -102,7 +102,7 @@ export default {
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Nama', value: 'name', sortable: true },
         { text: 'Kategori', value: 'category.name', sortable: true },
-        { text: 'Stok', value: 'stock', sortable: true },
+        { text: 'Stok Awal', value: 'stock', sortable: true },
         { text: 'Satuan', value: 'unit', sortable: true },
         { text: 'Harga per Satuan', value: 'price', sortable: true }
       ],
@@ -110,7 +110,7 @@ export default {
         ID: 'id',
         Nama: 'name',
         Kategori: 'category.name',
-        Stok: 'stock',
+        'Stok Awal': 'stock',
         Satuan: 'unit',
         'Harga per Satuan': 'price'
       },

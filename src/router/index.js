@@ -15,7 +15,7 @@ const routes = [
         name: 'Dashboard',
         component: () => import('@/views/Dashboard'),
         meta: {
-          title: 'Dashboard | POS App',
+          title: 'Dashboard | 21FACTORY',
           // requireAuth: true
         }
       },
@@ -24,7 +24,7 @@ const routes = [
         name: 'POS',
         component: () => import('@/views/POS'),
         meta: {
-          title: 'POS | POS App',
+          title: 'POS | 21FACTORY',
           // requireAuth: true
         }
       }
@@ -41,24 +41,24 @@ const routes = [
         name: 'Daftar Produk',
         component: () => import('@/views/Produk/views/DaftarProduk.vue'),
         meta: {
-          title: 'Daftar Produk | POS App'
+          title: 'Daftar Produk | 21FACTORY'
         }
       },
       {
-        path: '/produk/daftar-kategori',
+        path: '/produk/kategori',
         name: 'Daftar Kategori',
         component: () => import('@/views/Produk/views/DaftarKategori.vue'),
         meta: {
-          title: 'Daftar Kategori | POS App',
+          title: 'Kategori | 21FACTORY',
           requireAuth: true
         }
       },
       {
-        path: '/produk/daftar-bahan',
-        name: 'Daftar Bahan',
+        path: '/produk/bahan',
+        name: 'Bahan',
         component: () => import('@/views/Produk/views/DaftarBahan.vue'),
         meta: {
-          title: 'Daftar Bahan | POS App',
+          title: 'Bahan | 21FACTORY',
           requireAuth: true
         }
       },
@@ -67,7 +67,7 @@ const routes = [
         name: 'Resep',
         component: () => import('@/views/Produk/views/Resep.vue'),
         meta: {
-          title: 'Resep | POS App',
+          title: 'Resep | 21FACTORY',
           requireAuth: true
         }
       }
@@ -84,7 +84,7 @@ const routes = [
         name: 'Ringkasan',
         component: () => import('@/views/Inventaris/views/Ringkasan.vue'),
         meta: {
-          title: 'Ringkasan | Inventaris | POS App'
+          title: 'Ringkasan | Inventaris | 21FACTORY'
         }
       },
       {
@@ -92,7 +92,7 @@ const routes = [
         name: 'Supplier',
         component: () => import('@/views/Inventaris/views/Supplier.vue'),
         meta: {
-          title: 'Supplier | Inventaris | POS App'
+          title: 'Supplier | Inventaris | 21FACTORY'
         }
       },
       {
@@ -100,7 +100,7 @@ const routes = [
         name: 'Order',
         component: () => import('@/views/Inventaris/views/Order.vue'),
         meta: {
-          title: 'Order | Inventaris | POS App'
+          title: 'Order | Inventaris | 21FACTORY'
         }
       },
       {
@@ -108,7 +108,7 @@ const routes = [
         name: 'Transfer',
         component: () => import('@/views/Inventaris/views/Transfer.vue'),
         meta: {
-          title: 'Transfer | Inventaris | POS App'
+          title: 'Transfer | Inventaris | 21FACTORY'
         }
       },
       {
@@ -116,7 +116,7 @@ const routes = [
         name: 'Adjustment',
         component: () => import('@/views/Inventaris/views/Adjustment.vue'),
         meta: {
-          title: 'Adjustment | Inventaris | POS App'
+          title: 'Adjustment | Inventaris | 21FACTORY'
         }
       }
     ]
@@ -132,7 +132,7 @@ const routes = [
         name: 'Manajemen Meja',
         component: () => import('@/views/Outlet/views/ManajemenMeja.vue'),
         meta: {
-          title: 'Manajemen Meja | Outlet | POS App'
+          title: 'Manajemen Meja | Outlet | 21FACTORY'
         }
       }
     ]
@@ -148,7 +148,7 @@ const routes = [
         name: 'Data Pelanggan',
         component: () => import('@/views/Pelanggan/views/DataPelanggan.vue'),
         meta: {
-          title: 'Data Pelanggan | POS App'
+          title: 'Data Pelanggan | 21FACTORY'
         }
       }
     ]
@@ -164,7 +164,7 @@ const routes = [
         name: 'Transaksi',
         component: () => import('@/views/Laporan/views/Transaksi.vue'),
         meta: {
-          title: 'Transaksi | POS App'
+          title: 'Transaksi | 21FACTORY'
         }
       }
     ]
@@ -180,7 +180,7 @@ const routes = [
         name: 'Tampilan',
         component: () => import('@/views/Pengaturan/Tampilan.vue'),
         meta: {
-          title: 'Tampilan | POS App'
+          title: 'Tampilan | 21FACTORY'
         }
       }
     ]
