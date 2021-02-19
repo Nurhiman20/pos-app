@@ -29,7 +29,6 @@ const listViewInventory = (state) => {
     state.listAdjustment.forEach(adj => {
       if (adj.id_ingredient === inv.id) {
         adjustmentCount += adj.adjustment;
-        console.log(adjustmentCount);
         inv.adjustment = adjustmentCount;
       }
     });

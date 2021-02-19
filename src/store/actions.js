@@ -41,34 +41,32 @@ async function submitProduct({ commit }, dataForm) {
 async function updateProduct({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
-  
-  // search product in table inventory
-  let tx = vuePos.transaction('inventory').store;
+
+  // search product in collection recipe
+  let tx = vuePos.transaction('recipe').store;
   let cursor = await tx.openCursor();
-  let productInventory = { id: null, stock: null };
+  let productRecipe = { id: null, product: null };
   const loopCursor = true;
   while (loopCursor) {
     if (cursor.value.id_product === dataForm.id) {
-      productInventory = cursor.value;
+      productRecipe = cursor.value;
     }
     cursor = await cursor.continue();
     if (!cursor) break;
   }
 
   // set updated data
-  let updatedProductInventory = {
-    id: productInventory.id,
-    id_product: dataForm.id,
-    product: dataForm,
-    stock: productInventory.stock
+  let updatedProductRecipe = {
+    ...productRecipe,
+    product: dataForm
   }
 
-  // update product in table product and inventory
-  let transaction = await vuePos.transaction(['product', 'inventory'], 'readwrite');
+  // update product in collection product and recipe
+  let transaction = await vuePos.transaction(['product', 'recipe'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('product').put(dataForm);
-    if (updatedProductInventory.id !== null) {
-      transaction.objectStore('inventory').put(updatedProductInventory);
+    if (updatedProductRecipe.id !== null) {
+      transaction.objectStore('recipe').put(updatedProductRecipe);
     }
     transaction.done
       .then(result => {
@@ -87,25 +85,25 @@ async function deleteProduct({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
 
-  // search product in table inventory
-  let tx = vuePos.transaction('inventory').store;
+  // search product in collection recipe
+  let tx = vuePos.transaction('recipe').store;
   let cursor = await tx.openCursor();
-  let productInventory = { id: null, stock: null };
+  let productRecipe = { id: null, product: null };
   const loopCursor = true;
   while (loopCursor) {
     if (cursor.value.id_product === dataForm.id) {
-      productInventory = cursor.value;
+      productRecipe = cursor.value;
     }
     cursor = await cursor.continue();
     if (!cursor) break;
   }
 
-  // delete product in table product and inventory
-  let transaction = await vuePos.transaction(['product', 'inventory'], 'readwrite');
+  // delete product in collection product and inventory
+  let transaction = await vuePos.transaction(['product', 'recipe'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('product').delete(dataForm.id);
-    if (productInventory.id !== null) {   
-      transaction.objectStore('inventory').delete(productInventory.id);
+    if (productRecipe.id !== null) {   
+      transaction.objectStore('recipe').delete(productRecipe.id);
     }
     transaction.done
       .then(result => {
@@ -320,14 +318,36 @@ async function getRecipe({ commit }) {
 async function submitRecipe({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
+
+  // search product in collection product
+  let tx = vuePos.transaction('product').store;
+  let cursor = await tx.openCursor();
+  let product = { id: null, ingredients: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === dataForm.id_product) {
+      product = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // set product data
+  let prod = {
+    ...product,
+    ingredients: dataForm.ingredients
+  }
+
+  // submit recipe to collection product and recipe
+  let transaction = await vuePos.transaction(['recipe', 'product'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .put('recipe', dataForm)
+    transaction.objectStore('recipe').put(dataForm);    
+    transaction.objectStore('product').put(prod); 
+    transaction.done
       .then(result => {
         resolve(result);
       })
       .catch(error => {
-        console.log('error');
         reject(error);
       })
       .finally(() => {
@@ -339,9 +359,32 @@ async function submitRecipe({ commit }, dataForm) {
 async function deleteRecipe({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
+
+  // search product in collection product
+  let tx = vuePos.transaction('product').store;
+  let cursor = await tx.openCursor();
+  let product = { id: null, ingredients: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === dataForm.id_product) {
+      product = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // set product data
+  let prod = {
+    ...product,
+    ingredients: []
+  }
+
+  // delete recipe in collection recipe and update in product
+  let transaction = await vuePos.transaction(['recipe', 'product'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .delete('recipe', dataForm.id)
+    transaction.objectStore('recipe').delete(dataForm.id);    
+    transaction.objectStore('product').put(prod); 
+    transaction.done
       .then(result => {
         resolve(result);
       })
@@ -647,7 +690,7 @@ async function updateCustomer({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 2);
   
-  // search product in table inventory
+  // search product in collection inventory
   let tx = vuePos.transaction('transaction').store;
   let cursor = await tx.openCursor();
   let customerTx = { id: null };
@@ -663,7 +706,7 @@ async function updateCustomer({ commit }, dataForm) {
   // set updated data
   customerTx.customer = dataForm;
 
-  // update customer in table customer and transaction
+  // update customer in collection customer and transaction
   let transaction = await vuePos.transaction(['customer', 'transaction'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('customer').put(dataForm);
