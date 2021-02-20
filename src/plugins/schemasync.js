@@ -7,7 +7,7 @@ export const SchemaSyncHandler = {
       throw new Error('Browser does not support IndexedDB')
     }
 
-    openDB('vue-pos', 2, {
+    openDB('vue-pos', 3, {
       upgrade(db) {
         if (!db.objectStoreNames.contains('product')) {
           db.createObjectStore('product', { keyPath: 'id' });
@@ -27,6 +27,14 @@ export const SchemaSyncHandler = {
 
         if (!db.objectStoreNames.contains('customer')) {
           db.createObjectStore('customer', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('outlet')) {
+          db.createObjectStore('outlet', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('cashier')) {
+          db.createObjectStore('cashier', { keyPath: 'id' });
         }
 
         if (!db.objectStoreNames.contains('table')) {

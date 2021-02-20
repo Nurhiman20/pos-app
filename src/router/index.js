@@ -124,9 +124,25 @@ const routes = [
   {
     path: '/outlet',
     name: 'Outlet',
-    redirect: '/outlet/manajemen-meja',
+    redirect: '/outlet/daftar-outlet',
     component: () => import('@/layouts/Home'),
     children: [
+      {
+        path: '/outlet/daftar-outlet',
+        name: 'Daftar Outlet',
+        component: () => import('@/views/Outlet/views/DaftarOutlet.vue'),
+        meta: {
+          title: 'Daftar Outlet | Outlet | 21FACTORY'
+        }
+      },
+      {
+        path: '/outlet/kasir',
+        name: 'Kasir',
+        component: () => import('@/views/Outlet/views/Kasir.vue'),
+        meta: {
+          title: 'Kasir | Outlet | 21FACTORY'
+        }
+      },
       {
         path: '/outlet/manajemen-meja',
         name: 'Manajemen Meja',

@@ -26,6 +26,8 @@ const state = {
   listInventory: [],
   listTransaction: [],
   listCustomer: [],
+  listOutlet: [],
+  listCashier: [],
   listTable: [],
   listSupplier: [],
   listOrder: [],

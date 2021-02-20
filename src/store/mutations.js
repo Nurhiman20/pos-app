@@ -42,6 +42,14 @@ const SET_LIST_CUSTOMER = (state, payload) => {
   state.listCustomer = payload;
 };
 
+const SET_LIST_OUTLET = (state, payload) => {
+  state.listOutlet = payload;
+};
+
+const SET_LIST_CASHIER = (state, payload) => {
+  state.listCashier = payload;
+};
+
 const SET_LIST_TABLE = (state, payload) => {
   state.listTable = payload;
 };
@@ -92,6 +100,8 @@ export default {
   SET_LIST_ADJUSTMENT,
   SET_LIST_TRANSACTION,
   SET_LIST_CUSTOMER,
+  SET_LIST_OUTLET,
+  SET_LIST_CASHIER,
   SET_LIST_TABLE,
   SET_FILTER_CATEGORY,
   ADD_SELECTED_PRODUCT,
