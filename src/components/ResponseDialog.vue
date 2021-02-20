@@ -8,9 +8,9 @@
             <v-icon size="140" color="success" class="mb-4">mdi-checkbox-marked-circle</v-icon>
             <p class="title">Sukses!</p>
             <p class="message">{{ message }}</p>
-            <v-btn color="primary" block @click="closeDialogSuccess">
+            <!-- <v-btn color="primary" block @click="closeDialogSuccess">
               Tutup
-            </v-btn>
+            </v-btn> -->
           </div>
         </v-card-text>
       </v-card>
@@ -55,6 +55,15 @@
 <script>
 export default {
   props: ['success', 'failed', 'confirm', 'message'],
+  watch: {
+    success(val) {
+      if (val === true) {
+        setTimeout(() => {
+          this.closeDialogSuccess()
+        }, 500);
+      }
+    }
+  },
   methods: {
     closeDialogSuccess() {
       this.$emit('closeSuccess', false)

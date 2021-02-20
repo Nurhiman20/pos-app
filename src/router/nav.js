@@ -35,7 +35,7 @@ export const mainMenu = [
     ]
   },
   { 
-    icon: 'mdi-package-variant-closed', 
+    icon: 'mdi-warehouse', 
     text: 'Inventaris',
     children: [
       {

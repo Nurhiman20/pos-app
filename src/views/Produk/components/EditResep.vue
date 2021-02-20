@@ -27,6 +27,16 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Varian" rules="required">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedRecipe.varian"
+                label="Varian"
+                outlined
+                dense
+                class="mb-0 mt-3 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <div class="px-4 mt-6">
               <v-data-table
                 :headers="headers"
@@ -42,7 +52,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Edit</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Simpan</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -157,7 +167,7 @@ export default {
     editRecipe() {
       this.$store.dispatch("submitRecipe", this.selectedRecipe)
         .then(() => {
-          this.$emit("success", "Resep telah diedit");
+          this.$emit("success", "Resep telah disimpan");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

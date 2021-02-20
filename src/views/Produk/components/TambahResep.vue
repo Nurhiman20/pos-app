@@ -22,6 +22,16 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Varian" rules="required">
+              <v-text-field
+                :error-messages="errors"
+                v-model="varian"
+                label="Varian"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <div class="px-4 mt-6">
               <v-data-table
                 :headers="headers"
@@ -76,6 +86,7 @@ export default {
   data() {
     return {
       product: null,
+      varian: null,
       listIngredient: [],
       selectedIngredient: {},
       headers: [
@@ -148,6 +159,7 @@ export default {
         id: this.randomId(),
         id_product: this.product.id,
         product: this.product,
+        varian: this.varian,
         ingredients: this.listIngredient
       };
       this.$store.dispatch("submitRecipe", dataForm)

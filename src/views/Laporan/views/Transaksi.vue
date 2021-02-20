@@ -30,6 +30,62 @@
             append-icon="mdi-magnify"
           ></v-autocomplete>
         </v-col>
+        <v-col cols="12" md="3" lg="3" xl="3" align-self="center">
+          <v-menu
+            v-model="menu2"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="date"
+                label="Tanggal Awal"
+                prepend-icon="mdi-calendar"
+                readonly
+                outlined
+                dense
+                class="mt-4"
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="date"
+              @input="menu2 = false"
+            ></v-date-picker>
+          </v-menu>
+        </v-col>
+        <v-col cols="12" md="3" lg="3" xl="3" align-self="center">
+          <v-menu
+            v-model="menu3"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateEnd"
+                label="Tanggal Akhir"
+                prepend-icon="mdi-calendar"
+                readonly
+                outlined
+                dense
+                class="mt-4"
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="dateEnd"
+              @input="menu3 = false"
+            ></v-date-picker>
+          </v-menu>
+        </v-col>
       </v-row>
       <v-data-table
         :headers="headers"
@@ -91,6 +147,10 @@ export default {
       selectedTransaction: {},
       select: null,
       search: null,
+      date: null,
+      dateEnd: null,
+      menu2: false,
+      menu3: false,
       headers: [
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'ID Transaksi', value: 'id', sortable: false },
