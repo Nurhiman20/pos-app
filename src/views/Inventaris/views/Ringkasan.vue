@@ -41,7 +41,6 @@
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
-        @click:row="goToEdit"
       >
         <!-- <template v-slot:item.name="{item}">
           <div class="d-flex flex-row align-center py-2">
@@ -183,10 +182,6 @@ export default {
       } else {
         return null;
       }
-    },
-    goToEdit(item) {
-      this.selectedStock = item;
-      this.dialogEditStock = true;
     }
   },
   created() {
