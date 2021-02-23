@@ -60,7 +60,7 @@ export default {
       if (val === true) {
         setTimeout(() => {
           this.closeDialogSuccess()
-        }, 500);
+        }, 800);
       }
     }
   },
