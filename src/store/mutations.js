@@ -88,6 +88,14 @@ const SET_EDIT_TX = (state, payload) => {
   }
 };
 
+const SET_DATE_START = (state, payload) => {
+  state.dateStart = payload;
+};
+
+const SET_DATE_END = (state, payload) => {
+  state.dateEnd = payload;
+};
+
 export default {
   SET_LOADING,
   SET_LIST_PRODUCT,
@@ -108,5 +116,7 @@ export default {
   REMOVE_SELECTED_PRODUCT,
   CLEAR_SELECTED_PRODUCT,
   EDIT_SELECTED_PRODUCT,
-  SET_EDIT_TX
+  SET_EDIT_TX,
+  SET_DATE_START,
+  SET_DATE_END
 }

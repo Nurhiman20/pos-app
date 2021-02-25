@@ -17,6 +17,8 @@ const state = {
     name: 'all'
   },
   selectedTx: {},
+  dateStart: null,
+  dateEnd: null,
   
   // Data model
   listProduct: [],

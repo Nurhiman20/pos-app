@@ -3,7 +3,7 @@
     <div class="d-flex flex-row justify-space-between align-center">
       <h1>Transaksi</h1>
       <download-excel
-        :data="$store.state.listTransaction"
+        :data="$store.getters.listViewTransaction"
         :fields="jsonFields"
         worksheet="Transaction"
         name="Transaksi.xls"
@@ -55,6 +55,7 @@
             <v-date-picker
               v-model="date"
               @input="menu2 = false"
+              @change="setDateStart"
             ></v-date-picker>
           </v-menu>
         </v-col>
@@ -83,13 +84,14 @@
             <v-date-picker
               v-model="dateEnd"
               @input="menu3 = false"
+              @change="setDateEnd"
             ></v-date-picker>
           </v-menu>
         </v-col>
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="$store.state.listTransaction"
+        :items="$store.getters.listViewTransaction"
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
@@ -106,21 +108,14 @@
             </div>
           </div>
         </template>
-        <template v-slot:item.customer_name="{item}">
-          <p class="mb-0 mt-4">{{ item.customer.name }}</p>
-          <p class="app-subtitle">{{ item.customer.phone_number }}</p>
-        </template>
-        <template v-slot:item.total_discount="{item}">
-          <p>Rp{{ formatCurrency(item.total_discount) }},00</p>
-        </template>
         <template v-slot:item.total="{item}">
           <p>Rp{{ formatCurrency(item.total) }},00</p>
         </template>
-        <template v-slot:item.cash="{item}">
-          <p>Rp{{ formatCurrency(item.cash) }},00</p>
+        <template v-slot:item.date="{item}">
+          <p>{{ formatDate(item.time) }}</p>
         </template>
-        <template v-slot:item.money_change="{item}">
-          <p>Rp{{ formatCurrency(item.money_change) }},00</p>
+        <template v-slot:item.time="{item}">
+          <p>{{ formatTime(item.time) }}</p>
         </template>
       </v-data-table>
     </v-card>
@@ -136,6 +131,7 @@
 
 <script>
 import receiptApp from '../components/Receipt';
+import * as moment from 'moment';
 
 export default {
   components: {
@@ -152,15 +148,11 @@ export default {
       menu2: false,
       menu3: false,
       headers: [
+        { text: 'Tanggal', value: 'date', sortable: true },
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'ID Transaksi', value: 'id', sortable: false },
-        { text: 'Pelanggan', value: 'customer_name', sortable: false },
-        { text: 'Nomor Meja', value: 'table_number', sortable: false },
         { text: 'Produk', value: 'products_sold', sortable: false },
-        { text: 'Diskon', value: 'total_discount', sortable: false },
-        { text: 'Total Harga', value: 'total', sortable: false },
-        { text: 'Tunai', value: 'cash', sortable: false },
-        { text: 'Kembali', value: 'money_change', sortable: false },
+        { text: 'Total Harga', value: 'total', sortable: false }
       ],
       jsonFields: {
         ID: 'id',
@@ -197,13 +189,21 @@ export default {
   },
   methods: {
     querySelections(v) {
-      let listTransaction = this.$store.state.listTransaction.map(item => item.id);
+      let listTransaction = this.$store.getters.listViewTransaction.map(item => item.id);
       this.itemTransaction = listTransaction.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+    },
+    formatTime(val) {
+      moment.locale('id');
+      return moment(val).format('LT');
+    },
+    formatDate(val) {
+      moment.locale('id');
+      return moment(val).format('LL');
     },
     closeDialogReceipt(e) {
       this.dialogReceipt = e;
@@ -215,13 +215,23 @@ export default {
         return null;
       }
     },
+    setDateStart(e) {      
+      this.$store.commit('SET_DATE_START', e);
+    },
+    setDateEnd(e) {
+      this.$store.commit('SET_DATE_END', e);
+    },
     goToEdit(e) {
       this.selectedTransaction = e;
       this.dialogReceipt = true;
     }
   },
   created() {
-    this.$store.dispatch("getTransaction");
+    this.$store.dispatch("getTransaction");    
+    this.date = moment().format('YYYY-MM-DD');
+    this.dateEnd = moment().format('YYYY-MM-DD');
+    this.setDateStart(this.date);
+    this.setDateEnd(this.dateEnd);
   },
 }
 </script>

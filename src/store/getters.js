@@ -62,6 +62,17 @@ const listViewInventory = (state) => {
   return inventory;
 }
 
+const listViewTransaction = (state) => {
+  let filteredTx = [];
+  state.listTransaction.forEach(tx => {
+    if (moment(tx.time).isBetween(state.dateStart, moment(state.dateEnd).add(1, 'days'), undefined, '[]')) {
+      filteredTx.push(tx);
+    }
+  })
+
+  return filteredTx
+}
+
 const totalTransactionToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
@@ -113,6 +124,7 @@ const totalAmountMonth = (state) => {
 export default {
   listViewProduct,
   listViewInventory,
+  listViewTransaction,
   totalTransactionToday,
   totalTransactionMonth,
   totalAmountToday,
