@@ -48,6 +48,9 @@
             <p class="ml-3 my-auto">{{ item.name }}</p>
           </div>
         </template>
+        <template v-slot:item.ingredients="{item}">
+          <p class="my-auto">{{ item.ingredients.length }} bahan</p>
+        </template>
       </v-data-table>
     </v-card>
 
@@ -107,7 +110,8 @@ export default {
         { text: 'Produk', value: 'name', sortable: true },
         { text: 'Harga', value: 'price', sortable: false },
         { text: 'Kategori', value: 'category.name', sortable: false },
-        { text: 'Deskripsi', value: 'description', sortable: false }
+        { text: 'Deskripsi', value: 'description', sortable: false },
+        { text: 'Bahan', value: 'ingredients', sortable: false }
       ],
       jsonFields: {
         ID: 'id',

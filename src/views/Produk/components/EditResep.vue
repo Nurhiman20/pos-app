@@ -75,7 +75,11 @@ export default {
   },
   data() {
     return {
-      selectedRecipe: {},
+      selectedRecipe: {
+        product: { 
+          name: null
+        }
+      },
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
@@ -88,7 +92,6 @@ export default {
   },
   watch: {
     selected(val) {
-      console.log(val);
       this.selectedRecipe = val
     }
   },

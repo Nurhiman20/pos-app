@@ -96,7 +96,9 @@ export default {
       itemRecipes: [],
       selectedRecipe: {
         id: null,
-        name: null
+        product: { 
+          name: null
+        }
       },
       selectedDelete: {},
       headers: [

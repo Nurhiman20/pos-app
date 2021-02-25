@@ -3,7 +3,7 @@
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
         <div class="d-flex flex-row justify-space-between align-center">
-          <v-card-title class="ml-0">Edit Kategori</v-card-title>
+          <v-card-title class="ml-0">Edit Bahan</v-card-title>
           <v-btn color="error" outlined @click="goDelete">
             <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>

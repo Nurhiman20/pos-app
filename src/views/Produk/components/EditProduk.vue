@@ -55,6 +55,17 @@
                 auto-grow
               ></v-textarea>
             </ValidationProvider>
+            <div class="px-4 mt-2">
+              <v-data-table
+                :headers="headers"
+                :items="selectedProduct.ingredients"
+                class="elevation-1 scrollbar-custom"
+                hide-default-footer
+              ></v-data-table>
+            </div>
+            <div class="px-4 mt-3 mb-6">
+              <v-btn color="secondary" dark block @click="$router.push('/produk/resep')">Edit Bahan</v-btn>
+            </div>
             <ValidationProvider v-slot="{ errors }" name="Foto produk" rules="required">
               <v-file-input
                 v-model="selectedProduct.image"
@@ -94,6 +105,11 @@ export default {
       selectedProduct: {},
       rulesImage: [
         value => !value || value.size < 2000000 || 'Ukuran foto tidak boleh lebih dari 2 MB',
+      ],      
+      headers: [
+        { text: 'Bahan', value: 'ingredient.name', sortable: false },
+        { text: 'Qty', value: 'qty', sortable: false },
+        { text: 'Unit', value: 'ingredient.unit', sortable: false }
       ],
       previewImage: null
     }
