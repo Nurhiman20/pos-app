@@ -121,6 +121,50 @@ const totalAmountMonth = (state) => {
   return amountMonth;
 }
 
+const totalProfitToday = (state) => {
+  let transactionToday = [];
+  state.listTransaction.forEach(element => {
+    if (moment(element.time).isSame(moment().format(), 'day')) {
+      transactionToday.push(element);
+    }
+  });
+
+  const amountToday = transactionToday.reduce((acc, tx) => acc + tx.total, 0);
+  let costToday = 0;
+
+  transactionToday.forEach(tx => {
+    tx.products_sold.forEach(prod => {
+      prod.ingredients.forEach(ing => {
+        costToday += parseFloat(ing.ingredient.price) * parseFloat(ing.qty) * parseFloat(prod.qty)
+      })
+    })
+  });
+
+  return amountToday - costToday;
+}
+
+const totalProfitMonth = (state) => {
+  let transactionMonth = [];
+  state.listTransaction.forEach(element => {
+    if (moment(element.time).isSame(moment().format(), 'month')) {
+      transactionMonth.push(element);
+    }
+  });
+
+  const amountMonth = transactionMonth.reduce((acc, tx) => acc + tx.total, 0);
+  let costMonth = 0;
+
+  transactionMonth.forEach(tx => {
+    tx.products_sold.forEach(prod => {
+      prod.ingredients.forEach(ing => {
+        costMonth += parseFloat(ing.ingredient.price) * parseFloat(ing.qty) * parseFloat(prod.qty)
+      })
+    })
+  });
+
+  return amountMonth - costMonth;
+}
+
 export default {
   listViewProduct,
   listViewInventory,
@@ -128,5 +172,7 @@ export default {
   totalTransactionToday,
   totalTransactionMonth,
   totalAmountToday,
-  totalAmountMonth
+  totalAmountMonth,
+  totalProfitToday,
+  totalProfitMonth
 }
