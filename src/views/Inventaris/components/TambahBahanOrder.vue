@@ -56,7 +56,7 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Diterima" rules="required">
+            <!-- <ValidationProvider v-slot="{ errors }" name="Diterima" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="received"
@@ -66,7 +66,7 @@
                 dense
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
-            </ValidationProvider>
+            </ValidationProvider> -->
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
@@ -116,8 +116,7 @@ export default {
         ingredient: this.ingredient,
         in_stock: this.inStock,
         order: this.order,
-        unit_cost: this.unitCost,
-        received: this.received
+        unit_cost: this.unitCost
       }
       this.$emit('add', dataForm);
       this.ingredient = null;

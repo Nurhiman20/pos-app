@@ -2,17 +2,17 @@
   <div>
     <v-dialog v-model="show" persistent width="500">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Pemesanan</v-card-title>
+        <v-card-title class="ml-0">Tambah Penerimaan</v-card-title>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(addOrder)">
-            <ValidationProvider v-slot="{ errors }" name="Supplier" rules="required">
+            <ValidationProvider v-slot="{ errors }" name="Pemesanan" rules="required">
               <v-autocomplete
                 :error-messages="errors"
-                v-model="supplier"
-                :items="$store.state.listSupplier"
-                :item-text="textSupplier"
-                :item-value="valueSupplier"
-                label="Supplier"
+                v-model="order"
+                :items="$store.state.listReceive"
+                :item-text="textReceive"
+                :item-value="valueReceive"
+                label="Pemesanan"
                 cache-items
                 class="mb-0 mt-2 px-4"
                 outlined
@@ -34,9 +34,6 @@
                   <p class="my-auto">{{ formatCurrency(item.order * item.unit_cost) }}</p>
                 </template>
               </v-data-table>
-            </div>
-            <div class="px-4 mt-3 mb-6">
-              <v-btn color="secondary" dark block @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
             </div>
             <ValidationProvider v-slot="{ errors }" name="Keterangan" rules="max:200">
               <v-textarea
@@ -91,14 +88,13 @@ export default {
   },
   data() {
     return {
-      supplier: null,
+      order: null,
       notes: null,
       listSelectedIngredient: [],
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
-        { text: 'In Stock', value: 'in_stock', sortable: false },
-        { text: 'Order', value: 'order', sortable: false },
+        { text: 'Dipesan', value: 'order', sortable: false },
         { text: 'Unit Cost', value: 'unit_cost', sortable: false },
         { text: 'Total (Rp)', value: 'total', sortable: false },
         { text: 'Diterima', value: 'received', sortable: false }
@@ -111,10 +107,10 @@ export default {
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     },
-    textSupplier(item) {
+    textReceive(item) {
       return item.name
     },
-    valueSupplier(item) {
+    valueReceive(item) {
       return item
     },
     randomId() {

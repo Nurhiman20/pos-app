@@ -61,7 +61,7 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Diterima" rules="required">
+            <!-- <ValidationProvider v-slot="{ errors }" name="Diterima" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedIngredient.received"
@@ -71,7 +71,7 @@
                 dense
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
-            </ValidationProvider>
+            </ValidationProvider> -->
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>

@@ -96,11 +96,19 @@ const routes = [
         }
       },
       {
-        path: '/inventaris/order',
-        name: 'Order',
+        path: '/inventaris/pemesanan',
+        name: 'Pemesanan',
         component: () => import('@/views/Inventaris/views/Order.vue'),
         meta: {
-          title: 'Order | Inventaris | 21FACTORY'
+          title: 'Pemesanan | Inventaris | 21FACTORY'
+        }
+      },
+      {
+        path: '/inventaris/penerimaan',
+        name: 'Penerimaan',
+        component: () => import('@/views/Inventaris/views/Penerimaan.vue'),
+        meta: {
+          title: 'Penerimaan | Inventaris | 21FACTORY'
         }
       },
       {
