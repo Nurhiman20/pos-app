@@ -109,7 +109,7 @@ export default {
         { text: 'Kategori', value: 'category.name', sortable: true },
         { text: 'Stok Awal', value: 'stock', sortable: false },
         { text: 'Pemesanan', value: 'order', sortable: false },        
-        { text: 'Penerimaan', value: 'order', sortable: false },
+        { text: 'Penerimaan', value: 'receive', sortable: false },
         { text: 'Usage', value: 'usage', sortable: false },
         { text: 'Transfer', value: 'transfer', sortable: false },
         { text: 'Adjustment', value: 'adjustment', sortable: false },
@@ -187,6 +187,7 @@ export default {
   created() {
     this.$store.dispatch("getInventory");
     this.$store.dispatch("getOrder");
+    this.$store.dispatch("getReceive");
     this.$store.dispatch("getAdjustment");
     this.$store.dispatch("getTransaction");
   },

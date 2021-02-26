@@ -12,17 +12,29 @@ const listViewProduct = (state) => {
 const listViewInventory = (state) => {
   let inventory = [];
   let orderCount = 0;
+  let receiveCount = 0;
   let adjustmentCount = 0;
   let usageCount = 0;
 
   state.listInventory.forEach(inv => {
-    // count total received order
+    // count total order
     state.listOrder.forEach(order => {
       order.ingredients.forEach(ing => {
         if (ing.id_ingredient === inv.id) {
-          orderCount += parseFloat(ing.received);
+          orderCount += parseFloat(ing.order);
           inv.order = orderCount;
           orderCount = 0;
+        }
+      });
+    });
+
+    // count total received
+    state.listReceive.forEach(receive => {
+      receive.ingredients.forEach(ing => {
+        if (ing.id_ingredient === inv.id) {
+          receiveCount += parseFloat(ing.received);
+          inv.receive = receiveCount;
+          receiveCount = 0;
         }
       });
     });
@@ -50,7 +62,7 @@ const listViewInventory = (state) => {
     });
 
     // count ending stock
-    let endingStock = parseFloat(inv.stock) + inv.order - parseFloat(inv.usage) - parseFloat(inv.transfer) - inv.adjustment;
+    let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
     let invData = {
       ...inv,
       ending_stock: endingStock

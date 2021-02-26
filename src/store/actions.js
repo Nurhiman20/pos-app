@@ -201,6 +201,7 @@ async function submitIngredient({ commit }, dataForm) {
   let inv = {
     ...dataForm,
     order: 0,
+    receive: 0,
     usage: 0,
     transfer: 0,
     adjustment: 0,
