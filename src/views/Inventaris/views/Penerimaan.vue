@@ -62,15 +62,15 @@
       @error="failedAddReceive"
     ></add-receive-dialog>
 
-    <!-- <edit-order-dialog 
+    <edit-receive-dialog 
       :show="dialogEditReceive"
-      :selected="selectedOrder"
+      :selected="selectedReceive"
       @closeDialog="closeDialogEdit"
       @success="successPutReceive"
       @error="failedAddReceive"
       @delete="deleteReceive"
       @successDelete="successDelete"
-    ></edit-order-dialog> -->
+    ></edit-receive-dialog>
 
     <!-- response dialog -->
     <response-dialog 
@@ -88,13 +88,13 @@
 
 <script>
 import addReceiveDialog from '../components/TambahPenerimaan';
-// import editOrderDialog from '../components/EditOrder';
+import editReceiveDialog from '../components/EditPenerimaan';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
     addReceiveDialog,
-    // editOrderDialog,
+    editReceiveDialog,
     responseDialog
   },
   data() {
@@ -102,7 +102,7 @@ export default {
       search: null,
       select: null,
       itemReceive: [],
-      selectedOrder: {},
+      selectedReceive: {},
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'ID Order', value: 'id_order', sortable: false },
@@ -203,7 +203,7 @@ export default {
         })
     },
     goToEdit(item) {
-      this.selectedOrder = item;
+      this.selectedReceive = item;
       this.dialogEditReceive = true;
     }
   },

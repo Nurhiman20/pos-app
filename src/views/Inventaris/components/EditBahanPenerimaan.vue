@@ -71,7 +71,10 @@ export default {
   },
   watch: {
     selected(val) {
-      this.selectedIngredient = val
+      this.selectedIngredient = val;
+      if (val.received !== null || val.received !== undefined) {
+        this.received = val.received;
+      }
     }
   },
   methods: {
