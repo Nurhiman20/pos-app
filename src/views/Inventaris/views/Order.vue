@@ -206,8 +206,11 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("getInventory");
     this.$store.dispatch("getOrder");
-    this.$store.dispatch("getIngredient");
+    this.$store.dispatch("getReceive");
+    this.$store.dispatch("getAdjustment");
+    this.$store.dispatch("getTransaction");
     this.$store.dispatch("getSupplier");
   }
 }

@@ -23,7 +23,6 @@ const listViewInventory = (state) => {
         if (ing.id_ingredient === inv.id) {
           orderCount += parseFloat(ing.order);
           inv.order = orderCount;
-          orderCount = 0;
         }
       });
     });
@@ -34,7 +33,6 @@ const listViewInventory = (state) => {
         if (ing.id_ingredient === inv.id) {
           receiveCount += parseFloat(ing.received);
           inv.receive = receiveCount;
-          receiveCount = 0;
         }
       });
     });
@@ -44,7 +42,6 @@ const listViewInventory = (state) => {
       if (adj.id_ingredient === inv.id) {
         adjustmentCount += adj.adjustment;
         inv.adjustment = adjustmentCount;
-        adjustmentCount = 0;
       }
     });
 
@@ -55,7 +52,6 @@ const listViewInventory = (state) => {
           if (ing.id_ingredient === inv.id) {
             usageCount += parseFloat(ing.qty * prod.qty);
             inv.usage = usageCount.toFixed(2);
-            usageCount = 0;
           }
         });
       });
@@ -69,6 +65,10 @@ const listViewInventory = (state) => {
     }
 
     inventory.push(invData);
+    receiveCount = 0;
+    orderCount = 0;
+    adjustmentCount = 0;
+    usageCount = 0;
   });
 
   return inventory;

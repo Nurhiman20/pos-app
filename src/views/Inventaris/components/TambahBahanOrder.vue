@@ -9,11 +9,10 @@
               <v-autocomplete
                 :error-messages="errors"
                 v-model="ingredient"
-                :items="$store.state.listIngredient"
+                :items="$store.getters.listViewInventory"
                 :item-text="textIngredient"
                 :item-value="valueIngredient"
                 label="Nama Bahan"
-                cache-items
                 class="mb-0 mt-2 px-4"
                 outlined
                 dense
@@ -95,7 +94,7 @@ export default {
   watch: {
     ingredient(val) {
       if (val !== null) {
-        this.inStock = val.stock;
+        this.inStock = val.ending_stock;
         this.unit = val.unit;
       }
     }

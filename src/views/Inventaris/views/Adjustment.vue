@@ -195,7 +195,10 @@ export default {
   },
   created() {
     this.$store.dispatch("getAdjustment");
-    this.$store.dispatch("getIngredient");   
+    this.$store.dispatch("getInventory");
+    this.$store.dispatch("getOrder");
+    this.$store.dispatch("getReceive");
+    this.$store.dispatch("getTransaction");
   },
 }
 </script>
