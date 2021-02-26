@@ -33,6 +33,7 @@ const state = {
   listTable: [],
   listSupplier: [],
   listOrder: [],
+  listReceive: [],
   listAdjustment: []
 }
 

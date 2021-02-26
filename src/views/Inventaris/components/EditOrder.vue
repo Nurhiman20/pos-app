@@ -102,8 +102,7 @@ export default {
         { text: 'In Stock', value: 'in_stock', sortable: false },
         { text: 'Order', value: 'order', sortable: false },
         { text: 'Unit Cost', value: 'unit_cost', sortable: false },
-        { text: 'Total (Rp)', value: 'total', sortable: false },
-        { text: 'Diterima', value: 'received', sortable: false }
+        { text: 'Total (Rp)', value: 'total', sortable: false }
       ],
       dialogAddIngredient: false,      
       dialogEditIngredient: false

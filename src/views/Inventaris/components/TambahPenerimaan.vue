@@ -9,9 +9,9 @@
               <v-autocomplete
                 :error-messages="errors"
                 v-model="order"
-                :items="$store.state.listReceive"
-                :item-text="textReceive"
-                :item-value="valueReceive"
+                :items="$store.state.listOrder"
+                :item-text="textOrder"
+                :item-value="valueOrder"
                 label="Pemesanan"
                 cache-items
                 class="mb-0 mt-2 px-4"
@@ -22,10 +22,10 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
-            <div class="px-4 mt-6" v-if="listSelectedIngredient.length !== 0">
+            <div class="px-4 mt-6 mb-6" v-if="listIngredient.length !== 0">
               <v-data-table
                 :headers="headers"
-                :items="listSelectedIngredient"
+                :items="listIngredient"
                 class="elevation-1 scrollbar-custom"
                 hide-default-footer
                 @click:row="goToEdit"
@@ -57,40 +57,30 @@
       </v-card>
     </v-dialog>
 
-    <!-- dialog tambah bahan -->
-    <add-ingredient-dialog
-      :show="dialogAddIngredient"
-      @closeDialog="closeDialogAdd"
-      @add="addIngredient"
-    ></add-ingredient-dialog>
-
     <!-- dialog edit bahan -->
     <edit-ingredient-dialog
       :show="dialogEditIngredient"
       :selected="selectedIngredient"
       @closeDialog="closeDialogEdit"
       @edit="editIngredient"
-      @delete="deleteIngredient"
     ></edit-ingredient-dialog>
   </div>
 </template>
 
 <script>
 import * as moment from 'moment';
-import addIngredientDialog from '../components/TambahBahanOrder';
-import editIngredientDialog from '../components/EditBahanOrder';
+import editIngredientDialog from '../components/EditBahanPenerimaan';
 
 export default {
   props: ['show'],
   components: {
-    addIngredientDialog,
     editIngredientDialog
   },
   data() {
     return {
       order: null,
       notes: null,
-      listSelectedIngredient: [],
+      listIngredient: [],
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
@@ -99,27 +89,29 @@ export default {
         { text: 'Total (Rp)', value: 'total', sortable: false },
         { text: 'Diterima', value: 'received', sortable: false }
       ],
-      dialogAddIngredient: false,      
       dialogEditIngredient: false
+    }
+  },
+  watch: {
+    order(val) {
+      this.listIngredient = val.ingredients;
     }
   },
   methods: {
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     },
-    textReceive(item) {
-      return item.name
+    textOrder(item) {
+      let strText = '(' + item.id + ') ' + item.supplier.name + ' - ' + item.supplier.phone_number;
+      return strText
     },
-    valueReceive(item) {
+    valueOrder(item) {
       return item
     },
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = 'order-' + randLetter + Date.now();
+      var uniqid = 'rv-' + randLetter + Date.now();
       return uniqid
-    },
-    closeDialogAdd(e) {
-      this.dialogAddIngredient = e;
     },
     closeDialogEdit(e) {
       this.dialogEditIngredient = e;
@@ -131,20 +123,9 @@ export default {
       this.selectedIngredient = e;
       this.dialogEditIngredient = true;
     },
-    deleteIngredient(e) {
-      let listIngredient = [];
-      this.listSelectedIngredient.forEach(element => {
-        if (element.id_ingredient !== e.id_ingredient) {
-          listIngredient.push(element);
-        }
-      });
-
-      this.listSelectedIngredient = listIngredient;
-      this.dialogEditIngredient = false;
-    },
     editIngredient(e) {
       let listIngredient = [];
-      this.listSelectedIngredient.forEach(element => {
+      this.listIngredient.forEach(element => {
         if (element.id_ingredient === e.id_ingredient) {
           listIngredient.push(e);
         } else {
@@ -152,41 +133,41 @@ export default {
         }
       });
 
-      this.listSelectedIngredient = listIngredient;
+      this.listIngredient = listIngredient;
       this.dialogEditIngredient = false;
-    },
-    addIngredient(e) {
-      this.listSelectedIngredient.push(e);
-      this.dialogAddIngredient = false;
     },
     checkStatus() {
       let countUnfulfilled = 0;
-      this.listSelectedIngredient.forEach(item => {
-        if (item.order > item.received) {
+      this.listIngredient.forEach(item => {
+        if (parseFloat(item.order) > parseFloat(item.received)) {
           countUnfulfilled += 1;
         }
       });
 
-      if (countUnfulfilled > 0) {
-        return 'Belum terpenuhi'
-      } else {
+      if (countUnfulfilled === 0) {
+        countUnfulfilled = 0;
         return 'Terpenuhi'
+      } else {        
+        countUnfulfilled = 0;
+        return 'Belum Terpenuhi'
       }
     },
     addOrder() {
       let dataForm = {
         id: this.randomId(),
-        ingredients: this.listSelectedIngredient,
-        supplier: this.supplier,
+        id_order: this.order.id,
+        ingredients: this.listIngredient,
+        supplier: this.order.supplier,
         notes: this.notes,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a')
+        time: moment().format('MM/DD/YYYY, h:mm:ss a'),
+        status: this.checkStatus()
       };
-      this.$store.dispatch("submitOrder", dataForm)
+      this.$store.dispatch("submitReceive", dataForm)
         .then(() => {
-          this.supplier = null;
+          this.order = null;
           this.notes = null;
-          this.listSelectedIngredient = [];
-          this.$emit("success", "Order telah disimpan");
+          this.listIngredient = [];
+          this.$emit("success", "Penerimaan telah disimpan");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

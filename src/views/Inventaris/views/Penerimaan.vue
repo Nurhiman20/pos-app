@@ -45,29 +45,29 @@
         <template v-slot:item.supplier="{item}">
           <p class="my-auto">Rp{{ countTotal(item) }},00</p>
         </template>
-        <!-- <template v-slot:item.status="{item}">
+        <template v-slot:item.status="{item}">
           <div class="d-flex flex-row">
             <v-icon color="success" v-if="item.status === 'Terpenuhi'">mdi-check-decagram</v-icon>
             <v-icon color="error" v-else>mdi-alert-decagram</v-icon>
             <p class="my-auto ml-1">{{ item.status }}</p>
           </div>
-        </template> -->
+        </template>
       </v-data-table>
     </v-card>
   
-    <!-- <add-order-dialog
+    <add-receive-dialog
       :show="dialogAddReceive"
       @closeDialog="closeDialogAdd"
-      @success="successPutOrder"
-      @error="failedAddOrder"
-    ></add-order-dialog>
+      @success="successPutReceive"
+      @error="failedAddReceive"
+    ></add-receive-dialog>
 
-    <edit-order-dialog 
+    <!-- <edit-order-dialog 
       :show="dialogEditReceive"
       :selected="selectedOrder"
       @closeDialog="closeDialogEdit"
-      @success="successPutOrder"
-      @error="failedAddOrder"
+      @success="successPutReceive"
+      @error="failedAddReceive"
       @delete="deleteReceive"
       @successDelete="successDelete"
     ></edit-order-dialog> -->
@@ -87,13 +87,13 @@
 </template>
 
 <script>
-// import addOrderDialog from '../components/TambahOrder';
+import addReceiveDialog from '../components/TambahPenerimaan';
 // import editOrderDialog from '../components/EditOrder';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
-    // addOrderDialog,
+    addReceiveDialog,
     // editOrderDialog,
     responseDialog
   },
@@ -104,7 +104,8 @@ export default {
       itemReceive: [],
       selectedOrder: {},
       headers: [
-        { text: 'ID Order', value: 'id', sortable: false },
+        { text: 'ID', value: 'id', sortable: false },
+        { text: 'ID Order', value: 'id_order', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'Supplier', value: 'supplier.name', sortable: true },
         { text: 'Total', value: 'supplier', sortable: false },
@@ -170,12 +171,12 @@ export default {
       this.$store.dispatch("getReceive");
       this.dialogEditReceive = e;
     },
-    successPutOrder(e) {
+    successPutReceive(e) {
       this.$store.dispatch("getReceive");
       this.messageDialog = e;
       this.dialogSuccess = true;
     },
-    failedAddOrder(e) {
+    failedAddReceive(e) {
       this.messageDialog = e;
       this.dialogFailed = true;
     },

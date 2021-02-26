@@ -496,7 +496,7 @@ async function getOrder({ commit }) {
   const vuePos = await openDB('vue-pos', 3);
   return new Promise((resolve, reject) => {
     vuePos
-      .getAll('purchase_order')
+      .getAll('order')
       .then(result => {
         commit('SET_LIST_ORDER', result);
         resolve(result);
@@ -515,7 +515,7 @@ async function submitOrder({ commit }, dataForm) {
   const vuePos = await openDB('vue-pos', 3);
   return new Promise((resolve, reject) => {
     vuePos
-      .put('purchase_order', dataForm)
+      .put('order', dataForm)
       .then(result => {
         resolve(result);
       })
@@ -534,7 +534,63 @@ async function deleteOrder({ commit }, dataForm) {
   const vuePos = await openDB('vue-pos', 3);
   return new Promise((resolve, reject) => {
     vuePos
-      .delete('purchase_order', dataForm.id)
+      .delete('order', dataForm.id)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function getReceive({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('receive')
+      .then(result => {
+        commit('SET_LIST_RECEIVE', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function submitReceive({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('receive', dataForm)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        console.log('error');
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function deleteReceive({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .delete('receive', dataForm.id)
       .then(result => {
         resolve(result);
       })
@@ -927,6 +983,9 @@ export default {
   getOrder,
   submitOrder,
   deleteOrder,
+  getReceive,
+  submitReceive,
+  deleteReceive,
   deleteSupplier,
   getAdjustment,
   submitAdjustment,

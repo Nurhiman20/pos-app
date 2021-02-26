@@ -53,8 +53,12 @@ export const SchemaSyncHandler = {
           db.createObjectStore('supplier', { keyPath: 'id' });
         }
 
-        if (!db.objectStoreNames.contains('purchase_order')) {
-          db.createObjectStore('purchase_order', { keyPath: 'id' });
+        if (!db.objectStoreNames.contains('order')) {
+          db.createObjectStore('order', { keyPath: 'id' });
+        }
+
+        if (!db.objectStoreNames.contains('receive')) {
+          db.createObjectStore('receive', { keyPath: 'id' });
         }
         
         if (!db.objectStoreNames.contains('transfer')) {
