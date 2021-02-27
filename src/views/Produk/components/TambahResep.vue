@@ -22,14 +22,14 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Varian" rules="required">
+            <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
               <v-text-field
                 :error-messages="errors"
                 v-model="varian"
                 label="Varian"
                 outlined
                 dense
-                class="mb-0 mt-2 px-4"
+                class="mb-0 mt-4 px-4"
               ></v-text-field>
             </ValidationProvider>
             <div class="px-4 mt-6">
