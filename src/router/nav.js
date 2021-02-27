@@ -64,24 +64,24 @@ export const mainMenu = [
       }
     ]
   },
-  { 
-    icon: 'mdi-store', 
-    text: 'Outlet',
-    children: [
-      // {
-      //   text: 'Daftar Outlet',
-      //   to: '/outlet/daftar-outlet'
-      // },
-      // {
-      //   text: 'Kasir',
-      //   to: '/outlet/kasir'
-      // },
-      {
-        text: 'Manajemen Meja',
-        to: '/outlet/manajemen-meja'
-      }
-    ]
-  },
+  // { 
+  //   icon: 'mdi-store', 
+  //   text: 'Outlet',
+  //   children: [
+  //     // {
+  //     //   text: 'Daftar Outlet',
+  //     //   to: '/outlet/daftar-outlet'
+  //     // },
+  //     // {
+  //     //   text: 'Kasir',
+  //     //   to: '/outlet/kasir'
+  //     // },
+  //     {
+  //       text: 'Manajemen Meja',
+  //       to: '/outlet/manajemen-meja'
+  //     }
+  //   ]
+  // },
   { 
     icon: 'mdi-account-check-outline', 
     text: 'Pelanggan',
