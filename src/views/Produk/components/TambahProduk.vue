@@ -38,12 +38,58 @@
                 outlined
               ></v-select>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Tanpa bahan" rules="">
+              <v-checkbox
+                v-model="withoutIngredient"
+                label="Tanpa bahan"
+                class="mb-0 mt-n3 px-4"
+                :error-messages="errors"
+              ></v-checkbox>
+            </ValidationProvider>
+            <div v-if="withoutIngredient === true">
+              <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
+                <v-text-field
+                  :error-messages="errors"
+                  v-model="variantIngredient"
+                  label="Varian"
+                  outlined
+                  dense
+                  class="mb-0 mt-2 px-4"
+                ></v-text-field>
+              </ValidationProvider>
+              <ValidationProvider v-slot="{ errors }" name="Stok awal" rules="integer">
+                <v-text-field
+                  :error-messages="errors"
+                  v-model="stockIngredient"
+                  label="Stok Awal"
+                  outlined
+                  dense
+                  type="number" 
+                  class="mb-0 mt-2 px-4"
+                ></v-text-field>
+              </ValidationProvider>
+              <ValidationProvider v-slot="{ errors }" name="Satuan" rules="">
+                <v-autocomplete
+                  :error-messages="errors"
+                  v-model="unitIngredient"
+                  :items="listUnit"
+                  label="Satuan"
+                  cache-items
+                  class="mb-4 mt-2 px-4"
+                  outlined
+                  dense
+                  hide-no-data
+                  hide-details
+                  :clearable="true"
+                ></v-autocomplete>
+              </ValidationProvider>
+            </div>
             <ValidationProvider v-slot="{ errors }" name="Deskripsi produk" rules="required|max:200">
               <v-textarea
                 v-model="descriptionProduct"
                 :error-messages="errors"
                 label="Deskripsi Produk"
-                class="mb-0 mt-2 px-4"
+                class="mb-0 mt-8 px-4"
                 rows="3"
                 outlined
                 counter
@@ -91,9 +137,14 @@ export default {
       categoryProduct: null,
       descriptionProduct: null,
       imageProduct: null,
+      withoutIngredient: false,
+      variantIngredient: null,
+      stockIngredient: null,
+      unitIngredient: null,
       rulesImage: [
         value => !value || value.size < 2000000 || 'Ukuran foto tidak boleh lebih dari 2 MB',
       ],
+      listUnit: ['liter (l)', 'mililiter (ml)', 'kilogram (kg)', 'ons (ons)', 'gram (g)', 'miligram (mg)', 'centimeter (cm)', 'meter (m)', 'inch (in)', 'bungkus (bks)', 'botol (btl)', 'box (box)', 'butir (btr)', 'pieces (pcs)'],
       previewImage: null
     }
   },
@@ -126,6 +177,10 @@ export default {
         price: this.priceProduct,
         category: this.categoryProduct,
         description: this.descriptionProduct,
+        without_ingredient: this.withoutIngredient,
+        variant: this.variantIngredient,
+        stock: this.stockIngredient,
+        unit: this.unitIngredient,
         image: this.imageProduct
       };
       this.$store.dispatch("submitProduct", dataForm)
@@ -136,6 +191,7 @@ export default {
           this.descriptionProduct = null;
           this.imageProduct = null;
           this.previewImage = null;
+          this.withoutIngredient = false;
           this.$emit("success", "Produk telah disimpan");
         })
         .catch(() => {

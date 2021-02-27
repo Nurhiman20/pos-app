@@ -43,6 +43,52 @@
                 outlined
               ></v-select>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Tanpa bahan" rules="">
+              <v-checkbox
+                v-model="selectedProduct.without_ingredient"
+                label="Tanpa bahan"
+                class="mb-0 mt-n3 px-4"
+                :error-messages="errors"
+              ></v-checkbox>
+            </ValidationProvider>
+            <div v-if="selectedProduct.without_ingredient === true">
+              <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
+                <v-text-field
+                  :error-messages="errors"
+                  v-model="selectedProduct.variant"
+                  label="Varian"
+                  outlined
+                  dense
+                  class="mb-0 mt-2 px-4"
+                ></v-text-field>
+              </ValidationProvider>
+              <ValidationProvider v-slot="{ errors }" name="Stok awal" rules="integer">
+                <v-text-field
+                  :error-messages="errors"
+                  v-model="selectedProduct.stock"
+                  label="Stok Awal"
+                  outlined
+                  dense
+                  type="number" 
+                  class="mb-0 mt-2 px-4"
+                ></v-text-field>
+              </ValidationProvider>
+              <ValidationProvider v-slot="{ errors }" name="Satuan" rules="">
+                <v-autocomplete
+                  :error-messages="errors"
+                  v-model="selectedProduct.unit"
+                  :items="listUnit"
+                  label="Satuan"
+                  cache-items
+                  class="mb-4 mt-2 px-4"
+                  outlined
+                  dense
+                  hide-no-data
+                  hide-details
+                  :clearable="true"
+                ></v-autocomplete>
+              </ValidationProvider>
+            </div>
             <ValidationProvider v-slot="{ errors }" name="Deskripsi produk" rules="required|max:50">
               <v-textarea
                 v-model="selectedProduct.description"
@@ -55,7 +101,7 @@
                 auto-grow
               ></v-textarea>
             </ValidationProvider>
-            <div class="px-4 mt-2">
+            <div class="px-4 mt-2" v-if="selectedProduct.without_ingredient === false || selectedProduct.without_ingredient === undefined">
               <v-data-table
                 :headers="headers"
                 :items="selectedProduct.ingredients"
@@ -63,7 +109,7 @@
                 hide-default-footer
               ></v-data-table>
             </div>
-            <div class="px-4 mt-3 mb-6">
+            <div class="px-4 mt-3 mb-6" v-if="selectedProduct.without_ingredient === false || selectedProduct.without_ingredient === undefined">
               <v-btn color="secondary" dark block @click="$router.push('/produk/resep')">Edit Bahan</v-btn>
             </div>
             <ValidationProvider v-slot="{ errors }" name="Foto produk" rules="required">

@@ -48,12 +48,19 @@ const listViewInventory = (state) => {
     // count total usage
     state.listTransaction.forEach(tx => {
       tx.products_sold.forEach(prod => {
-        prod.ingredients.forEach(ing => {
-          if (ing.id_ingredient === inv.id) {
-            usageCount += parseFloat(ing.qty * prod.qty);
+        if (prod.ingredients !== undefined) {
+          prod.ingredients.forEach(ing => {
+            if (ing.id_ingredient === inv.id) {
+              usageCount += parseFloat(ing.qty * prod.qty);
+              inv.usage = usageCount.toFixed(2);
+            }
+          });
+        } else {
+          if (prod.id === inv.id) {
+            usageCount += parseFloat(prod.qty);
             inv.usage = usageCount.toFixed(2);
           }
-        });
+        }
       });
     });
 
@@ -61,7 +68,7 @@ const listViewInventory = (state) => {
     let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
     let invData = {
       ...inv,
-      ending_stock: endingStock
+      ending_stock: endingStock.toFixed(2)
     }
 
     inventory.push(invData);

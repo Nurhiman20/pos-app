@@ -22,14 +22,30 @@ async function getProduct() {
 async function submitProduct({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
+
+  // set inventory data
+  let inv = {
+    ...dataForm,
+    order: 0,
+    receive: 0,
+    usage: 0,
+    transfer: 0,
+    adjustment: 0,
+    ending_stock: 0
+  };
+
+  // submit product to collection product and inventory
+  let transaction = await vuePos.transaction(['product', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .put('product', dataForm)
+    transaction.objectStore('product').put(dataForm);
+    if (dataForm.without_ingredient === true) {
+      transaction.objectStore('inventory').put(inv);
+    }
+    transaction.done
       .then(result => {
         resolve(result);
       })
       .catch(error => {
-        console.log('error');
         reject(error);
       })
       .finally(() => {
