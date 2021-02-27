@@ -101,6 +101,7 @@ export default {
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Nama', value: 'name', sortable: true },
+        { text: 'Varian', value: 'variant', sortable: false },
         { text: 'Kategori', value: 'category.name', sortable: true },
         { text: 'Stok Awal', value: 'stock', sortable: true },
         { text: 'Satuan', value: 'unit', sortable: true },

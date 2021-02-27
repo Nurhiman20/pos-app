@@ -15,6 +15,16 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
+              <v-text-field
+                :error-messages="errors"
+                v-model="variantIngredient"
+                label="Varian"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Kategori bahan" rules="required">
               <v-select
                 v-model="categoryIngredient"
@@ -82,6 +92,7 @@ export default {
   data() {
     return {
       nameIngredient: null,
+      variantIngredient: null,
       categoryIngredient: {},
       stockIngredient: null,
       unitIngredient: null,
@@ -108,6 +119,7 @@ export default {
       let dataForm = {
         id: this.randomId(),
         name: this.nameIngredient,
+        variant: this.variantIngredient,
         category: this.categoryIngredient,
         stock: this.stockIngredient,
         unit: this.unitIngredient,
