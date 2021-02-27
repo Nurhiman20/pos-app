@@ -962,6 +962,43 @@ async function deleteTable({ commit }, dataForm) {
   });
 }
 
+async function updateReceipt({ commit, state }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search outlet in collection outlet
+  let tx = vuePos.transaction('outlet').store;
+  let cursor = await tx.openCursor();
+  let outlet = { id: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === state.account.id) {
+      outlet = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  let updatedOutlet = {
+    ...outlet,
+    receipt: dataForm
+  }
+
+  return new Promise((resolve, reject) => {
+    vuePos
+      .put('outlet', updatedOutlet)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 export default {
   getProduct,
   submitProduct,
@@ -1005,5 +1042,6 @@ export default {
   deleteCashier,
   getTable,
   submitTable,
-  deleteTable
+  deleteTable,
+  updateReceipt
 }

@@ -2,10 +2,14 @@
   <div>
     <div class="receipt pa-3 mb-3 pb-12" id="receipt">
       <div class="d-flex flex-column justify-center justify-content-start border-bottom">
-        <h2 class="text-center">21FACTORY</h2>
-        <p class="app-subtitle text-center">Jl. Veteran I No.21, RT.4/RW.2, Jakarta Pusat, DKI Jakarta 10110<br>
+        <div class="d-flex">
+          <!-- <v-img :src="showImage" max-width="150" :aspect-ratio="4/3" class="mx-auto"></v-img> -->
+          <img :src="showImage" style="max-width: 150px; margin: auto;">
+        </div>
+        <h2 class="text-center">{{ $store.state.account.receipt.outlet_name }}</h2>
+        <p class="app-subtitle text-center">{{ $store.state.account.receipt.address }}<br>
           <v-icon class="" color="#9A9A9A" size="15">mdi-phone</v-icon>
-          081234567
+          {{ $store.state.account.receipt.phone_number }}
         </p>
       </div>
       <div class="d-flex flex-row justify-space-between justify-content-between mt-2">
@@ -49,6 +53,25 @@
         <p>Change</p>
         <p>Rp{{ formatCurrency(this.selected.money_change) }},00</p>
       </div>
+      <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.website !== null">
+        <v-icon color="#9A9A9A" size="15">mdi-web</v-icon>
+        <p class="my-auto ml-1">{{ $store.state.account.receipt.website }}</p>
+      </div>
+      <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.ig !== null">
+        <v-icon color="#9A9A9A" size="15">mdi-instagram</v-icon>
+        <p class="my-auto ml-1">{{ $store.state.account.receipt.ig }}</p>
+      </div>
+      <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.fb !== null">
+        <v-icon color="#9A9A9A" size="15">mdi-facebook</v-icon>
+        <p class="my-auto ml-1">{{ $store.state.account.receipt.fb }}</p>
+      </div>
+      <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.twitter !== null">
+        <v-icon color="#9A9A9A" size="15">mdi-twitter</v-icon>
+        <p class="my-auto ml-1">{{ $store.state.account.receipt.twitter }}</p>
+      </div>
+      <div class="d-flex flex-row mt-2">
+        <p class="mx-auto">{{ $store.state.account.receipt.notes }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -56,6 +79,15 @@
 <script>
 export default {
   props: ['selected', 'print'],
+  computed: {
+    showImage() {
+      let logo = null;
+      if (this.$store.state.account.receipt.logo !== undefined) {
+        logo = URL.createObjectURL(this.$store.state.account.receipt.logo);
+      }
+      return logo
+    }
+  },
   watch: {
     print(val) {
       if (val === true) {
@@ -68,7 +100,7 @@ export default {
   methods: {    
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
-    },
+    }
   },
 }
 </script>

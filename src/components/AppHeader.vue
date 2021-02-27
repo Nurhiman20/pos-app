@@ -13,7 +13,7 @@
         <v-icon>mdi-menu</v-icon>
       </v-btn> -->
       <v-spacer></v-spacer>
-      <div class="d-flex flex-row">
+      <!-- <div class="d-flex flex-row">
         <v-select
           v-model="cashier"
           :items="$store.state.listCashier"
@@ -35,7 +35,7 @@
           outlined
           dense
         ></v-select>
-      </div>
+      </div> -->
     </v-app-bar>
   </div>
 </template>

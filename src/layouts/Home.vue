@@ -60,6 +60,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch("getOutlet");
     const dark = localStorage.getItem('darkTheme');
     
     if (dark === 'true') {

@@ -133,6 +133,10 @@ export const mainMenu = [
     text: 'Pengaturan',
     children: [
       {
+        text: 'Receipt',
+        to: '/pengaturan/receipt'
+      },
+      {
         text: 'Tampilan',
         to: '/pengaturan/tampilan'
       }

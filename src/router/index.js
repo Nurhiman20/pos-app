@@ -206,6 +206,14 @@ const routes = [
         meta: {
           title: 'Tampilan | 21FACTORY'
         }
+      },
+      {
+        path: '/pengaturan/receipt',
+        name: 'Receipt',
+        component: () => import('@/views/Pengaturan/Receipt.vue'),
+        meta: {
+          title: 'Receipt | 21FACTORY'
+        }
       }
     ]
   }

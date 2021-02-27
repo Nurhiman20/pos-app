@@ -48,6 +48,9 @@ const SET_LIST_CUSTOMER = (state, payload) => {
 
 const SET_LIST_OUTLET = (state, payload) => {
   state.listOutlet = payload;
+  
+  // sementara
+  state.account = payload[0];
 };
 
 const SET_LIST_CASHIER = (state, payload) => {

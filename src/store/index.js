@@ -21,6 +21,9 @@ const state = {
   dateEnd: null,
   
   // Data model
+  account: {
+    id: 'outlet-W1614393018859'
+  },
   listProduct: [],
   listCategory: [],
   listIngredient: [],
