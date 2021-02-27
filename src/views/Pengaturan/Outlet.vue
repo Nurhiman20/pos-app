@@ -15,7 +15,7 @@
         <v-card class="pa-4 mt-4">          
           <div class="d-flex flex-row justify-space-between">
             <v-card-title>Pegawai</v-card-title>
-            <v-btn color="primary" @click="$router.push('/pengaturan/pegawai')">Edit</v-btn> 
+            <v-btn color="primary" class="my-auto" @click="$router.push('/pengaturan/pegawai')">Edit</v-btn> 
           </div>
           <v-data-table
             :headers="headersCashier"
@@ -32,7 +32,7 @@
         <v-card class="pa-4 mt-4">
           <div class="d-flex flex-row justify-space-between">
             <v-card-title>Meja</v-card-title>
-            <v-btn color="primary">Tambah Meja</v-btn> 
+            <v-btn color="primary" class="my-auto">Tambah Meja</v-btn> 
           </div>
           <v-data-table
             :headers="headersTable"
