@@ -180,8 +180,9 @@ export default {
         })
     },
     goToEdit(item) {
-      this.selectedOutlet = item;
-      this.dialogEditOutlet = true;
+      // this.selectedOutlet = item;
+      // this.dialogEditOutlet = true;
+      this.$router.push('/pengaturan/outlet/' + item.id)
     }
   },
   created() {

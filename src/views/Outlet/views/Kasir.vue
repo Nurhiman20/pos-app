@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
-      <h1>Kasir</h1>
+      <h1>Pegawai</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
         <download-excel
           :data="$store.state.listCashier"
@@ -12,7 +12,7 @@
         >
           <v-btn color="secondary" small>Export</v-btn>
         </download-excel>
-        <v-btn class="ml-2" color="primary" small @click="dialogAddCashier = true">Tambah Kasir</v-btn>
+        <v-btn class="ml-2" color="primary" small @click="dialogAddCashier = true">Tambah Pegawai</v-btn>
       </div>
     </div>
 
@@ -101,7 +101,9 @@ export default {
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Username', value: 'username', sortable: true },
         { text: 'Nama', value: 'name', sortable: true },
-        { text: 'Nomor HP', value: 'phone_number', sortable: false }
+        { text: 'Jabatan', value: 'role', sortable: true },
+        { text: 'Nomor HP', value: 'phone_number', sortable: false },
+        { text: 'Cabang', value: 'outlet', sortable: true }
       ],      
       jsonFields: {
         ID: 'id',

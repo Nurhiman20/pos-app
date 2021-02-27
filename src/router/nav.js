@@ -68,14 +68,14 @@ export const mainMenu = [
     icon: 'mdi-store', 
     text: 'Outlet',
     children: [
-      {
-        text: 'Daftar Outlet',
-        to: '/outlet/daftar-outlet'
-      },
-      {
-        text: 'Kasir',
-        to: '/outlet/kasir'
-      },
+      // {
+      //   text: 'Daftar Outlet',
+      //   to: '/outlet/daftar-outlet'
+      // },
+      // {
+      //   text: 'Kasir',
+      //   to: '/outlet/kasir'
+      // },
       {
         text: 'Manajemen Meja',
         to: '/outlet/manajemen-meja'
@@ -132,6 +132,14 @@ export const mainMenu = [
     icon: 'mdi-cog-outline', 
     text: 'Pengaturan',
     children: [
+      {
+        text: 'Outlet',
+        to: '/pengaturan/daftar-outlet'
+      },
+      {
+        text: 'Pegawai',
+        to: '/pengaturan/kasir'
+      },
       {
         text: 'Receipt',
         to: '/pengaturan/receipt'
