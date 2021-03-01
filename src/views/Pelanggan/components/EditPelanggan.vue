@@ -33,6 +33,16 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Email" rules="email">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedCustomer.email"
+                label="Email"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>

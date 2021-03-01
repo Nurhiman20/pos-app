@@ -100,12 +100,14 @@ export default {
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Nama', value: 'name', sortable: false },
-        { text: 'Nomor HP', value: 'phone_number', sortable: false }
+        { text: 'Nomor HP', value: 'phone_number', sortable: false },
+        { text: 'Email', value: 'email', sortable: false }
       ],
       jsonFields: {
         ID: 'id',
         'Nama Pelanggan': 'name',
-        'Nomor HP': 'phone_number'
+        'Nomor HP': 'phone_number',
+        Email: 'email'
       },
       dialogAddCustomer: false,
       dialogEditCustomer: false,

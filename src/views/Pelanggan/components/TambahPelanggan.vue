@@ -25,6 +25,16 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Email" rules="email">
+              <v-text-field
+                :error-messages="errors"
+                v-model="email"
+                label="Email"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
@@ -43,7 +53,8 @@ export default {
   data() {
     return {
       name: null,
-      phoneNumber: null
+      phoneNumber: null,
+      email: null
     }
   },
   methods: {
@@ -59,12 +70,14 @@ export default {
       let dataForm = {
         id: this.randomId(),
         name: this.name,
-        phone_number: this.phoneNumber
+        phone_number: this.phoneNumber,
+        email: this.email
       }
       this.$store.dispatch("submitCustomer", dataForm)
         .then(() => {
           this.name = null;
           this.phoneNumber = null;
+          this.email = null;
           this.$emit("success", "Pelanggan telah diperbarui");
         })
         .catch(() => {
