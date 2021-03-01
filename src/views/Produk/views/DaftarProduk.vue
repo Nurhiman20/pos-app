@@ -50,7 +50,7 @@
         </template>
         <template v-slot:item.ingredients="{item}">
           <p class="my-auto" v-if="item.ingredients !== undefined">{{ item.ingredients.length }} bahan</p>
-          <p class="my-auto" v-ielse>-</p>
+          <p class="my-auto" v-else>-</p>
         </template>
       </v-data-table>
     </v-card>

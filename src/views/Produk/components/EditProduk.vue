@@ -52,6 +52,17 @@
               ></v-checkbox>
             </ValidationProvider>
             <div v-if="selectedProduct.without_ingredient === true">
+              <ValidationProvider v-slot="{ errors }" name="Harga beli" rules="integer">
+                <v-text-field
+                  :error-messages="errors"
+                  v-model="selectedProduct.price_cost"
+                  label="Harga Beli"
+                  placeholder="15000"
+                  outlined
+                  dense
+                  class="mb-0 mt-2 px-4"
+                ></v-text-field>
+              </ValidationProvider>
               <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
                 <v-text-field
                   :error-messages="errors"
@@ -157,7 +168,8 @@ export default {
         { text: 'Qty', value: 'qty', sortable: false },
         { text: 'Unit', value: 'ingredient.unit', sortable: false }
       ],
-      previewImage: null
+      previewImage: null,      
+      listUnit: ['liter (l)', 'mililiter (ml)', 'kilogram (kg)', 'ons (ons)', 'gram (g)', 'miligram (mg)', 'centimeter (cm)', 'meter (m)', 'inch (in)', 'bungkus (bks)', 'botol (btl)', 'box (box)', 'butir (btr)', 'pieces (pcs)'],
     }
   },
   watch: {

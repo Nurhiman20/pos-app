@@ -153,9 +153,13 @@ const totalProfitToday = (state) => {
 
   transactionToday.forEach(tx => {
     tx.products_sold.forEach(prod => {
-      prod.ingredients.forEach(ing => {
-        costToday += parseFloat(ing.ingredient.price) * parseFloat(ing.qty) * parseFloat(prod.qty)
-      })
+      if (prod.ingredients !== undefined) {
+        prod.ingredients.forEach(ing => {
+          costToday += parseFloat(ing.ingredient.price) * parseFloat(ing.qty) * parseFloat(prod.qty);
+        })
+      } else {
+        costToday += (parseFloat(prod.price) - parseFloat(prod.price_cost)) * parseFloat(prod.qty);
+      }
     })
   });
 
@@ -175,9 +179,13 @@ const totalProfitMonth = (state) => {
 
   transactionMonth.forEach(tx => {
     tx.products_sold.forEach(prod => {
-      prod.ingredients.forEach(ing => {
-        costMonth += parseFloat(ing.ingredient.price) * parseFloat(ing.qty) * parseFloat(prod.qty)
-      })
+      if (prod.ingredients !== undefined) {
+        prod.ingredients.forEach(ing => {
+          costMonth += parseFloat(ing.ingredient.price) * parseFloat(ing.qty) * parseFloat(prod.qty);
+        })
+      } else {
+        costMonth += (parseFloat(prod.price) - parseFloat(prod.price_cost)) * parseFloat(prod.qty);
+      }
     })
   });
 

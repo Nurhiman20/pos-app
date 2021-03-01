@@ -47,6 +47,17 @@
               ></v-checkbox>
             </ValidationProvider>
             <div v-if="withoutIngredient === true">
+              <ValidationProvider v-slot="{ errors }" name="Harga beli" rules="integer">
+                <v-text-field
+                  :error-messages="errors"
+                  v-model="priceCost"
+                  label="Harga Beli"
+                  placeholder="15000"
+                  outlined
+                  dense
+                  class="mb-0 mt-2 px-4"
+                ></v-text-field>
+              </ValidationProvider>
               <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
                 <v-text-field
                   :error-messages="errors"
@@ -138,6 +149,7 @@ export default {
       descriptionProduct: null,
       imageProduct: null,
       withoutIngredient: false,
+      priceCost: null,
       variantIngredient: null,
       stockIngredient: null,
       unitIngredient: null,
@@ -178,6 +190,7 @@ export default {
         category: this.categoryProduct,
         description: this.descriptionProduct,
         without_ingredient: this.withoutIngredient,
+        price_cost: this.priceCost,
         variant: this.variantIngredient,
         stock: this.stockIngredient,
         unit: this.unitIngredient,
@@ -192,6 +205,10 @@ export default {
           this.imageProduct = null;
           this.previewImage = null;
           this.withoutIngredient = false;
+          this.priceCost = null;
+          this.variantIngredient = null;
+          this.stockIngredient = null;
+          this.unitIngredient = null;
           this.$emit("success", "Produk telah disimpan");
         })
         .catch(() => {
