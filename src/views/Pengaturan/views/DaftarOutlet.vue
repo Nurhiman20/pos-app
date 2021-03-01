@@ -182,7 +182,7 @@ export default {
     goToEdit(item) {
       // this.selectedOutlet = item;
       // this.dialogEditOutlet = true;
-      this.$router.push('/pengaturan/outlet/' + item.id)
+      this.$router.push('/pengaturan/outlet/daftar-outlet/' + item.id)
     }
   },
   created() {

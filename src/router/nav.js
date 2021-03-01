@@ -134,7 +134,7 @@ export const mainMenu = [
     children: [
       {
         text: 'Outlet',
-        to: '/pengaturan/daftar-outlet'
+        to: '/pengaturan/outlet/daftar-outlet'
       },
       {
         text: 'Pegawai',

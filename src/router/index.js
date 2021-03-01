@@ -136,14 +136,6 @@ const routes = [
     component: () => import('@/layouts/Home'),
     children: [
       {
-        path: '/outlet/daftar-outlet',
-        name: 'Daftar Outlet',
-        component: () => import('@/views/Outlet/views/DaftarOutlet.vue'),
-        meta: {
-          title: 'Daftar Outlet | Outlet | 21FACTORY'
-        }
-      },
-      {
         path: '/outlet/manajemen-meja',
         name: 'Manajemen Meja',
         component: () => import('@/views/Outlet/views/ManajemenMeja.vue'),
@@ -188,24 +180,32 @@ const routes = [
   {
     path: '/pengaturan',
     name: 'Pengaturan',
-    redirect: '/pengaturan/tampilan',
+    redirect: '/pengaturan/outlet',
     component: () => import('@/layouts/Home'),
     children: [
       {
-        path: '/pengaturan/daftar-outlet',
-        name: 'Daftar Outlet',
-        component: () => import('@/views/Outlet/views/DaftarOutlet.vue'),
-        meta: {
-          title: 'Daftar Outlet | Outlet | 21FACTORY'
-        }
-      },
-      {
-        path: '/pengaturan/outlet/:id',
+        path: '/pengaturan/outlet',
         name: 'Outlet',
-        component: () => import('@/views/Pengaturan/Outlet.vue'),
-        meta: {
-          title: 'Outlet | Outlet | 21FACTORY'
-        }
+        redirect: '/pengaturan/outlet/daftar-outlet',
+        component: () => import('@/views/Pengaturan'),
+        children: [
+          {
+            path: '/pengaturan/outlet/daftar-outlet',
+            name: 'Daftar Outlet',
+            component: () => import('@/views/Pengaturan/views/DaftarOutlet.vue'),
+            meta: {
+              title: 'Daftar Outlet | Outlet | 21FACTORY'
+            }
+          },
+          {
+            path: '/pengaturan/outlet/daftar-outlet/:id',
+            name: 'Detail Outlet',
+            component: () => import('@/views/Pengaturan/views/DetailOutlet.vue'),
+            meta: {
+              title: 'Detail Outlet | Outlet | 21FACTORY'
+            }
+          }
+        ]
       },
       {
         path: '/pengaturan/kasir',
