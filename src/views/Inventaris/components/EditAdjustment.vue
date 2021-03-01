@@ -13,7 +13,7 @@
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editAdjustment)">
-            <ValidationProvider v-slot="{ errors }" name="In stock" rules="integer">
+            <ValidationProvider v-slot="{ errors }" name="In stock" rules="">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedAdjustment.ingredient.ending_stock"
