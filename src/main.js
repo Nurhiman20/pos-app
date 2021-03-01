@@ -23,9 +23,18 @@ const options = {
 
 Vue.use(VueHtmlToPaper, options);
 
-SchemaSyncHandler.sync()
+SchemaSyncHandler.sync();
 Vue.component("downloadExcel", JsonExcel);
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then(function(persistent) {
+    if (persistent)
+      console.log("Storage will not be cleared except by explicit user action");
+    else
+      console.log("Storage may be cleared by the UA under storage pressure.");
+  });
+}
 
 new Vue({
   router,
