@@ -2,29 +2,12 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <div class="d-flex flex-row justify-space-between align-center">
+        <div class="d-flex flex-column">
           <v-card-title class="ml-0">Edit Bahan</v-card-title>
+          <v-card-subtitle>{{ selectedIngredient.ingredient.name }}</v-card-subtitle>
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editIngredient)">
-            <ValidationProvider v-slot="{ errors }" name="Nama bahan" rules="required">
-              <v-autocomplete
-                :error-messages="errors"
-                v-model="selectedIngredient.ingredient"
-                :items="$store.state.listIngredient"
-                :item-text="textIngredient"
-                :item-value="valueIngredient"
-                label="Nama Bahan"
-                cache-items
-                class="mb-0 mt-2 px-4"
-                outlined
-                dense
-                hide-no-data
-                hide-details
-                disabled
-                :clearable="true"
-              ></v-autocomplete>
-            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Dipesan" rules="required">
               <v-text-field
                 :error-messages="errors"
@@ -34,7 +17,7 @@
                 outlined
                 dense
                 disabled
-                class="mb-0 mt-8 px-4"
+                class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Diterima" rules="required">
@@ -66,7 +49,11 @@ export default {
   data() {
     return {
       received: null,
-      selectedIngredient: {}
+      selectedIngredient: {
+        ingredient: {
+          name: null
+        }
+      }
     }
   },
   watch: {

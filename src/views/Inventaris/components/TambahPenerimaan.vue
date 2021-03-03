@@ -102,7 +102,16 @@ export default {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     },
     textOrder(item) {
-      let strText = '(' + item.id + ') ' + item.supplier.name + ' - ' + item.supplier.phone_number;
+      let strText = '(' + item.id + ') ' + item.supplier.name + ' - ' + item.supplier.phone_number + ' ';
+      let strIng = '(';
+      item.ingredients.forEach((ing, index) => {
+        if (index < item.ingredients.length - 1) {
+          strIng += ing.ingredient.name + ', '
+        } else {
+          strIng += ing.ingredient.name + ')'
+        }
+      });
+      strText += strIng;
       return strText
     },
     valueOrder(item) {
