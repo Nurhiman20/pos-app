@@ -71,18 +71,47 @@ async function updateProduct({ commit }, dataForm) {
     if (!cursor) break;
   }
 
+  // search product in collection inventory
+  let inventory = vuePos.transaction('inventory').store;
+  let cursor2 = await inventory.openCursor();
+  let inv = { id: null };
+  const loopCursor2 = true;
+  while (loopCursor2) {
+    if (cursor2.value.id === dataForm.id) {
+      inv = cursor2.value;
+    }
+    cursor2 = await cursor2.continue();
+    if (!cursor2) break;
+  }
+
   // set updated data
   let updatedProductRecipe = {
     ...productRecipe,
     product: dataForm
   }
-
+  let updatedInv = {
+    ...inv,
+    name: dataForm.name,
+    category: dataForm.category,
+    price: dataForm.price,
+    stock: dataForm.stock,
+    unit: dataForm.unit,
+    description: dataForm.description,
+    without_ingredient: dataForm.without_ingredient,
+    price_cost: dataForm.price_cost,
+    variant: dataForm.variant,
+    image: dataForm.image
+  };
+  
   // update product in collection product and recipe
-  let transaction = await vuePos.transaction(['product', 'recipe'], 'readwrite');
+  let transaction = await vuePos.transaction(['product', 'recipe', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('product').put(dataForm);
     if (updatedProductRecipe.id !== null) {
       transaction.objectStore('recipe').put(updatedProductRecipe);
+    }
+    if (updatedInv.id !== null) {
+      transaction.objectStore('inventory').put(updatedInv);
     }
     transaction.done
       .then(result => {
@@ -114,12 +143,28 @@ async function deleteProduct({ commit }, dataForm) {
     if (!cursor) break;
   }
 
+  // search product in collection inventory
+  let inventory = vuePos.transaction('inventory').store;
+  let cursor2 = await inventory.openCursor();
+  let inv = { id: null };
+  const loopCursor2 = true;
+  while (loopCursor2) {
+    if (cursor2.value.id === dataForm.id) {
+      inv = cursor2.value;
+    }
+    cursor2 = await cursor2.continue();
+    if (!cursor2) break;
+  }
+
   // delete product in collection product and inventory
-  let transaction = await vuePos.transaction(['product', 'recipe'], 'readwrite');
+  let transaction = await vuePos.transaction(['product', 'recipe', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('product').delete(dataForm.id);
     if (productRecipe.id !== null) {   
       transaction.objectStore('recipe').delete(productRecipe.id);
+    }
+    if (inv.id !== null) {   
+      transaction.objectStore('inventory').delete(dataForm.id);
     }
     transaction.done
       .then(result => {

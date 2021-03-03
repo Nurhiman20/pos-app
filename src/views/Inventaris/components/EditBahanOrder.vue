@@ -75,7 +75,12 @@ export default {
   props: ['show', 'selected'],
   data() {
     return {
-      selectedIngredient: {}
+      selectedIngredient: {
+        ingredient: {
+          id: null,
+          name: null
+        }
+      }
     }
   },
   watch: {
