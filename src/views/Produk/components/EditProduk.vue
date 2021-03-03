@@ -199,6 +199,15 @@ export default {
       this.$emit("delete", this.selectedProduct)
     },
     editProduct() {
+      if (this.selectedProduct.without_ingredient === true) {
+        delete this.selectedProduct["ingredients"];
+      } else {
+        this.selectedProduct.ingredients = [];
+        delete this.selectedProduct["price_cost"];
+        delete this.selectedProduct["variant"];
+        delete this.selectedProduct["stock"];
+        delete this.selectedProduct["unit"];
+      }
       this.$store.dispatch("updateProduct", this.selectedProduct)
         .then(() => {
           this.$emit("success", "Produk telah diedit");

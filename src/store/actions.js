@@ -102,6 +102,17 @@ async function updateProduct({ commit }, dataForm) {
     variant: dataForm.variant,
     image: dataForm.image
   };
+
+  // set inventory data
+  let invData = {
+    ...dataForm,
+    order: 0,
+    receive: 0,
+    usage: 0,
+    transfer: 0,
+    adjustment: 0,
+    ending_stock: 0
+  };
   
   // update product in collection product and recipe
   let transaction = await vuePos.transaction(['product', 'recipe', 'inventory'], 'readwrite');
@@ -110,8 +121,12 @@ async function updateProduct({ commit }, dataForm) {
     if (updatedProductRecipe.id !== null) {
       transaction.objectStore('recipe').put(updatedProductRecipe);
     }
-    if (updatedInv.id !== null) {
+    if (updatedInv.id !== null && dataForm.without_ingredient === true) {
       transaction.objectStore('inventory').put(updatedInv);
+    } else if (updatedInv.id !== null && dataForm.without_ingredient === false) {
+      transaction.objectStore('inventory').delete(dataForm.id);
+    } else if (updatedInv.id === null && dataForm.without_ingredient === true) {
+      transaction.objectStore('inventory').put(invData);
     }
     transaction.done
       .then(result => {
