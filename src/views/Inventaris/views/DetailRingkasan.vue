@@ -11,7 +11,7 @@
           </div>
           <v-data-table
             :headers="headersOrder"
-            :items="$store.state.listOrder"
+            :items="$store.getters.orderOnDetail"
             class="elevation-1 scrollbar-custom"
             hide-default-footer
             @click:row="goToEdit"
@@ -29,7 +29,7 @@
           </div>
           <v-data-table
             :headers="headersReceive"
-            :items="$store.state.listReceive"
+            :items="$store.getters.receiveOnDetail"
             class="elevation-1 scrollbar-custom"
             hide-default-footer
             @click:row="goToEdit"
@@ -61,7 +61,7 @@
           </div>
           <v-data-table
             :headers="headersAdjustment"
-            :items="$store.state.listAdjustment"
+            :items="$store.getters.adjustmentOnDetail"
             class="elevation-1 scrollbar-custom"
             hide-default-footer
             @click:row="goToEdit"
@@ -135,6 +135,7 @@ export default {
     this.$store.dispatch("getInventoryById", this.$route.params.id);
     this.$store.dispatch("getOrder");
     this.$store.dispatch("getReceive");
+    this.$store.dispatch("getAdjustment");
   },
 }
 </script>

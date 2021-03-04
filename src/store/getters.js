@@ -192,6 +192,43 @@ const totalProfitMonth = (state) => {
   return amountMonth - costMonth;
 }
 
+const orderOnDetail = (state) => {
+  let orders = [];
+  state.listOrder.forEach(order => {
+    order.ingredients.forEach(ing => {
+      if (ing.id_ingredient === state.detailInventory.id) {
+        orders.push(order);
+      }
+    });
+  });
+  
+  return orders;
+}
+
+const receiveOnDetail = (state) => {
+  let receives = [];
+  state.listReceive.forEach(receive => {
+    receive.ingredients.forEach(ing => {
+      if (ing.id_ingredient === state.detailInventory.id) {
+        receives.push(receive);
+      }
+    });
+  });
+  
+  return receives;
+}
+
+const adjustmentOnDetail = (state) => {
+  let adjustments = [];
+  state.listAdjustment.forEach(adj => {
+    if (adj.id_ingredient === state.detailInventory.id) {
+      adjustments.push(adj);
+    }
+  });
+  
+  return adjustments;
+}
+
 export default {
   listViewProduct,
   listViewInventory,
@@ -201,5 +238,8 @@ export default {
   totalAmountToday,
   totalAmountMonth,
   totalProfitToday,
-  totalProfitMonth
+  totalProfitMonth,
+  orderOnDetail,
+  receiveOnDetail,
+  adjustmentOnDetail
 }
