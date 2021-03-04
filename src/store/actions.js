@@ -611,9 +611,17 @@ async function submitOrder({ commit }, dataForm) {
   let transaction = await vuePos.transaction(['order', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('order').put(dataForm);
+
+    let orderCount = 0;
     inventories.forEach(inv => {
-      inv.orders.push(dataForm);
+      dataForm.ingredients.forEach(ing => {
+        if (ing.id_ingredient === inv.id) {
+          orderCount += parseFloat(ing.order);
+          inv.order = orderCount;
+        }
+      });      
       transaction.objectStore('inventory').put(inv);
+      orderCount = 0;
     });
     transaction.done
       .then(result => {
@@ -631,9 +639,38 @@ async function submitOrder({ commit }, dataForm) {
 async function deleteOrder({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  let transaction = await vuePos.transaction(['order', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .delete('order', dataForm.id)
+    transaction.objectStore('order').delete(dataForm.id);
+
+    let orderCount = 0;
+    inventories.forEach(inv => {
+      orderCount = inv.order;
+      dataForm.ingredients.forEach(ing => {
+        if (ing.id_ingredient === inv.id) {
+          orderCount -= parseFloat(ing.order);
+          inv.order = orderCount;
+        }
+      });      
+      transaction.objectStore('inventory').put(inv);
+    });
+    transaction.done
       .then(result => {
         resolve(result);
       })
@@ -644,6 +681,19 @@ async function deleteOrder({ commit }, dataForm) {
         commit("SET_LOADING", false);
       });
   });
+  // return new Promise((resolve, reject) => {
+  //   vuePos
+  //     .delete('order', dataForm.id)
+  //     .then(result => {
+  //       resolve(result);
+  //     })
+  //     .catch(error => {
+  //       reject(error);
+  //     })
+  //     .finally(() => {
+  //       commit("SET_LOADING", false);
+  //     });
+  // });
 }
 
 async function getReceive({ commit }) {

@@ -11,21 +11,21 @@ const listViewProduct = (state) => {
 
 const listViewInventory = (state) => {
   let inventory = [];
-  let orderCount = 0;
+  // let orderCount = 0;
   let receiveCount = 0;
   let adjustmentCount = 0;
   let usageCount = 0;
 
   state.listInventory.forEach(inv => {
     // count total order
-    state.listOrder.forEach(order => {
-      order.ingredients.forEach(ing => {
-        if (ing.id_ingredient === inv.id) {
-          orderCount += parseFloat(ing.order);
-          inv.order = orderCount;
-        }
-      });
-    });
+    // state.listOrder.forEach(order => {
+    //   order.ingredients.forEach(ing => {
+    //     if (ing.id_ingredient === inv.id) {
+    //       orderCount += parseFloat(ing.order);
+    //       inv.order = orderCount;
+    //     }
+    //   });
+    // });
 
     // count total received
     state.listReceive.forEach(receive => {
@@ -73,7 +73,7 @@ const listViewInventory = (state) => {
 
     inventory.push(invData);
     receiveCount = 0;
-    orderCount = 0;
+    // orderCount = 0;
     adjustmentCount = 0;
     usageCount = 0;
   });
