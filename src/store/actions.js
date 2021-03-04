@@ -494,6 +494,25 @@ async function getInventory({ commit }) {
   });
 }
 
+async function getInventoryById({ commit }, id) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .get('inventory', id)
+      .then(result => {
+        commit('SET_DETAIL_INVENTORY', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function submitInventory({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -1297,6 +1316,7 @@ export default {
   submitRecipe,
   deleteRecipe,
   getInventory,
+  getInventoryById,
   submitInventory,
   getSupplier,
   submitSupplier,

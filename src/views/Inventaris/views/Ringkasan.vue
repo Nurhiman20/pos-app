@@ -41,6 +41,7 @@
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
+        @click:row="viewDetail"
       >
         <!-- <template v-slot:item.name="{item}">
           <div class="d-flex flex-row align-center py-2">
@@ -182,6 +183,9 @@ export default {
       } else {
         return null;
       }
+    },
+    viewDetail(e) {
+      this.$router.push('ringkasan/detail/' + e.id);
     }
   },
   created() {

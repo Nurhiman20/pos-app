@@ -80,12 +80,28 @@ const routes = [
     component: () => import('@/layouts/Home'),
     children: [
       {
-        path: '/inventaris/ringkasan',
+        path: '/inventaris/index',
         name: 'Ringkasan',
-        component: () => import('@/views/Inventaris/views/Ringkasan.vue'),
-        meta: {
-          title: 'Ringkasan | Inventaris | 21FACTORY'
-        }
+        redirect: '/inventaris/ringkasan',
+        component: () => import('@/views/Inventaris/index.vue'),
+        children: [
+          {
+            path: '/inventaris/ringkasan',
+            name: 'Daftar Ringkasan',
+            component: () => import('@/views/Inventaris/views/Ringkasan.vue'),
+            meta: {
+              title: 'Ringkasan | Inventaris | 21FACTORY'
+            }
+          },
+          {
+            path: '/inventaris/ringkasan/detail/:id',
+            name: 'Detail Ringkasan',
+            component: () => import('@/views/Inventaris/views/DetailRingkasan.vue'),
+            meta: {
+              title: 'Detail Ringkasan | Inventaris | 21FACTORY'
+            }
+          }
+        ]
       },
       {
         path: '/inventaris/supplier',
