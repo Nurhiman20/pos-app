@@ -43,8 +43,8 @@
         @click:row="goToEdit"
       >
         <template v-slot:item.expense_income="{item}">
-          <p class="text-bold success--text my-auto" v-if="item.in_stock - item.actual_stock > 0">Rp{{ formatCurrency((item.in_stock - item.actual_stock) * item.ingredient.price) }},00</p>
-          <p class="text-bold error--text my-auto" v-else>- Rp{{ formatCurrency((item.in_stock - item.actual_stock) * item.ingredient.price * (-1)) }},00</p>
+          <p class="text-bold success--text my-auto" v-if="parseFloat(item.in_stock) - parseFloat(item.actual_stock) > 0">Rp{{ formatCurrency(countExIn(item)) }},00</p>
+          <p class="text-bold error--text my-auto" v-else>- Rp{{ countExIn(item) * (-1) }},00</p>
         </template>
       </v-data-table>
     </v-card>
@@ -137,6 +137,10 @@ export default {
     },
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+    },
+    countExIn(item) {
+      let count = (parseFloat(item.in_stock) - parseFloat(item.actual_stock)) * parseFloat(item.ingredient.price);
+      return count.toFixed(0)
     },
     closeDialogSuccess(e) {
       this.dialogAddAdjustment = false;

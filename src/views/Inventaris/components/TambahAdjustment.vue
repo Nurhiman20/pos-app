@@ -105,6 +105,10 @@ export default {
       var uniqid = 'adj-' + randLetter + Date.now();
       return uniqid
     },
+    countAdjustment(inStock, actualStock) {
+      let count = parseFloat(inStock) - parseFloat(actualStock);
+      return parseFloat(count.toFixed(2))
+    },
     addAdjustment() {
       let dataForm = {
         id: this.randomId(),
@@ -112,7 +116,7 @@ export default {
         ingredient: this.nameIngredient,
         in_stock: this.inStock,
         actual_stock: this.actualStock,
-        adjustment: parseFloat(this.inStock) - parseFloat(this.actualStock),
+        adjustment: this.countAdjustment(this.inStock, this.actualStock),
         notes: this.notes,
         time: moment().format('MM/DD/YYYY, h:mm:ss a')
       };
