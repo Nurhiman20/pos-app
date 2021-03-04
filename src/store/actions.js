@@ -614,6 +614,7 @@ async function submitOrder({ commit }, dataForm) {
 
     let orderCount = 0;
     inventories.forEach(inv => {
+      orderCount = inv.order;
       dataForm.ingredients.forEach(ing => {
         if (ing.id_ingredient === inv.id) {
           orderCount += parseFloat(ing.order);
@@ -621,7 +622,6 @@ async function submitOrder({ commit }, dataForm) {
         }
       });      
       transaction.objectStore('inventory').put(inv);
-      orderCount = 0;
     });
     transaction.done
       .then(result => {
@@ -727,6 +727,7 @@ async function submitReceive({ commit }, dataForm) {
 
     let receiveCount = 0;
     inventories.forEach(inv => {
+      receiveCount = inv.receive;
       dataForm.ingredients.forEach(ing => {
         if (ing.id_ingredient === inv.id) {
           receiveCount += parseFloat(ing.received);
@@ -742,7 +743,6 @@ async function submitReceive({ commit }, dataForm) {
       }
 
       transaction.objectStore('inventory').put(invData);
-      receiveCount = 0;
     });
     transaction.done
       .then(result => {
