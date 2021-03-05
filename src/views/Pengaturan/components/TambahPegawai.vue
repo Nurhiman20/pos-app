@@ -108,6 +108,7 @@ export default {
         username: this.username,
         role: this.role,
         phone_number: this.phoneNumber,
+        id_outlet: this.outlet.id,
         outlet: this.outlet
       }
       this.$store.dispatch("submitEmployee", dataForm)

@@ -22,12 +22,10 @@
             <v-btn small color="primary" class="my-auto" @click="$router.push('/pengaturan/pegawai')">Edit</v-btn> 
           </div>
           <v-data-table
-            :headers="headersCashier"
-            :items="$store.state.listCashier"
-            :search="search"
+            :headers="headersEmployee"
+            :items="$store.state.detailOutlet.employee"
             class="elevation-1 scrollbar-custom"
             hide-default-footer
-            @click:row="goToEdit"
           >
           </v-data-table>
         </v-card>
@@ -41,10 +39,8 @@
           <v-data-table
             :headers="headersTable"
             :items="$store.state.listTable"
-            :search="search"
             class="elevation-1 scrollbar-custom"
             hide-default-footer
-            @click:row="goToEdit"
           >
           </v-data-table>
         </v-card>
@@ -59,7 +55,6 @@
       @success="successPutOutlet"
       @error="failedPutOutlet"
       @delete="deleteOutlet"
-      @successDelete="successDelete"
     ></edit-outlet-dialog>
 
     <!-- response dialog -->
@@ -89,7 +84,7 @@ export default {
     return {      
       selectedOutlet: {},
       selectedDelete: {},
-      headersCashier: [
+      headersEmployee: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Username', value: 'username', sortable: true },
         { text: 'Nama', value: 'name', sortable: true },
@@ -160,7 +155,7 @@ export default {
   created() {
     this.$store.dispatch("getOutletById", this.$route.params.id);
     this.$store.dispatch("getOutlet");
-    this.$store.dispatch("getCashier");
+    this.$store.dispatch("getEmployee");
     this.$store.dispatch("getTable");
   },
 }

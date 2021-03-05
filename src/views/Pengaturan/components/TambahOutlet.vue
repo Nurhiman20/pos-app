@@ -73,7 +73,9 @@ export default {
         id: this.randomId(),
         name: this.name,
         phone: this.phone,
-        address: this.address
+        address: this.address,
+        employee: [],
+        table: []
       }
       this.$store.dispatch("submitOutlet", dataForm)
         .then(() => {

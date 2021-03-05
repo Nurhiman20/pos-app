@@ -23,14 +23,13 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Nomor telepon" rules="required|integer">
+            <ValidationProvider v-slot="{ errors }" name="Nomor telepon" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="selected.phone"
                 label="Nomor Telepon"
                 outlined
                 dense
-                type="number"
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>

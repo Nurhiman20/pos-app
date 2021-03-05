@@ -66,6 +66,7 @@
                 dense
                 hide-no-data
                 hide-details
+                disabled
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
@@ -98,7 +99,7 @@ export default {
       this.$emit("delete", this.selected);
     },
     editEmployee() {
-      this.$store.dispatch("submitEmployee", this.selected)
+      this.$store.dispatch("updateEmployee", this.selected)
         .then(() => {
           this.$emit("success", "Pegawai telah diperbarui");
         })
