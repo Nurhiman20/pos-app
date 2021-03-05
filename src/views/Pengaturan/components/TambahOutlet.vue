@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Outlet</v-card-title>
+        <v-card-title class="ml-0">Tambah Cabang</v-card-title>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(addOutlet)">
             <ValidationProvider v-slot="{ errors }" name="Nama" rules="required">
@@ -15,14 +15,13 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Nomor telepon" rules="required|integer">
+            <ValidationProvider v-slot="{ errors }" name="Nomor telepon" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="phone"
                 label="Nomor Telepon"
                 outlined
                 dense
-                type="number"
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>

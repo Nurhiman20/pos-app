@@ -57,8 +57,12 @@ const SET_LIST_OUTLET = (state, payload) => {
   state.account = payload[0];
 };
 
-const SET_LIST_CASHIER = (state, payload) => {
-  state.listCashier = payload;
+const SET_DETAIL_OUTLET = (state, payload) => {
+  state.detailOutlet = payload;
+};
+
+const SET_LIST_EMPLOYEE = (state, payload) => {
+  state.listEmployee = payload;
 };
 
 const SET_LIST_TABLE = (state, payload) => {
@@ -122,7 +126,8 @@ export default {
   SET_LIST_TRANSACTION,
   SET_LIST_CUSTOMER,
   SET_LIST_OUTLET,
-  SET_LIST_CASHIER,
+  SET_DETAIL_OUTLET,
+  SET_LIST_EMPLOYEE,
   SET_LIST_TABLE,
   SET_FILTER_CATEGORY,
   ADD_SELECTED_PRODUCT,

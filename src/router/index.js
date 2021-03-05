@@ -196,39 +196,39 @@ const routes = [
   {
     path: '/pengaturan',
     name: 'Pengaturan',
-    redirect: '/pengaturan/outlet',
+    redirect: '/pengaturan/cabang',
     component: () => import('@/layouts/Home'),
     children: [
       {
-        path: '/pengaturan/outlet',
-        name: 'Outlet',
-        redirect: '/pengaturan/outlet/daftar-outlet',
+        path: '/pengaturan/cabang',
+        name: 'Cabang',
+        redirect: '/pengaturan/cabang/daftar-cabang',
         component: () => import('@/views/Pengaturan'),
         children: [
           {
-            path: '/pengaturan/outlet/daftar-outlet',
-            name: 'Daftar Outlet',
-            component: () => import('@/views/Pengaturan/views/DaftarOutlet.vue'),
+            path: '/pengaturan/cabang/daftar-cabang',
+            name: 'Daftar Cabang',
+            component: () => import('@/views/Pengaturan/views/DaftarCabang.vue'),
             meta: {
-              title: 'Daftar Outlet | Outlet | 21FACTORY'
+              title: 'Daftar Cabang | Cabang | 21FACTORY'
             }
           },
           {
-            path: '/pengaturan/outlet/daftar-outlet/:id',
-            name: 'Detail Outlet',
-            component: () => import('@/views/Pengaturan/views/DetailOutlet.vue'),
+            path: '/pengaturan/cabang/daftar-cabang/:id',
+            name: 'Detail Cabang',
+            component: () => import('@/views/Pengaturan/views/DetailCabang.vue'),
             meta: {
-              title: 'Detail Outlet | Outlet | 21FACTORY'
+              title: 'Detail Cabang | Cabang | 21FACTORY'
             }
           }
         ]
       },
       {
-        path: '/pengaturan/kasir',
-        name: 'Kasir',
-        component: () => import('@/views/Outlet/views/Kasir.vue'),
+        path: '/pengaturan/pegawai',
+        name: 'Pegawai',
+        component: () => import('@/views/Pengaturan/views/Pegawai.vue'),
         meta: {
-          title: 'Kasir | Outlet | 21FACTORY'
+          title: 'Pegawai | Outlet | 21FACTORY'
         }
       },
       {

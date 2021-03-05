@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-row justify-space-between align-center">
-      <h1>Daftar Outlet</h1>
+      <h1>Daftar Cabang</h1>
       <div class="d-flex flex-row flex-wrap justify-end">
         <download-excel
           :data="$store.state.listOutlet"
@@ -12,7 +12,7 @@
         >
           <v-btn color="secondary" small>Export</v-btn>
         </download-excel>
-        <v-btn class="ml-2" color="primary" small @click="dialogAddOutlet = true">Tambah Outlet</v-btn>
+        <v-btn class="ml-2" color="primary" small @click="dialogAddOutlet = true">Tambah Cabang</v-btn>
       </div>
     </div>
 
@@ -180,9 +180,7 @@ export default {
         })
     },
     goToEdit(item) {
-      // this.selectedOutlet = item;
-      // this.dialogEditOutlet = true;
-      this.$router.push('/pengaturan/outlet/daftar-outlet/' + item.id)
+      this.$router.push('/pengaturan/cabang/daftar-cabang/' + item.id)
     }
   },
   created() {

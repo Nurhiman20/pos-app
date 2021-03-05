@@ -133,12 +133,12 @@ export const mainMenu = [
     text: 'Pengaturan',
     children: [
       {
-        text: 'Outlet',
-        to: '/pengaturan/outlet/daftar-outlet'
+        text: 'Cabang',
+        to: '/pengaturan/cabang/daftar-cabang'
       },
       {
         text: 'Pegawai',
-        to: '/pengaturan/kasir'
+        to: '/pengaturan/pegawai'
       },
       {
         text: 'Receipt',

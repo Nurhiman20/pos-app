@@ -33,8 +33,8 @@ export const SchemaSyncHandler = {
           db.createObjectStore('outlet', { keyPath: 'id' });
         }
 
-        if (!db.objectStoreNames.contains('cashier')) {
-          db.createObjectStore('cashier', { keyPath: 'id' });
+        if (!db.objectStoreNames.contains('employee')) {
+          db.createObjectStore('employee', { keyPath: 'id' });
         }
 
         if (!db.objectStoreNames.contains('table')) {

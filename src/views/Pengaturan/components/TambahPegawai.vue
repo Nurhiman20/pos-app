@@ -2,9 +2,9 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Kasir</v-card-title>
+        <v-card-title class="ml-0">Tambah Pegawai</v-card-title>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(addCashier)">
+          <v-form @submit.prevent="handleSubmit(addEmployee)">
             <ValidationProvider v-slot="{ errors }" name="Nama" rules="required">
               <v-text-field
                 :error-messages="errors"
@@ -25,6 +25,16 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Jabatan" rules="required">
+              <v-text-field
+                :error-messages="errors"
+                v-model="role"
+                label="Jabatan"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Nomor HP" rules="required|integer">
               <v-text-field
                 :error-messages="errors"
@@ -35,6 +45,22 @@
                 type="number"
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
+            </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Cabang" rules="required">
+              <v-autocomplete
+                :error-messages="errors"
+                v-model="outlet"
+                :items="$store.state.listOutlet"
+                :item-text="textOutlet"
+                :item-value="valueOutlet"
+                label="Cabang"
+                class="mb-3 mt-2 px-4"
+                outlined
+                dense
+                hide-no-data
+                hide-details
+                :clearable="true"
+              ></v-autocomplete>
             </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -55,31 +81,43 @@ export default {
     return {
       name: null,
       phoneNumber: null,
-      username: null
+      username: null,
+      role: null,
+      outlet: null
     }
   },
   methods: {
-    closeDialog() {
-      this.$emit('closeDialog', false);
-    },    
+    textOutlet(item) {
+      return item.name
+    },
+    valueOutlet(item) {
+      return item
+    },
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = 'cashier-' + randLetter + Date.now();
+      var uniqid = 'emp-' + randLetter + Date.now();
       return uniqid
     },
-    addCashier() {
+    closeDialog() {
+      this.$emit('closeDialog', false);
+    },
+    addEmployee() {
       let dataForm = {
         id: this.randomId(),
         name: this.name,
         username: this.username,
-        phone_number: this.phoneNumber
+        role: this.role,
+        phone_number: this.phoneNumber,
+        outlet: this.outlet
       }
-      this.$store.dispatch("submitCashier", dataForm)
+      this.$store.dispatch("submitEmployee", dataForm)
         .then(() => {
           this.name = null;
           this.username = null;
           this.phoneNumber = null;
-          this.$emit("success", "Kasir telah diperbarui");
+          this.role = null;
+          this.outlet = null;
+          this.$emit("success", "Pegawai telah diperbarui");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

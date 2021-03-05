@@ -1117,6 +1117,25 @@ async function getOutlet({ commit }) {
   });
 }
 
+async function getOutletById({ commit }, id) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .get('outlet', id)
+      .then(result => {
+        commit('SET_DETAIL_OUTLET', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function submitOutlet({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -1153,14 +1172,14 @@ async function deleteOutlet({ commit }, dataForm) {
   });
 }
 
-async function getCashier({ commit }) {
+async function getEmployee({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
   return new Promise((resolve, reject) => {
     vuePos
-      .getAll('cashier')
+      .getAll('employee')
       .then(result => {
-        commit('SET_LIST_CASHIER', result);
+        commit('SET_LIST_EMPLOYEE', result);
         resolve(result);
       })
       .catch(error => {
@@ -1172,12 +1191,12 @@ async function getCashier({ commit }) {
   });
 }
 
-async function submitCashier({ commit }, dataForm) {
+async function submitEmployee({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
   return new Promise((resolve, reject) => {
     vuePos
-      .put('cashier', dataForm)
+      .put('employee', dataForm)
       .then(result => {
         resolve(result);
       })
@@ -1190,12 +1209,12 @@ async function submitCashier({ commit }, dataForm) {
   });
 }
 
-async function deleteCashier({ commit }, dataForm) {
+async function deleteEmployee({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
   return new Promise((resolve, reject) => {
     vuePos
-      .delete('cashier', dataForm.id)
+      .delete('employee', dataForm.id)
       .then(result => {
         resolve(result);
       })
@@ -1337,11 +1356,12 @@ export default {
   updateCustomer,
   deleteCustomer,
   getOutlet,
+  getOutletById,
   submitOutlet,
   deleteOutlet,
-  getCashier,
-  submitCashier,
-  deleteCashier,
+  getEmployee,
+  submitEmployee,
+  deleteEmployee,
   getTable,
   submitTable,
   deleteTable,

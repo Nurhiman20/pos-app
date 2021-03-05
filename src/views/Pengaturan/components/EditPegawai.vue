@@ -4,7 +4,7 @@
       <v-card class="pa-3">
         <div class="d-flex flex-row justify-space-between align-center">
           <div>
-            <v-card-title class="ml-0">Edit Kasir</v-card-title>
+            <v-card-title class="ml-0">Edit Pegawai</v-card-title>
             <v-card-subtitle>{{ selected.name }}</v-card-subtitle>
           </div>
           <v-btn color="error" outlined @click="doDelete">
@@ -12,7 +12,7 @@
           </v-btn>
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(editCashier)">
+          <v-form @submit.prevent="handleSubmit(editEmployee)">
             <ValidationProvider v-slot="{ errors }" name="Nama" rules="required">
               <v-text-field
                 :error-messages="errors"
@@ -33,16 +33,41 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Nomor HP" rules="required|integer">
+            <ValidationProvider v-slot="{ errors }" name="Jabatan" rules="required">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selected.role"
+                label="Jabatan"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Nomor HP" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="selected.phone_number"
                 label="Nomor HP"
                 outlined
                 dense
-                type="number"
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
+            </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Cabang" rules="required">
+              <v-autocomplete
+                :error-messages="errors"
+                v-model="selected.outlet"
+                :items="$store.state.listOutlet"
+                :item-text="textOutlet"
+                :item-value="valueOutlet"
+                label="Cabang"
+                class="mb-3 mt-2 px-4"
+                outlined
+                dense
+                hide-no-data
+                hide-details
+                :clearable="true"
+              ></v-autocomplete>
             </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -60,16 +85,22 @@
 export default {
   props: ['show', 'selected'],
   methods: {
+    textOutlet(item) {
+      return item.name
+    },
+    valueOutlet(item) {
+      return item
+    },
     closeDialog() {
       this.$emit('closeDialog', false);
     },
     doDelete() {
       this.$emit("delete", this.selected);
     },
-    editCashier() {
-      this.$store.dispatch("submitCashier", this.selected)
+    editEmployee() {
+      this.$store.dispatch("submitEmployee", this.selected)
         .then(() => {
-          this.$emit("success", "Kasir telah diperbarui");
+          this.$emit("success", "Pegawai telah diperbarui");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

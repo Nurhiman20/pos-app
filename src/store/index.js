@@ -19,6 +19,8 @@ const state = {
   selectedTx: {},
   dateStart: null,
   dateEnd: null,
+  detailInventory: {},
+  detailOutlet: {},
   
   // Data model
   account: {
@@ -29,11 +31,10 @@ const state = {
   listIngredient: [],
   listRecipe: [],
   listInventory: [],
-  detailInventory: {},
   listTransaction: [],
   listCustomer: [],
   listOutlet: [],
-  listCashier: [],
+  listEmployee: [],
   listTable: [],
   listSupplier: [],
   listOrder: [],
