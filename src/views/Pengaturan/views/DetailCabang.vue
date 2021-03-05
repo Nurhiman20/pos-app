@@ -45,6 +45,17 @@
           </v-data-table>
         </v-card>
       </v-col>
+      <v-col cols="12">
+        <v-card class="pa-4">
+          <div class="d-flex flex-row justify-space-between align-center">
+            <v-card-title>Struk</v-card-title>
+            <div class="d-flex flex-row">
+              <v-btn small color="secondary" class="mr-3">Preview</v-btn>
+              <v-btn small color="primary">Simpan</v-btn> 
+            </div>
+          </div>
+        </v-card>
+      </v-col>
     </v-row>
 
     <!-- dialog edit outlet -->

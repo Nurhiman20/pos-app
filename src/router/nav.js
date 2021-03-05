@@ -145,7 +145,7 @@ export const mainMenu = [
         to: '/pengaturan/meja'
       },
       {
-        text: 'Receipt',
+        text: 'Struk',
         to: '/pengaturan/receipt'
       },
       {
