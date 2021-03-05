@@ -75,7 +75,18 @@ export default {
         phone: this.phone,
         address: this.address,
         employee: [],
-        table: []
+        table: [],
+        receipt: {
+          outlet_name: this.name,
+          phone_number: this.phone,
+          address: this.address,
+          logo: null, 
+          website: null,
+          ig: null,
+          fb: null,
+          twitter: null,
+          notes: null
+        }
       }
       this.$store.dispatch("submitOutlet", dataForm)
         .then(() => {

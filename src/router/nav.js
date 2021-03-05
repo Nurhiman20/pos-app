@@ -145,10 +145,6 @@ export const mainMenu = [
         to: '/pengaturan/meja'
       },
       {
-        text: 'Struk',
-        to: '/pengaturan/receipt'
-      },
-      {
         text: 'Tampilan',
         to: '/pengaturan/tampilan'
       }

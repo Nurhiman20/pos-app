@@ -20,7 +20,18 @@ const state = {
   dateStart: null,
   dateEnd: null,
   detailInventory: {},
-  detailOutlet: {},
+  detailOutlet: {
+    receipt: {
+      outlet_name: null,
+      phone_number: null,
+      address: null,
+      website: null,
+      ig: null,
+      fb: null,
+      twitter: null,
+      notes: null
+    }
+  },
   
   // Data model
   account: {

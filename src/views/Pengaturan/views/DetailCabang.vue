@@ -46,15 +46,7 @@
         </v-card>
       </v-col>
       <v-col cols="12">
-        <v-card class="pa-4">
-          <div class="d-flex flex-row justify-space-between align-center">
-            <v-card-title>Struk</v-card-title>
-            <div class="d-flex flex-row">
-              <v-btn small color="secondary" class="mr-3">Preview</v-btn>
-              <v-btn small color="primary">Simpan</v-btn> 
-            </div>
-          </div>
-        </v-card>
+        <receipt-card></receipt-card>
       </v-col>
     </v-row>
 
@@ -84,12 +76,14 @@
 
 <script>
 import editOutletDialog from '../components/EditOutlet';
+import receiptCard from '../components/Struk';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
     editOutletDialog,
-    responseDialog
+    responseDialog,
+    receiptCard
   },
   data() {
     return {      
