@@ -76,7 +76,7 @@
       <v-col cols="12">
         <v-card class="pa-3 mt-4">
           <div class="d-flex flex-row justify-space-between">
-            <v-card-title>Transaction</v-card-title>
+            <v-card-title>Transaksi</v-card-title>
           </div>
         </v-card>
       </v-col>
