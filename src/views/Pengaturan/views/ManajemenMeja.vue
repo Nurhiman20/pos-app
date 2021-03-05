@@ -89,7 +89,8 @@ export default {
       headers: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Nomor Meja', value: 'table_number', sortable: true },
-        { text: 'Kapasitas', value: 'capacity', sortable: true }
+        { text: 'Kapasitas', value: 'capacity', sortable: true },
+        { text: 'Cabang', value: 'outlet.name', sortable: true }
       ],
       dialogAddTable: false,
       dialogEditTable: false,
@@ -168,6 +169,7 @@ export default {
   },
   created() {
     this.$store.dispatch("getTable");
+    this.$store.dispatch("getOutlet");
   },
 }
 </script>

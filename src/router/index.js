@@ -146,22 +146,6 @@ const routes = [
     ]
   },
   {
-    path: '/outlet',
-    name: 'Outlet',
-    redirect: '/outlet/daftar-outlet',
-    component: () => import('@/layouts/Home'),
-    children: [
-      {
-        path: '/outlet/manajemen-meja',
-        name: 'Manajemen Meja',
-        component: () => import('@/views/Outlet/views/ManajemenMeja.vue'),
-        meta: {
-          title: 'Manajemen Meja | Outlet | 21FACTORY'
-        }
-      }
-    ]
-  },
-  {
     path: '/pelanggan',
     name: 'Pelanggan',
     redirect: '/pelanggan/list',
@@ -229,6 +213,14 @@ const routes = [
         component: () => import('@/views/Pengaturan/views/Pegawai.vue'),
         meta: {
           title: 'Pegawai | Outlet | 21FACTORY'
+        }
+      },
+      {
+        path: '/pengaturan/meja',
+        name: 'Meja',
+        component: () => import('@/views/Pengaturan/views/ManajemenMeja.vue'),
+        meta: {
+          title: 'Meja | Outlet | 21FACTORY'
         }
       },
       {

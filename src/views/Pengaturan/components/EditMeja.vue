@@ -69,7 +69,7 @@ export default {
       this.$emit("delete", this.selectedTable);
     },
     editTable() {
-      this.$store.dispatch("submitTable", this.selectedTable)
+      this.$store.dispatch("updateTable", this.selectedTable)
         .then(() => {
           this.$emit("success", "Daftar meja telah diperbarui");
         })

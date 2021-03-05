@@ -141,6 +141,10 @@ export const mainMenu = [
         to: '/pengaturan/pegawai'
       },
       {
+        text: 'Meja',
+        to: '/pengaturan/meja'
+      },
+      {
         text: 'Receipt',
         to: '/pengaturan/receipt'
       },

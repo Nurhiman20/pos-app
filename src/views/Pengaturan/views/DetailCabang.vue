@@ -34,11 +34,11 @@
         <v-card class="pa-4">
           <div class="d-flex flex-row justify-space-between">
             <v-card-title>Meja</v-card-title>
-            <v-btn small color="primary" class="my-auto">Tambah Meja</v-btn> 
+            <v-btn small color="primary" class="my-auto" @click="$router.push('/pengaturan/meja')">Edit</v-btn> 
           </div>
           <v-data-table
             :headers="headersTable"
-            :items="$store.state.listTable"
+            :items="$store.state.detailOutlet.table"
             class="elevation-1 scrollbar-custom"
             hide-default-footer
           >

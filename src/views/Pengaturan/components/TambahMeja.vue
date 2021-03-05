@@ -28,6 +28,22 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Cabang" rules="required">
+              <v-autocomplete
+                :error-messages="errors"
+                v-model="outlet"
+                :items="$store.state.listOutlet"
+                :item-text="textOutlet"
+                :item-value="valueOutlet"
+                label="Cabang"
+                class="mb-3 mt-2 px-4"
+                outlined
+                dense
+                hide-no-data
+                hide-details
+                :clearable="true"
+              ></v-autocomplete>
+            </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
@@ -46,10 +62,17 @@ export default {
   data() {
     return {
       tableNumber: null,
-      capacity: null
+      capacity: null,
+      outlet: null
     }
   },
   methods: {
+    textOutlet(item) {
+      return item.name
+    },
+    valueOutlet(item) {
+      return item
+    },
     closeDialog() {
       this.$emit('closeDialog', false);
     },    
@@ -62,12 +85,15 @@ export default {
       let dataForm = {
         id: this.randomId(),
         table_number: this.tableNumber,
-        capacity: this.capacity
+        capacity: this.capacity,
+        id_outlet: this.outlet.id,
+        outlet: this.outlet
       }
       this.$store.dispatch("submitTable", dataForm)
         .then(() => {
           this.tableNumber = null;
           this.capacity = null;
+          this.outlet = null;
           this.$emit("success", "Daftar meja telah diperbarui");
         })
         .catch(() => {

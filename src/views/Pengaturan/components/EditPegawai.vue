@@ -53,23 +53,6 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Cabang" rules="required">
-              <v-autocomplete
-                :error-messages="errors"
-                v-model="selected.outlet"
-                :items="$store.state.listOutlet"
-                :item-text="textOutlet"
-                :item-value="valueOutlet"
-                label="Cabang"
-                class="mb-3 mt-2 px-4"
-                outlined
-                dense
-                hide-no-data
-                hide-details
-                disabled
-                :clearable="true"
-              ></v-autocomplete>
-            </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
@@ -86,12 +69,6 @@
 export default {
   props: ['show', 'selected'],
   methods: {
-    textOutlet(item) {
-      return item.name
-    },
-    valueOutlet(item) {
-      return item
-    },
     closeDialog() {
       this.$emit('closeDialog', false);
     },

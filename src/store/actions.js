@@ -1319,7 +1319,8 @@ async function deleteEmployee({ commit }, dataForm) {
 
 async function getTable({ commit }) {
   commit("SET_LOADING");
-  const vuePos = await openDB('vue-pos', 3);
+  const vuePos = await openDB('vue-pos', 3);  
+
   return new Promise((resolve, reject) => {
     vuePos
       .getAll('table')
@@ -1339,9 +1340,73 @@ async function getTable({ commit }) {
 async function submitTable({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
+
+  // search outlet in outlet collection
+  let tx = vuePos.transaction('outlet').store;
+  let cursor = await tx.openCursor();
+  let outlet = { id: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === dataForm.id_outlet) {
+      outlet = cursor.value;
+      outlet.table.push(dataForm);
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // update table in collection table and outlet
+  let transaction = await vuePos.transaction(['table', 'outlet'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .put('table', dataForm)
+    transaction.objectStore('table').put(dataForm);
+    if (outlet.id !== null) {
+      transaction.objectStore('outlet').put(outlet);
+    }
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function updateTable({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search outlet in outlet collection
+  let tx = vuePos.transaction('outlet').store;
+  let cursor = await tx.openCursor();
+  let outlet = { id: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === dataForm.id_outlet) {
+      outlet = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // update table in collection table and outlet
+  let transaction = await vuePos.transaction(['table', 'outlet'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('table').put(dataForm);
+    let indexTable = null;
+    if (outlet.id !== null) {
+      outlet.table.forEach((table, index) => {
+        if (table.id === dataForm.id) {
+          indexTable = index;
+        }
+      });
+      outlet.table[indexTable] = dataForm;
+      transaction.objectStore('outlet').put(outlet);
+    }
+    transaction.done
       .then(result => {
         resolve(result);
       })
@@ -1357,9 +1422,35 @@ async function submitTable({ commit }, dataForm) {
 async function deleteTable({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
+
+  // search outlet in outlet collection
+  let tx = vuePos.transaction('outlet').store;
+  let cursor = await tx.openCursor();
+  let outlet = { id: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === dataForm.id_outlet) {
+      outlet = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // update table in collection table and outlet
+  let transaction = await vuePos.transaction(['table', 'outlet'], 'readwrite');
   return new Promise((resolve, reject) => {
-    vuePos
-      .delete('table', dataForm.id)
+    transaction.objectStore('table').delete(dataForm.id);
+    let indexTable = null;
+    if (outlet.id !== null) {
+      outlet.table.forEach((table, index) => {
+        if (table.id === dataForm.id) {
+          indexTable = index;
+        }
+      });
+      outlet.table.splice(indexTable, 1);
+      transaction.objectStore('outlet').put(outlet);
+    }
+    transaction.done
       .then(result => {
         resolve(result);
       })
@@ -1455,6 +1546,7 @@ export default {
   deleteEmployee,
   getTable,
   submitTable,
+  updateTable,
   deleteTable,
   updateReceipt
 }
