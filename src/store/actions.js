@@ -1154,6 +1154,48 @@ async function submitOutlet({ commit }, dataForm) {
   });
 }
 
+async function updateStatusOutlet({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search outlet that is active status in outlet collection
+  let tx = vuePos.transaction('transaction').store;
+  let cursor = await tx.openCursor();
+  let outlets = [dataForm];
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.status_account === true && cursor.value.id !== dataForm.id) {
+      let outletData = {
+        ...cursor.value,
+        status_account: false
+      }
+      outlets.push(outletData);
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // update outlet status
+  let transaction = await vuePos.transaction(['outlet'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    outlets.forEach(outlet => {
+      transaction.objectStore('outlet').put(outlet);
+    });    
+    transaction.done
+      .then(result => {
+        console.log(result);
+        resolve(result);
+      })
+      .catch(error => {
+        console.log(error);
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function deleteOutlet({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -1540,6 +1582,7 @@ export default {
   getOutletById,
   submitOutlet,
   deleteOutlet,
+  updateStatusOutlet,
   getEmployee,
   submitEmployee,
   updateEmployee,

@@ -145,6 +145,10 @@ export const mainMenu = [
         to: '/pengaturan/meja'
       },
       {
+        text: 'Akun',
+        to: '/pengaturan/akun'
+      },
+      {
         text: 'Tampilan',
         to: '/pengaturan/tampilan'
       }

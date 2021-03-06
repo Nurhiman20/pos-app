@@ -53,12 +53,19 @@ const SET_LIST_CUSTOMER = (state, payload) => {
 const SET_LIST_OUTLET = (state, payload) => {
   state.listOutlet = payload;
   
-  // sementara
-  state.account = payload[0];
+  payload.forEach(outlet => {
+    if (outlet.status_account === true) {
+      state.account = outlet;
+    }
+  });
 };
 
 const SET_DETAIL_OUTLET = (state, payload) => {
   state.detailOutlet = payload;
+};
+
+const SET_ACCOUNT = (state, payload) => {
+  state.account = payload;
 };
 
 const SET_LIST_EMPLOYEE = (state, payload) => {
@@ -127,6 +134,7 @@ export default {
   SET_LIST_CUSTOMER,
   SET_LIST_OUTLET,
   SET_DETAIL_OUTLET,
+  SET_ACCOUNT,
   SET_LIST_EMPLOYEE,
   SET_LIST_TABLE,
   SET_FILTER_CATEGORY,

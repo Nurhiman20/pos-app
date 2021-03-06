@@ -208,6 +208,14 @@ const routes = [
         ]
       },
       {
+        path: '/pengaturan/akun',
+        name: 'Akun',
+        component: () => import('@/views/Pengaturan/views/Akun.vue'),
+        meta: {
+          title: 'Akun | Pengaturan | 21FACTORY'
+        }
+      },
+      {
         path: '/pengaturan/pegawai',
         name: 'Pegawai',
         component: () => import('@/views/Pengaturan/views/Pegawai.vue'),
@@ -226,9 +234,9 @@ const routes = [
       {
         path: '/pengaturan/tampilan',
         name: 'Tampilan',
-        component: () => import('@/views/Pengaturan/Tampilan.vue'),
+        component: () => import('@/views/Pengaturan/views/Tampilan.vue'),
         meta: {
-          title: 'Tampilan | 21FACTORY'
+          title: 'Tampilan | Pengaturan | 21FACTORY'
         }
       },
       // {

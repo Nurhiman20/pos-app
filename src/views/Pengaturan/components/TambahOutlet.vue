@@ -76,6 +76,7 @@ export default {
         address: this.address,
         employee: [],
         table: [],
+        status_account: false,
         receipt: {
           outlet_name: this.name,
           phone_number: this.phone,

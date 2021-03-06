@@ -76,7 +76,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getOutlet");
+    // this.$store.dispatch("getOutlet");
   }
 }
 </script>
