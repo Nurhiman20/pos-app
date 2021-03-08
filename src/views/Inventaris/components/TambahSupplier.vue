@@ -15,6 +15,16 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Contact person" rules="required">
+              <v-text-field
+                :error-messages="errors"
+                v-model="contactPerson"
+                label="Contact Person"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Nomor HP" rules="integer">
               <v-text-field
                 :error-messages="errors"
@@ -25,7 +35,7 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Email supplier" rules="email">
+            <ValidationProvider v-slot="{ errors }" name="Email" rules="email">
               <v-text-field
                 :error-messages="errors"
                 v-model="emailSupplier"
@@ -65,6 +75,7 @@ export default {
   data() {
     return {
       nameSupplier: null,
+      contactPerson: null,
       phoneNumber: null,
       emailSupplier: null,
       addressSupplier: null
@@ -83,6 +94,7 @@ export default {
       let dataForm = {
         id: this.randomId(),
         name: this.nameSupplier,
+        contact_person: this.contactPerson,
         phone_number: this.phoneNumber,
         email: this.emailSupplier,
         address: this.addressSupplier

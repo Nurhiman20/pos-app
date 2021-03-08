@@ -20,6 +20,16 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Contact person" rules="required">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedSupplier.contact_person"
+                label="Contact Person"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Nomor HP" rules="integer">
               <v-text-field
                 :error-messages="errors"
@@ -30,11 +40,11 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Email supplier" rules="email">
+            <ValidationProvider v-slot="{ errors }" name="Email" rules="email">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedSupplier.email"
-                label="Email Supplier"
+                label="Email"
                 outlined
                 dense
                 class="mb-0 mt-2 px-4"

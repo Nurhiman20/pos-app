@@ -101,6 +101,7 @@ export default {
       headers: [
         { text: 'Nama', value: 'name', sortable: true },
         { text: 'Alamat', value: 'address', sortable: false },
+        { text: 'Contact Person', value: 'contact_person', sortable: false },
         { text: 'No. HP', value: 'phone_number', sortable: false },
         { text: 'Email', value: 'email', sortable: false }
       ],
@@ -108,6 +109,7 @@ export default {
         ID: 'id',
         Nama: 'name',
         Alamat: 'address',
+        'Contact Person': 'contact_person',
         'No. HP': 'phone_number',
         Email: 'email'
       },
