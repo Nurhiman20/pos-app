@@ -104,8 +104,8 @@ export default {
       itemReceive: [],
       selectedReceive: {},
       headers: [
-        { text: 'ID', value: 'id', sortable: false },
-        { text: 'ID Order', value: 'id_order', sortable: false },
+        { text: 'ID Penerimaan', value: 'id', sortable: false },
+        { text: 'ID Pemesanan', value: 'id_order', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'Supplier', value: 'supplier.name', sortable: true },
         { text: 'Total', value: 'supplier', sortable: false },
