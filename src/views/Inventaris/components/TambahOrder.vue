@@ -179,6 +179,7 @@ export default {
     addOrder() {
       let dataForm = {
         id: this.randomId(),
+        id_outlet: this.$store.state.account.id,
         ingredients: this.listSelectedIngredient,
         supplier: this.supplier,
         notes: this.notes,

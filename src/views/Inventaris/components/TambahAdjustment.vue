@@ -112,6 +112,7 @@ export default {
     addAdjustment() {
       let dataForm = {
         id: this.randomId(),
+        id_outlet: this.$store.state.account.id,
         id_ingredient: this.nameIngredient.id,
         ingredient: this.nameIngredient,
         in_stock: this.inStock,
