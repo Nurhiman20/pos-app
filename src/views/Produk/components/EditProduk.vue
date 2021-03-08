@@ -100,7 +100,7 @@
                 ></v-autocomplete>
               </ValidationProvider>
             </div>
-            <ValidationProvider v-slot="{ errors }" name="Deskripsi produk" rules="required|max:50">
+            <ValidationProvider v-slot="{ errors }" name="Deskripsi produk" rules="max:50">
               <v-textarea
                 v-model="selectedProduct.description"
                 :error-messages="errors"
