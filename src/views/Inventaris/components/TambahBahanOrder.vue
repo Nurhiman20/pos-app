@@ -2,17 +2,17 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Bahan</v-card-title>
+        <v-card-title class="ml-0">Tambah Bahan / Produk</v-card-title>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(addIngredient)">
-            <ValidationProvider v-slot="{ errors }" name="Nama bahan" rules="required">
+            <ValidationProvider v-slot="{ errors }" name="Nama bahan / produk" rules="required">
               <v-autocomplete
                 :error-messages="errors"
                 v-model="ingredient"
                 :items="$store.getters.listViewInventory"
                 :item-text="textIngredient"
                 :item-value="valueIngredient"
-                label="Nama Bahan"
+                label="Nama Bahan / Produk"
                 class="mb-0 mt-2 px-4"
                 outlined
                 dense

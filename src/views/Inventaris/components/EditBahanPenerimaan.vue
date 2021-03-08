@@ -3,7 +3,7 @@
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
         <div class="d-flex flex-column">
-          <v-card-title class="ml-0">Edit Bahan</v-card-title>
+          <v-card-title class="ml-0">Edit Bahan / Produk</v-card-title>
           <v-card-subtitle>{{ selectedIngredient.ingredient.name }}</v-card-subtitle>
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">

@@ -4,7 +4,7 @@
       <v-card class="pa-3">
         <div class="d-flex flex-row justify-space-between align-center">
           <div class="d-flex flex-column">
-            <v-card-title class="ml-0">Edit Bahan</v-card-title>
+            <v-card-title class="ml-0">Edit Bahan / Produk</v-card-title>
             <v-card-subtitle>{{ selectedIngredient.ingredient.name }}</v-card-subtitle>
           </div>
           <v-btn color="error" outlined @click="goDelete">
