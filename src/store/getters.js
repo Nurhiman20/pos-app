@@ -20,7 +20,7 @@ const listViewInventory = (state) => {
     // count total order
     inv.tx.forEach(order => {
       if (order.id.indexOf('order') !== -1) {
-        orderCount += parseFloat(order.order);
+        orderCount += parseFloat(order.qty);
         inv.order = orderCount;
       }
     });
@@ -28,7 +28,7 @@ const listViewInventory = (state) => {
     // count total received
     inv.tx.forEach(receive => {
       if (receive.id.indexOf('rv') !== -1) {
-        receiveCount += parseFloat(receive.received);
+        receiveCount += parseFloat(receive.qty);
         inv.receive = receiveCount;
       }
     });
@@ -36,7 +36,7 @@ const listViewInventory = (state) => {
     // count total adjustment
     inv.tx.forEach(adj => {
       if (adj.id.indexOf('adj') !== -1) {
-        adjustmentCount += parseFloat(adj.adjustment);
+        adjustmentCount += parseFloat(adj.qty);
         inv.adjustment = adjustmentCount;
       }
     });

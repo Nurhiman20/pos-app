@@ -341,7 +341,6 @@ async function updateIngredient({ commit }, dataForm) {
     }
     transaction.done
       .then(result => {
-        console.log(result);
         resolve(result);
       })
       .catch(error => {
@@ -623,12 +622,13 @@ async function submitOrder({ commit }, dataForm) {
       if (cursor.value.id === ing.ingredient.id) {
         cursor.value.tx.push({
           id: dataForm.id,
+          type: 'Pemesanan',
           id_ingredient: ing.id_ingredient,
           id_outlet: dataForm.id_outlet,
           time: dataForm.time,
           supplier: dataForm.supplier,
           notes: dataForm.notes,
-          order: ing.order,
+          qty: ing.order,
           unit_cost: ing.unit_cost
         })
         inventories.push(cursor.value);
@@ -682,7 +682,7 @@ async function updateOrder({ commit }, dataForm) {
         if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient && ingredient.order != 0) {
           element.supplier = dataForm.supplier;
           element.notes = dataForm.notes;
-          element.order = ingredient.order;
+          element.qty = ingredient.order;
           element.unit_cost = ingredient.unit_cost;
         } else if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient && ingredient.order == 0) {
           inventory.tx.splice(indexTx, 1);
@@ -792,6 +792,7 @@ async function submitReceive({ commit }, dataForm) {
       if (cursor.value.id === ing.ingredient.id) {
         cursor.value.tx.push({
           id: dataForm.id,
+          type: 'Penerimaan',
           id_ingredient: ing.id_ingredient,
           id_outlet: dataForm.id_outlet,
           id_order: dataForm.id_order,
@@ -799,7 +800,7 @@ async function submitReceive({ commit }, dataForm) {
           time: dataForm.time,
           status: dataForm.status,
           notes: dataForm.notes,
-          received: ing.received
+          qty: ing.received
         })
         inventories.push(cursor.value);
       }
@@ -854,7 +855,7 @@ async function updateReceive({ commit }, dataForm) {
           element.order = dataForm.order;
           element.status = dataForm.status;
           element.notes = dataForm.notes;
-          element.received = ingredient.received;
+          element.qty = ingredient.received;
         }
       });
     });
@@ -959,12 +960,13 @@ async function submitAdjustment({ commit }, dataForm) {
     if (cursor.value.id === dataForm.id_ingredient) {
       cursor.value.tx.push({
         id: dataForm.id,
+        type: 'Adjustment',
         id_ingredient: dataForm.id_ingredient,
         id_outlet: dataForm.id_outlet,
         time: dataForm.time,
         in_stock: dataForm.in_stock,
         actual_stock: dataForm.actual_stock,
-        adjustment: dataForm.adjustment,
+        qty: dataForm.adjustment,
         notes: dataForm.notes
       })
       inventories.push(cursor.value);
@@ -1014,7 +1016,7 @@ async function updateAdjustment({ commit }, dataForm) {
       if (element.id === dataForm.id) {
         element.in_stock = dataForm.in_stock;
         element.actual_stock = dataForm.actual_stock;
-        element.adjustment = dataForm.adjustment;
+        element.qty = dataForm.adjustment;
         element.notes = dataForm.notes;
       }
     });

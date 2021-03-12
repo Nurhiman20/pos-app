@@ -4,6 +4,19 @@
       <h1>{{ this.$store.state.detailInventory.name }}</h1>
     </div>
     <v-row>
+      <v-col cols="12">
+        <v-card class="pa-3 mt-4">
+          <div class="d-flex flex-row justify-space-between">
+            <v-card-title>History</v-card-title>
+          </div>
+          <v-data-table
+            :headers="headersHistory"
+            :items="$store.state.detailInventory.tx"
+            class="elevation-1 scrollbar-custom"
+            hide-default-footer
+          ></v-data-table>
+        </v-card>
+      </v-col>
       <v-col cols="12" md="6" lg="6" xl="6">
         <v-card class="pa-3 mt-4">          
           <div class="d-flex flex-row justify-space-between">
@@ -68,7 +81,7 @@
           >
             <template v-slot:item.expense_income="{item}">
               <p class="text-bold success--text my-auto" v-if="parseFloat(item.in_stock) - parseFloat(item.actual_stock) > 0">Rp{{ formatCurrency(countExIn(item)) }},00</p>
-              <p class="text-bold error--text my-auto" v-else>- Rp{{ countExIn(item) * (-1) }},00</p>
+              <p class="text-bold error--text my-auto" v-else>- Rp{{ formatCurrency(countExIn(item) * (-1)) }},00</p>
             </template>
           </v-data-table>
         </v-card>
@@ -87,7 +100,13 @@
 <script>
 export default {
   data() {
-    return {      
+    return {
+      headersHistory: [
+        { text: 'ID', value: 'id', sortable: false },
+        { text: 'Waktu', value: 'time', sortable: true },
+        { text: 'Jenis', value: 'type', sortable: true },
+        { text: 'Qty', value: 'qty', sortable: true }
+      ],
       headersOrder: [
         { text: 'ID Order', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
