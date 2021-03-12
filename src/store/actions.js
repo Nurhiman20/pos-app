@@ -31,7 +31,8 @@ async function submitProduct({ commit }, dataForm) {
     usage: 0,
     transfer: 0,
     adjustment: 0,
-    ending_stock: 0
+    ending_stock: 0,
+    orders: []
   };
 
   // submit product to collection product and inventory
@@ -282,7 +283,8 @@ async function submitIngredient({ commit }, dataForm) {
     usage: 0,
     transfer: 0,
     adjustment: 0,
-    ending_stock: 0
+    ending_stock: 0,
+    orders: []
   };
 
   // submit ingredient to collection ingredient and inventory
@@ -619,6 +621,15 @@ async function submitOrder({ commit }, dataForm) {
   while (loopCursor) {
     dataForm.ingredients.forEach(ing => {
       if (cursor.value.id === ing.ingredient.id) {
+        cursor.value.orders.push({
+          id_order: dataForm.id,
+          id_outlet: dataForm.id_outlet,
+          time: dataForm.time,
+          supplier: dataForm.supplier,
+          notes: dataForm.notes,
+          order: ing.order,
+          unit_cost: ing.unit_cost
+        })
         inventories.push(cursor.value);
       }
     });
@@ -629,18 +640,21 @@ async function submitOrder({ commit }, dataForm) {
   let transaction = await vuePos.transaction(['order', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('order').put(dataForm);
-
-    let orderCount = 0;
     inventories.forEach(inv => {
-      orderCount = parseFloat(inv.order);
-      dataForm.ingredients.forEach(ing => {
-        if (ing.id_ingredient === inv.id) {
-          orderCount += parseFloat(ing.order);
-          inv.order = orderCount;
-        }
-      });      
       transaction.objectStore('inventory').put(inv);
-    });
+    })
+
+    // let orderCount = 0;
+    // inventories.forEach(inv => {
+    //   orderCount = parseFloat(inv.order);
+    //   dataForm.ingredients.forEach(ing => {
+    //     if (ing.id_ingredient === inv.id) {
+    //       orderCount += parseFloat(ing.order);
+    //       inv.order = orderCount;
+    //     }
+    //   });      
+    //   transaction.objectStore('inventory').put(inv);
+    // });
     transaction.done
       .then(result => {
         resolve(result);
