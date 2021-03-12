@@ -790,6 +790,17 @@ async function submitReceive({ commit }, dataForm) {
   while (loopCursor) {
     dataForm.ingredients.forEach(ing => {
       if (cursor.value.id === ing.ingredient.id) {
+        cursor.value.tx.push({
+          id: dataForm.id,
+          id_ingredient: ing.id_ingredient,
+          id_outlet: dataForm.id_outlet,
+          id_order: dataForm.id_order,
+          order: dataForm.order,
+          time: dataForm.time,
+          status: dataForm.status,
+          notes: dataForm.notes,
+          received: ing.received
+        })
         inventories.push(cursor.value);
       }
     });
@@ -800,25 +811,60 @@ async function submitReceive({ commit }, dataForm) {
   let transaction = await vuePos.transaction(['receive', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('receive').put(dataForm);
+    inventories.forEach(inventory => {
+      transaction.objectStore('inventory').put(inventory);
+    });
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
 
-    let receiveCount = 0;
-    inventories.forEach(inv => {
-      receiveCount = parseFloat(inv.receive);
-      dataForm.ingredients.forEach(ing => {
-        if (ing.id_ingredient === inv.id) {
-          receiveCount += parseFloat(ing.received);
-          inv.receive = receiveCount;
+async function updateReceive({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach(ingredient => {
+      inventory.tx.forEach(element => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient) {
+          element.id_order = dataForm.order.id;
+          element.order = dataForm.order;
+          element.status = dataForm.status;
+          element.notes = dataForm.notes;
+          element.received = ingredient.received;
         }
       });
+    });
+  });
 
-      // count ending stock
-      let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
-      let invData = {
-        ...inv,
-        ending_stock: endingStock.toFixed(2)
-      }
-
-      transaction.objectStore('inventory').put(invData);
+  let transaction = await vuePos.transaction(['receive', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('receive').put(dataForm);
+    inventories.forEach(inventory => {
+      transaction.objectStore('inventory').put(inventory);
     });
     transaction.done
       .then(result => {
@@ -852,28 +898,21 @@ async function deleteReceive({ commit }, dataForm) {
     if (!cursor) break;
   }
 
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach(ingredient => {
+      inventory.tx.forEach((element, indexTx) => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient) {
+          inventory.tx.splice(indexTx, 1);
+        }
+      });
+    });
+  });
+
   let transaction = await vuePos.transaction(['receive', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('receive').delete(dataForm.id);
-
-    let receiveCount = 0;
-    inventories.forEach(inv => {
-      dataForm.ingredients.forEach(ing => {
-        receiveCount = parseFloat(inv.receive);
-        if (ing.id_ingredient === inv.id) {
-          receiveCount -= parseFloat(ing.received);
-          inv.receive = receiveCount;
-        }
-      });
-
-      // count ending stock
-      let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
-      let invData = {
-        ...inv,
-        ending_stock: endingStock.toFixed(2)
-      }
-
-      transaction.objectStore('inventory').put(invData);
+    inventories.forEach(inventory => {
+      transaction.objectStore('inventory').put(inventory);
     });
     transaction.done
       .then(result => {
@@ -1043,19 +1082,6 @@ async function deleteAdjustment({ commit }, dataForm) {
         commit("SET_LOADING", false);
       });
   });
-  // return new Promise((resolve, reject) => {
-  //   vuePos
-  //     .delete('adjustment', dataForm.id)
-  //     .then(result => {
-  //       resolve(result);
-  //     })
-  //     .catch(error => {
-  //       reject(error);
-  //     })
-  //     .finally(() => {
-  //       commit("SET_LOADING", false);
-  //     });
-  // });
 }
 
 async function getTransaction({ commit }) {
@@ -1665,6 +1691,7 @@ export default {
   deleteOrder,
   getReceive,
   submitReceive,
+  updateReceive,
   deleteReceive,
   deleteSupplier,
   getAdjustment,

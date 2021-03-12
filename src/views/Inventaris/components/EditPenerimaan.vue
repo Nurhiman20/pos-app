@@ -161,7 +161,7 @@ export default {
         ...this.selectedReceive,
         status: this.checkStatus()
       }
-      this.$store.dispatch("submitReceive", dataForm)
+      this.$store.dispatch("updateReceive", dataForm)
         .then(() => {
           this.$emit("success", "Penerimaan telah diperbarui");
         })
