@@ -96,7 +96,7 @@ export default {
         ...this.selectedAdjustment,
         adjustment: parseFloat(this.selectedAdjustment.in_stock) - parseFloat(this.selectedAdjustment.actual_stock)
       }
-      this.$store.dispatch("submitAdjustment", dataForm)
+      this.$store.dispatch("updateAdjustment", dataForm)
         .then(() => {
           this.$emit("success", "Adjustment telah diedit");
         })

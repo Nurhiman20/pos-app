@@ -644,18 +644,6 @@ async function submitOrder({ commit }, dataForm) {
     inventories.forEach(inv => {
       transaction.objectStore('inventory').put(inv);
     })
-
-    // let orderCount = 0;
-    // inventories.forEach(inv => {
-    //   orderCount = parseFloat(inv.order);
-    //   dataForm.ingredients.forEach(ing => {
-    //     if (ing.id_ingredient === inv.id) {
-    //       orderCount += parseFloat(ing.order);
-    //       inv.order = orderCount;
-    //     }
-    //   });      
-    //   transaction.objectStore('inventory').put(inv);
-    // });
     transaction.done
       .then(result => {
         resolve(result);
@@ -926,11 +914,21 @@ async function submitAdjustment({ commit }, dataForm) {
   // search ingredient in inventory collection
   let tx = vuePos.transaction('inventory').store;
   let cursor = await tx.openCursor();
-  let inv = { id: null };
+  let inventories = [];
   const loopCursor = true;
   while (loopCursor) {
     if (cursor.value.id === dataForm.id_ingredient) {
-      inv = cursor.value;
+      cursor.value.tx.push({
+        id: dataForm.id,
+        id_ingredient: dataForm.id_ingredient,
+        id_outlet: dataForm.id_outlet,
+        time: dataForm.time,
+        in_stock: dataForm.in_stock,
+        actual_stock: dataForm.actual_stock,
+        adjustment: dataForm.adjustment,
+        notes: dataForm.notes
+      })
+      inventories.push(cursor.value);
     }
     cursor = await cursor.continue();
     if (!cursor) break;
@@ -939,27 +937,61 @@ async function submitAdjustment({ commit }, dataForm) {
   let transaction = await vuePos.transaction(['adjustment', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('adjustment').put(dataForm);
-
-    let adjustmentCount = parseFloat(inv.adjustment);    
-    if (dataForm.id_ingredient === inv.id) {
-      adjustmentCount += parseFloat(dataForm.adjustment);
-      inv.adjustment = adjustmentCount;
-    }
-
-    // count ending stock
-    let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
-    let invData = {
-      ...inv,
-      ending_stock: endingStock.toFixed(2)
-    }
-
-    transaction.objectStore('inventory').put(invData);
+    inventories.forEach(inv => {
+      transaction.objectStore('inventory').put(inv);
+    })
     transaction.done
       .then(result => {
         resolve(result);
       })
       .catch(error => {
-        console.log(error);
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function updateAdjustment({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === dataForm.id_ingredient) {
+      inventories.push(cursor.value);
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    inventory.tx.forEach(element => {
+      if (element.id === dataForm.id) {
+        element.in_stock = dataForm.in_stock;
+        element.actual_stock = dataForm.actual_stock;
+        element.adjustment = dataForm.adjustment;
+        element.notes = dataForm.notes;
+      }
+    });
+  });
+
+  let transaction = await vuePos.transaction(['adjustment', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('adjustment').put(dataForm);
+    inventories.forEach(inv => {
+      transaction.objectStore('inventory').put(inv);
+    })
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
         reject(error);
       })
       .finally(() => {
@@ -975,35 +1007,30 @@ async function deleteAdjustment({ commit }, dataForm) {
   // search ingredient in inventory collection
   let tx = vuePos.transaction('inventory').store;
   let cursor = await tx.openCursor();
-  let inv = { id: null };
+  let inventories = [];
   const loopCursor = true;
   while (loopCursor) {
     if (cursor.value.id === dataForm.id_ingredient) {
-      inv = cursor.value;
+      inventories.push(cursor.value);
     }
     cursor = await cursor.continue();
     if (!cursor) break;
   }
 
+  inventories.forEach(inventory => {
+    inventory.tx.forEach((element, indexTx) => {
+      if (element.id === dataForm.id) {
+        inventory.tx.splice(indexTx, 1);
+      }
+    });
+  });
+
   let transaction = await vuePos.transaction(['adjustment', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('adjustment').delete(dataForm.id);
-
-    let adjustmentCount = parseFloat(inv.adjustment);    
-    if (dataForm.id_ingredient === inv.id) {
-      adjustmentCount -= parseFloat(dataForm.adjustment);
-      inv.adjustment = adjustmentCount;
-    }
-
-    // count ending stock
-    let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
-    let invData = {
-      ...inv,
-      ending_stock: endingStock.toFixed(2),
-      adjustment: inv.adjustment.toFixed(2)
-    }
-
-    transaction.objectStore('inventory').put(invData);
+    inventories.forEach(inv => {
+      transaction.objectStore('inventory').put(inv);
+    })
     transaction.done
       .then(result => {
         resolve(result);
@@ -1642,6 +1669,7 @@ export default {
   deleteSupplier,
   getAdjustment,
   submitAdjustment,
+  updateAdjustment,
   deleteAdjustment,
   getTransaction,
   submitTransaction,

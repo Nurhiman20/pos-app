@@ -13,7 +13,7 @@ const listViewInventory = (state) => {
   let inventory = [];
   let orderCount = 0;
   // let receiveCount = 0;
-  // let adjustmentCount = 0;
+  let adjustmentCount = 0;
   let usageCount = 0;
 
   state.listInventory.forEach(inv => {
@@ -36,12 +36,12 @@ const listViewInventory = (state) => {
     // });
 
     // count total adjustment
-    // state.listAdjustment.forEach(adj => {
-    //   if (adj.id_ingredient === inv.id) {
-    //     adjustmentCount += adj.adjustment;
-    //     inv.adjustment = adjustmentCount;
-    //   }
-    // });
+    inv.tx.forEach(adj => {
+      if (adj.id.indexOf('adj') !== -1) {
+        adjustmentCount += parseFloat(adj.adjustment);
+        inv.adjustment = adjustmentCount;
+      }
+    });
 
     // count total usage
     state.listTransaction.forEach(tx => {
@@ -72,7 +72,7 @@ const listViewInventory = (state) => {
     inventory.push(invData);
     // receiveCount = 0;
     orderCount = 0;
-    // adjustmentCount = 0;
+    adjustmentCount = 0;
     usageCount = 0;
   });
 
