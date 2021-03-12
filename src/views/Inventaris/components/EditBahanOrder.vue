@@ -7,9 +7,9 @@
             <v-card-title class="ml-0">Edit Bahan / Produk</v-card-title>
             <v-card-subtitle>{{ selectedIngredient.ingredient.name }}</v-card-subtitle>
           </div>
-          <v-btn color="error" outlined @click="goDelete">
+          <!-- <v-btn color="error" outlined @click="goDelete">
             <v-icon class="mr-1">mdi-delete</v-icon>Hapus
-          </v-btn>
+          </v-btn> -->
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editIngredient)">

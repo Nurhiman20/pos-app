@@ -32,7 +32,7 @@ async function submitProduct({ commit }, dataForm) {
     transfer: 0,
     adjustment: 0,
     ending_stock: 0,
-    orders: []
+    tx: []
   };
 
   // submit product to collection product and inventory
@@ -108,7 +108,7 @@ async function updateProduct({ commit }, dataForm) {
   let invData = {
     ...dataForm,
     order: 0,
-    orders: [],
+    tx: [],
     receive: 0,
     usage: 0,
     transfer: 0,
@@ -284,7 +284,7 @@ async function submitIngredient({ commit }, dataForm) {
     transfer: 0,
     adjustment: 0,
     ending_stock: 0,
-    orders: []
+    tx: []
   };
 
   // submit ingredient to collection ingredient and inventory
@@ -621,8 +621,9 @@ async function submitOrder({ commit }, dataForm) {
   while (loopCursor) {
     dataForm.ingredients.forEach(ing => {
       if (cursor.value.id === ing.ingredient.id) {
-        cursor.value.orders.push({
-          id_order: dataForm.id,
+        cursor.value.tx.push({
+          id: dataForm.id,
+          id_ingredient: ing.id_ingredient,
           id_outlet: dataForm.id_outlet,
           time: dataForm.time,
           supplier: dataForm.supplier,
@@ -668,6 +669,60 @@ async function submitOrder({ commit }, dataForm) {
   });
 }
 
+async function updateOrder({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach((ingredient, indexIngredient) => {
+      inventory.tx.forEach((element, indexTx) => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient && ingredient.order != 0) {
+          element.supplier = dataForm.supplier;
+          element.notes = dataForm.notes;
+          element.order = ingredient.order;
+          element.unit_cost = ingredient.unit_cost;
+        } else if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient && ingredient.order == 0) {
+          inventory.tx.splice(indexTx, 1);
+          dataForm.ingredients.splice(indexIngredient, 1);
+        }
+      });
+    });
+  });
+
+  let transaction = await vuePos.transaction(['order', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('order').put(dataForm);
+    inventories.forEach(inv => {
+      transaction.objectStore('inventory').put(inv);
+    })
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function deleteOrder({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -687,19 +742,20 @@ async function deleteOrder({ commit }, dataForm) {
     if (!cursor) break;
   }
 
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach(ingredient => {
+      inventory.tx.forEach((element, indexTx) => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient) {
+          inventory.tx.splice(indexTx, 1);
+        }
+      });
+    });
+  });
+
   let transaction = await vuePos.transaction(['order', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('order').delete(dataForm.id);
-
-    let orderCount = 0;
-    inventories.forEach(inv => {
-      orderCount = parseFloat(inv.order);
-      dataForm.ingredients.forEach(ing => {
-        if (ing.id_ingredient === inv.id) {
-          orderCount -= parseFloat(ing.order);
-          inv.order = orderCount;
-        }
-      });      
+    inventories.forEach(inv => { 
       transaction.objectStore('inventory').put(inv);
     });
     transaction.done
@@ -1578,6 +1634,7 @@ export default {
   submitSupplier,
   getOrder,
   submitOrder,
+  updateOrder,
   deleteOrder,
   getReceive,
   submitReceive,

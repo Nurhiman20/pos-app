@@ -40,15 +40,15 @@
                 </template>
               </v-data-table>
             </div>
-            <div class="px-4 mt-3 mb-6">
+            <!-- <div class="px-4 mt-3 mb-6">
               <v-btn color="secondary" dark block @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
-            </div>
+            </div> -->
             <ValidationProvider v-slot="{ errors }" name="Keterangan" rules="max:200">
               <v-textarea
                 v-model="selectedOrder.notes"
                 :error-messages="errors"
                 label="Keterangan"
-                class="mb-0 mt-2 px-4"
+                class="mb-0 mt-6 px-4"
                 rows="3"
                 outlined
                 counter
@@ -196,7 +196,7 @@ export default {
       //   time: moment().format('MM/DD/YYYY, h:mm:ss a')
       // };
       this.checkStatus();
-      this.$store.dispatch("submitOrder", this.selectedOrder)
+      this.$store.dispatch("updateOrder", this.selectedOrder)
         .then(() => {
           this.$emit("success", "Order telah diedit");
         })
