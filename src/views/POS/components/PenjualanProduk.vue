@@ -112,6 +112,7 @@ export default {
 
       let dataForm = {
         id: this.randomId(),
+        id_outlet: this.$store.state.account.id,
         products_sold: prod,
         time: this.dateTime(),
         total_discount: this.discount,

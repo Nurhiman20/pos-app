@@ -1109,9 +1109,50 @@ async function submitTransaction({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
 
-  let transaction = await vuePos.transaction(['transaction'], 'readwrite');
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.products_sold.forEach(prod => {
+      if (prod.without_ingredient === true) {        
+        if (cursor.value.id === prod.id) {
+          cursor.value.tx.push({
+            id: dataForm.id,
+            type: 'Penjualan',
+            id_ingredient: prod.id,
+            id_outlet: dataForm.id_outlet,
+            time: dataForm.time,
+            qty: parseFloat(prod.qty)
+          })
+        }
+      } else {
+        prod.ingredients.forEach(ing => {
+          if (cursor.value.id === ing.ingredient.id) {
+            cursor.value.tx.push({
+              id: dataForm.id,
+              type: 'Penjualan',
+              id_ingredient: ing.id_ingredient,
+              id_outlet: dataForm.id_outlet,
+              time: dataForm.time,
+              qty: parseFloat(ing.qty) * parseFloat(prod.qty)
+            })
+          }
+        });
+      }
+      inventories.push(cursor.value);
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  let transaction = await vuePos.transaction(['transaction', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('transaction').put(dataForm);
+    inventories.forEach(inv => {
+      transaction.objectStore('inventory').put(inv);
+    })
     transaction.done
       .then(result => {
         resolve(result);

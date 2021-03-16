@@ -42,22 +42,11 @@ const listViewInventory = (state) => {
     });
 
     // count total usage
-    state.listTransaction.forEach(tx => {
-      tx.products_sold.forEach(prod => {
-        if (prod.ingredients !== undefined) {
-          prod.ingredients.forEach(ing => {
-            if (ing.id_ingredient === inv.id) {
-              usageCount += parseFloat(ing.qty * prod.qty);
-              inv.usage = usageCount.toFixed(2);
-            }
-          });
-        } else {
-          if (prod.id === inv.id) {
-            usageCount += parseFloat(prod.qty);
-            inv.usage = usageCount.toFixed(2);
-          }
-        }
-      });
+    inv.tx.forEach(tx => {
+      if (tx.id.indexOf('tr') !== -1) {
+        usageCount += parseFloat(tx.qty);
+        inv.usage = usageCount.toFixed(2);
+      }
     });
 
     // count ending stock
