@@ -104,9 +104,14 @@ const EDIT_SELECTED_PRODUCT = (state, payload) => {
 };
 
 const SET_EDIT_TX = (state, payload) => {
-  state.selectedTx = payload;
-  if (payload.products_sold !== undefined) {
-    state.selectedProduct = payload.products_sold;
+  if (payload === null) {
+    state.selectedTx = {};
+    state.selectedProduct = [];
+  } else {
+    state.selectedTx = payload;
+    if (payload.products_sold !== undefined) {
+      state.selectedProduct = payload.products_sold;
+    }
   }
 };
 

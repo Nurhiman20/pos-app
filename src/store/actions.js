@@ -1166,6 +1166,78 @@ async function submitTransaction({ commit }, dataForm) {
   });
 }
 
+async function updateTransaction({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.products_sold.forEach(prod => {
+      if (prod.without_ingredient === true) {        
+        if (cursor.value.id === prod.id) {
+          inventories.push(cursor.value);
+        }
+      } else {
+        prod.ingredients.forEach(ing => {
+          if (cursor.value.id === ing.ingredient.id) {
+            inventories.push(cursor.value);
+          }
+        });
+      }      
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    dataForm.products_sold.forEach((prod, indexProd) => {
+      if (prod.without_ingredient === true) {
+        inventory.tx.forEach((element, indexTx) => {
+          if (element.id === dataForm.id && element.id_ingredient === prod.id && prod.qty != 0) {
+            element.qty = parseFloat(prod.qty);
+          } else if (element.id === dataForm.id && element.id_ingredient === prod.id && prod.qty == 0) {
+            inventory.tx.splice(indexTx, 1);
+            dataForm.products_sold.splice(indexProd, 1);
+          }
+        });
+      } else {
+        prod.ingredients.forEach(ing => {
+          inventory.tx.forEach((element, indexTx) => {
+            if (element.id === dataForm.id && element.id_ingredient === ing.id_ingredient && prod.qty != 0) {
+              element.qty = parseFloat(ing.qty) * parseFloat(prod.qty);
+            } else if (element.id === dataForm.id && element.id_ingredient === prod.id && prod.qty == 0) {
+              inventory.tx.splice(indexTx, 1);
+              dataForm.products_sold.splice(indexProd, 1);
+            }
+          });
+        });
+      } 
+    })
+  });
+  
+  let transaction = await vuePos.transaction(['transaction', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('transaction').put(dataForm);
+    inventories.forEach(inv => {
+      transaction.objectStore('inventory').put(inv);
+    })
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getCustomer({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -1743,6 +1815,7 @@ export default {
   deleteAdjustment,
   getTransaction,
   submitTransaction,
+  updateTransaction,
   getCustomer,
   submitCustomer,
   updateCustomer,

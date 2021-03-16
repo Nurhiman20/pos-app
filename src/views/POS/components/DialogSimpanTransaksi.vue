@@ -15,7 +15,6 @@
                     :item-text="textCustomer"
                     :item-value="valueCustomer"
                     label="Nama Pelanggan"
-                    cache-items
                     class="mt-2 px-4"
                     outlined
                     dense
@@ -39,14 +38,14 @@
                 </v-col>
               </v-row>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Nomor Meja" rules="required|integer">
+            <ValidationProvider v-slot="{ errors }" name="Nomor Meja" rules="required">
               <v-autocomplete
                 :error-messages="errors"
-                v-model="selectTableNumber"
-                :items="itemTable"
-                :search-input.sync="tableNumber"
+                v-model="tableNumber"
+                :items="$store.state.listTable"
+                :item-text="textTable"
+                :item-value="valueTable"
                 label="Nomor Meja"
-                cache-items
                 class="mt-6 px-4"
                 outlined
                 dense
@@ -56,7 +55,7 @@
               ></v-autocomplete>
             </ValidationProvider>
 
-            <div class="px-4 mt-6" v-if="selectTableNumber !== null">
+            <div class="px-4 mt-6" v-if="tableNumber !== null">
               <h3>E-Receipt</h3>
               <receipt-app :selected="transaction" :print="print" @receiptPrinted="finishPrint"></receipt-app>
             </div>
@@ -96,19 +95,13 @@ export default {
   data() {
     return {
       customer: null,
-      selectTableNumber: null,
       tableNumber: null,
-      itemCustomer: [],
-      itemTable: [],
       print: false,
       newCustomerDialog: false
     }
   },
   watch: {
     tableNumber(val) {
-      val && val !== this.selectTableNumber && this.querySelectionsTable(val);
-    },
-    selectTableNumber(val) {
       if (val !== null) {
         let dataForm = this.transaction;
         dataForm.customer = this.customer;
@@ -117,16 +110,16 @@ export default {
     }
   },
   methods: {
-    querySelectionsTable(v) {
-      let listTable = this.$store.state.listTable.map(item => item.table_number);
-      this.itemTable = listTable.filter(e => {
-        return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
-      });
-    },
     textCustomer(item) {
       return item.name + ' - ' + item.phone_number
     },
     valueCustomer(item) {
+      return item
+    },
+    textTable(item) {
+      return item.table_number
+    },
+    valueTable(item) {
       return item
     },
     closeDialog() {
@@ -155,23 +148,33 @@ export default {
       dataForm.table_number = this.tableNumber;
       if (this.$store.state.selectedTx.id !== undefined) {
         dataForm.id = this.$store.state.selectedTx.id;
-      }
-      this.$store.dispatch("submitTransaction", dataForm)
+        this.$store.dispatch("updateTransaction", dataForm)
         .then(() => {
           this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
-          this.customerName = null;
-          this.phoneNumber = null;
-          this.tableNumber = null;
-          this.$emit("success", "Transaksi telah disimpan");
+          this.$emit("success", "Transaksi telah diperbarui");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
+      } else {
+        this.$store.dispatch("submitTransaction", dataForm)
+          .then(() => {
+            this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+            this.customerName = null;
+            this.phoneNumber = null;
+            this.tableNumber = null;
+            this.$emit("success", "Transaksi telah disimpan");
+          })
+          .catch(() => {
+            this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+          });
+      }
     }
   },
   created() {
-    if (this.$store.state.selectedTx.customer_name !== undefined) {
-      this.phoneNumber = this.$store.state.selectedTx.phone_number;
+    if (this.$store.state.selectedTx.customer !== undefined) {
+      this.customer = this.$store.state.selectedTx.customer;
+      this.tableNumber = this.$store.state.selectedTx.table_number;
     }
   },
 }

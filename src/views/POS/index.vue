@@ -100,6 +100,7 @@ export default {
       this.saveDialog = false;
       this.dialogSuccess = e;
       if (this.$store.state.selectedTx.id !== undefined) {
+        this.$store.commit("SET_EDIT_TX", null);
         this.$router.push('/laporan/transaksi');
       }      
       this.$store.commit("SET_EDIT_TX", {});

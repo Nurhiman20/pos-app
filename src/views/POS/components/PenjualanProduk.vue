@@ -50,6 +50,7 @@
           </v-col>
           <v-col cols="12" md="12" lg="12" class="py-0">
             <v-btn class="mt-3" block color="primary" dark @click="submitTransaction">Transaksi</v-btn>
+            <v-btn class="mt-3" block color="secondary" outlined dark @click="cancelEdit" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Batal Edit Transaksi</v-btn>
           </v-col>
         </v-row>
       </div>
@@ -103,6 +104,10 @@ export default {
     },
     dateTime() {
       return new Date().toLocaleString();
+    },
+    cancelEdit() {
+      this.$store.commit("SET_EDIT_TX", null);
+      this.$router.push('/laporan/transaksi');
     },
     submitTransaction() {
       let prod = this.$store.state.selectedProduct;

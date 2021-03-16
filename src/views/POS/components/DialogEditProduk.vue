@@ -4,11 +4,11 @@
       <v-card class="pa-3">
         <div class="d-flex flex-row justify-space-between align-center">
           <v-card-title class="ml-0">Edit Produk</v-card-title>
-          <v-btn color="error" outlined @click="removeFromCart">
+          <v-btn color="error" outlined @click="removeFromCart" v-if="Object.keys(this.$store.state.selectedTx).length === 0">
             <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>
         </div>
-        <v-card-subtitle>{{ selectedProduct.name }}</v-card-subtitle>
+        <v-card-subtitle class="mt-n4">{{ selectedProduct.name }}</v-card-subtitle>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(selectProduct)">
             <v-row no-gutters>
@@ -98,7 +98,7 @@ export default {
     },
     selectProduct() {
       this.selectedProduct.total = parseInt(this.selectedProduct.qty) * parseInt(this.selectedProduct.price) - parseInt(this.selectedProduct.discount);
-      if (this.checkQuantity() && this.checkDiscount()) {
+      if (this.checkDiscount()) {
         this.$store.commit("EDIT_SELECTED_PRODUCT", this.selectedProduct)
         this.closeDialog();
       }
