@@ -1193,30 +1193,76 @@ async function updateTransaction({ commit }, dataForm) {
     if (!cursor) break;
   }
 
+  // update data in inventory
   inventories.forEach(inventory => {
-    dataForm.products_sold.forEach((prod, indexProd) => {
-      if (prod.without_ingredient === true) {
-        inventory.tx.forEach((element, indexTx) => {
-          if (element.id === dataForm.id && element.id_ingredient === prod.id && prod.qty != 0) {
-            element.qty = parseFloat(prod.qty);
-          } else if (element.id === dataForm.id && element.id_ingredient === prod.id && prod.qty == 0) {
-            inventory.tx.splice(indexTx, 1);
-            dataForm.products_sold.splice(indexProd, 1);
+    const found = inventory.tx.some(el => el.id === dataForm.id);
+
+    // in condition total item / product was change 
+    if (found) {
+      inventory.tx.forEach((element, indexTx) => {
+        dataForm.products_sold.forEach(prod => {
+          if (prod.without_ingredient === true) {
+              if (element.id === dataForm.id && element.id_ingredient === prod.id && prod.qty != 0) {
+                element.qty = parseFloat(prod.qty);
+              } else if (element.id === dataForm.id && element.id_ingredient === prod.id && prod.qty == 0) {
+                // condition item / product was removed
+                inventory.tx.splice(indexTx, 1);
+              }
+          } else {
+            if (prod.qty != 0) {
+              prod.ingredients.forEach(ing => {
+                  if (element.id === dataForm.id && element.id_ingredient === ing.id_ingredient) {
+                    element.qty = parseFloat(ing.qty) * parseFloat(prod.qty);
+                  }
+              })
+            } else if (prod.qty == 0) {
+              // condition item / product was removed
+              prod.ingredients.forEach(ing => {
+                  if (element.id === dataForm.id && element.id_ingredient === ing.id_ingredient) {
+                    inventory.tx.splice(indexTx, 1);
+                  }
+              })
+            }
+          } 
+        })
+      });
+    } else {
+      // condition new item / product was added
+      dataForm.products_sold.forEach(prod => {
+        if (prod.without_ingredient === true) {
+          if (inventory.id === prod.id) {
+            inventory.tx.push({
+              id: dataForm.id,
+              type: 'Penjualan',
+              id_ingredient: prod.id,
+              id_outlet: dataForm.id_outlet,
+              time: dataForm.time,
+              qty: parseFloat(prod.qty)
+            })
           }
-        });
-      } else {
-        prod.ingredients.forEach(ing => {
-          inventory.tx.forEach((element, indexTx) => {
-            if (element.id === dataForm.id && element.id_ingredient === ing.id_ingredient && prod.qty != 0) {
-              element.qty = parseFloat(ing.qty) * parseFloat(prod.qty);
-            } else if (element.id === dataForm.id && element.id_ingredient === prod.id && prod.qty == 0) {
-              inventory.tx.splice(indexTx, 1);
-              dataForm.products_sold.splice(indexProd, 1);
+        } else {
+          prod.ingredients.forEach(ing => {
+            if (inventory.id === ing.ingredient.id) {
+              inventory.tx.push({
+                id: dataForm.id,
+                type: 'Penjualan',
+                id_ingredient: ing.id_ingredient,
+                id_outlet: dataForm.id_outlet,
+                time: dataForm.time,
+                qty: parseFloat(ing.qty) * parseFloat(prod.qty)
+              })
             }
           });
-        });
-      } 
-    })
+        } 
+      })
+    }
+  });
+
+  // remove product from products_sold when product was removed
+  dataForm.products_sold.forEach((prod, indexProd) => {
+    if (prod.qty == 0) {
+      dataForm.products_sold.splice(indexProd, 1);
+    }
   });
   
   let transaction = await vuePos.transaction(['transaction', 'inventory'], 'readwrite');
