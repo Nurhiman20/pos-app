@@ -26,13 +26,13 @@
       </div> -->
       <div class="mt-2 pb-2 product border-bottom">
         <v-row v-for="(prod, i) in this.selected.products_sold" :key="i" no-gutters>
-          <v-col cols="4">
+          <v-col cols="4" v-if="prod.qty != 0">
             <p class="mb-1">{{ prod.name }}</p>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="4" v-if="prod.qty != 0">
             <p class="mb-1 text-center">{{ prod.qty }} x {{ formatCurrency(prod.price) }}</p>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="4" v-if="prod.qty != 0">
             <p class="mb-1 text-right">Rp{{ formatCurrency(prod.price*prod.qty) }},00</p>
           </v-col>
         </v-row>
@@ -54,19 +54,19 @@
         <p>Rp{{ formatCurrency(this.selected.money_change) }},00</p>
       </div>
       <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.website !== null">
-        <v-icon color="#9A9A9A" size="15">mdi-web</v-icon>
+        <img src="../assets/img/web.png" style="width: 18px; height: 18px; margin: auto 0;">
         <p class="my-auto ml-1">{{ $store.state.account.receipt.website }}</p>
       </div>
       <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.ig !== null">
-        <v-icon color="#9A9A9A" size="15">mdi-instagram</v-icon>
+        <img src="../assets/img/instagram.png" style="width: 18px; height: 18px; margin: auto 0;">
         <p class="my-auto ml-1">{{ $store.state.account.receipt.ig }}</p>
       </div>
       <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.fb !== null">
-        <v-icon color="#9A9A9A" size="15">mdi-facebook</v-icon>
+        <img src="../assets/img/facebook.png" style="width: 18px; height: 18px; margin: auto 0;">
         <p class="my-auto ml-1">{{ $store.state.account.receipt.fb }}</p>
       </div>
       <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.twitter !== null">
-        <v-icon color="#9A9A9A" size="15">mdi-twitter</v-icon>
+        <img src="../assets/img/twitter.png" style="width: 18px; height: 18px; margin: auto 0;">
         <p class="my-auto ml-1">{{ $store.state.account.receipt.twitter }}</p>
       </div>
       <div class="d-flex flex-row mt-2">
