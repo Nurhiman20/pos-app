@@ -21,6 +21,19 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Harga jual" rules="">
+              <v-text-field
+                :error-messages="errors"
+                v-model="unitPrice"
+                label="Harga Jual"
+                prefix="Rp"
+                outlined
+                dense
+                disabled
+                class="mb-0 mt-8 px-4"
+                v-if="unitPrice !== null"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="In stock" rules="">
               <v-text-field
                 :error-messages="errors"
@@ -30,7 +43,8 @@
                 outlined
                 dense
                 disabled
-                class="mb-0 mt-8 px-4"
+                :class="unitPrice === null ? 'mt-8' : 'mt-2'"
+                class="mb-0 px-4"
               ></v-text-field>
             </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Order" rules="required">
@@ -88,7 +102,8 @@ export default {
       unit: null,
       order: null,
       received: 0,
-      unitCost: null
+      unitCost: null,
+      unitPrice: null
     }
   },
   watch: {
@@ -96,6 +111,11 @@ export default {
       if (val !== null) {
         this.inStock = val.ending_stock;
         this.unit = val.unit;
+        if (val.id.indexOf('prod') !== -1) {
+          this.unitPrice = val.price;
+        } else {
+          this.unitPrice = null;
+        }
       }
     }
   },

@@ -13,6 +13,19 @@
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editIngredient)">
+            <ValidationProvider v-slot="{ errors }" name="Harga jual" rules="">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedIngredient.ingredient.price"
+                label="Harga Jual"
+                prefix="Rp"
+                outlined
+                dense
+                disabled
+                class="mb-0 mt-2 px-4"
+                v-if="selectedIngredient.ingredient.id.indexOf('prod') !== -1"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="In stock" rules="">
               <v-text-field
                 :error-messages="errors"
@@ -22,7 +35,7 @@
                 outlined
                 dense
                 disabled
-                class="mb-0 mt-8 px-4"
+                class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Order" rules="required">
