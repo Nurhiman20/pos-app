@@ -87,6 +87,8 @@
 </template>
 
 <script>
+import * as moment from 'moment';
+
 export default {
   props: ['show'],
   data() {
@@ -123,7 +125,8 @@ export default {
         category: this.categoryIngredient,
         stock: this.stockIngredient,
         unit: this.unitIngredient,
-        price: this.pricePerUnit
+        price: this.pricePerUnit,
+        time: moment().format('MM/DD/YYYY, h:mm:ss a')
       };
       this.$store.dispatch("submitIngredient", dataForm)
         .then(() => {

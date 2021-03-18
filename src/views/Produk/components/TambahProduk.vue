@@ -139,6 +139,8 @@
 </template>
 
 <script>
+import * as moment from 'moment';
+
 export default {
   props: ['show'],
   data() {
@@ -194,7 +196,8 @@ export default {
         variant: this.variantIngredient,
         stock: this.stockIngredient,
         unit: this.unitIngredient,
-        image: this.imageProduct
+        image: this.imageProduct,
+        time: moment().format('MM/DD/YYYY, h:mm:ss a')
       };
       this.$store.dispatch("submitProduct", dataForm)
         .then(() => {

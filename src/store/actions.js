@@ -19,7 +19,7 @@ async function getProduct() {
   // });
 }
 
-async function submitProduct({ commit }, dataForm) {
+async function submitProduct({ state, commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
 
@@ -40,6 +40,15 @@ async function submitProduct({ commit }, dataForm) {
   return new Promise((resolve, reject) => {
     transaction.objectStore('product').put(dataForm);
     if (dataForm.without_ingredient === true) {
+      let firstTx = {
+        id: 'first-000000',
+        type: 'Stok Awal',
+        id_outlet: state.account.id,
+        time: dataForm.time,
+        qty: dataForm.stock,
+        unit: dataForm.unit
+      }
+      inv.tx.push(firstTx);
       transaction.objectStore('inventory').put(inv);
     }
     transaction.done
@@ -55,7 +64,7 @@ async function submitProduct({ commit }, dataForm) {
   });
 }
 
-async function updateProduct({ commit }, dataForm) {
+async function updateProduct({ state, commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
 
@@ -103,17 +112,32 @@ async function updateProduct({ commit }, dataForm) {
     variant: dataForm.variant,
     image: dataForm.image
   };
+  updatedInv.tx.forEach(tx => {
+    if (tx.id === 'first-000000') {
+      tx.qty = dataForm.stock;
+      tx.unit = dataForm.unit;
+    }
+  });
 
   // set inventory data
   let invData = {
     ...dataForm,
     order: 0,
-    tx: [],
     receive: 0,
     usage: 0,
     transfer: 0,
     adjustment: 0,
-    ending_stock: 0
+    ending_stock: 0,
+    tx: [
+      {
+        id: 'first-000000',
+        type: 'Stok Awal',
+        id_outlet: state.account.id,
+        time: dataForm.time,
+        qty: dataForm.stock,
+        unit: dataForm.unit
+      }
+    ]
   };
   
   // update product in collection product and recipe
@@ -271,7 +295,7 @@ async function getIngredient({ commit }) {
   });
 }
 
-async function submitIngredient({ commit }, dataForm) {
+async function submitIngredient({ state, commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
 
@@ -284,7 +308,16 @@ async function submitIngredient({ commit }, dataForm) {
     transfer: 0,
     adjustment: 0,
     ending_stock: 0,
-    tx: []
+    tx: [
+      {
+        id: 'first-000000',
+        type: 'Stok Awal',
+        id_outlet: state.account.id,
+        time: dataForm.time,
+        qty: dataForm.stock,
+        unit: dataForm.unit
+      }
+    ]
   };
 
   // submit ingredient to collection ingredient and inventory
@@ -331,6 +364,13 @@ async function updateIngredient({ commit }, dataForm) {
     stock: dataForm.stock,
     unit: dataForm.unit
   };
+
+  updatedInv.tx.forEach(tx => {
+    if (tx.id === 'first-000000') {
+      tx.qty = dataForm.stock;
+      tx.unit = dataForm.unit;
+    }
+  });
 
   // update ingredient in collection inventory and ingredient
   let transaction = await vuePos.transaction(['ingredient', 'inventory'], 'readwrite');
