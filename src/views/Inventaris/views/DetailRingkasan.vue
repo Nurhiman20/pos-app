@@ -91,6 +91,33 @@
           <div class="d-flex flex-row justify-space-between">
             <v-card-title>Transaksi</v-card-title>
           </div>
+          <v-data-table
+            :headers="headersTransaction"
+            :items="$store.getters.transactionOnDetail"
+            class="elevation-1 scrollbar-custom"
+            hide-default-footer
+          >
+            <template v-slot:item.products_sold="{item}">
+              <div v-for="(prod, index) in item.products_sold" :key="index">
+                <div class="d-flex flex-row align-center py-2">
+                  <v-img :src="showImage(prod.image)" min-width="60" max-width="60" :aspect-ratio="4/3"></v-img>
+                  <div class="ml-2 mt-4">
+                    <p class="text-bold mb-0">{{ prod.name }} ({{ prod.qty }})</p>
+                    <p class="app-subtitle">Rp{{ formatCurrency(prod.price) }},00</p>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template v-slot:item.total="{item}">
+              <p>Rp{{ formatCurrency(item.total) }},00</p>
+            </template>
+            <template v-slot:item.date="{item}">
+              <p>{{ item.time }}</p>
+            </template>
+            <template v-slot:item.time="{item}">
+              <p>{{ item.time }}</p>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
     </v-row>
@@ -128,11 +155,25 @@ export default {
         { text: 'Expense/Income', value: 'expense_income', sortable: true },
         { text: 'Keterangan', value: 'notes', sortable: true }
       ],
+      headersTransaction: [
+        { text: 'Tanggal', value: 'date', sortable: true },
+        { text: 'Waktu', value: 'time', sortable: true },
+        { text: 'ID Transaksi', value: 'id', sortable: false },
+        { text: 'Produk', value: 'products_sold', sortable: false },
+        { text: 'Total Harga', value: 'total', sortable: false }
+      ]
     }
   },
   methods: {
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+    },    
+    showImage(item) {
+      if (item !== null) {
+        return URL.createObjectURL(item);
+      } else {
+        return null;
+      }
     },
     countTotalOrder(item) {
       const total = item.ingredients.reduce((acc, ing) => acc + (ing.order * ing.unit_cost), 0);
@@ -155,6 +196,7 @@ export default {
     this.$store.dispatch("getOrder");
     this.$store.dispatch("getReceive");
     this.$store.dispatch("getAdjustment");
+    this.$store.dispatch("getTransaction");
   },
 }
 </script>

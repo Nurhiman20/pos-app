@@ -214,6 +214,25 @@ const adjustmentOnDetail = (state) => {
   return adjustments;
 }
 
+const transactionOnDetail = (state) => {
+  let transaction = [];
+  state.listTransaction.forEach(tx => {
+    tx.products_sold.forEach(prod => {
+      if (prod.ingredients !== undefined) {
+        prod.ingredients.forEach(ing => {
+          if (ing.id_ingredient === state.detailInventory.id) {
+            transaction.push(tx);
+          }
+        });
+      } else if (prod.id === state.detailInventory.id) {
+        transaction.push(tx);
+      }
+    });
+  });
+  
+  return transaction;
+}
+
 export default {
   listViewProduct,
   listViewInventory,
@@ -226,5 +245,6 @@ export default {
   totalProfitMonth,
   orderOnDetail,
   receiveOnDetail,
-  adjustmentOnDetail
+  adjustmentOnDetail,
+  transactionOnDetail
 }
