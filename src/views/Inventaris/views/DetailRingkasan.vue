@@ -7,6 +7,19 @@
       <v-col cols="12">
         <v-card class="pa-3 mt-4">
           <div class="d-flex flex-row justify-space-between">
+            <v-card-title>Stok Saat Ini</v-card-title>
+          </div>
+          <v-data-table
+            :headers="headersCurrentStock"
+            :items="$store.getters.viewCurrentStock"
+            class="elevation-1 scrollbar-custom"
+            hide-default-footer
+          ></v-data-table>
+        </v-card>
+      </v-col>
+      <v-col cols="12">
+        <v-card class="pa-3 mt-4">
+          <div class="d-flex flex-row justify-space-between">
             <v-card-title>History</v-card-title>
           </div>
           <v-data-table
@@ -128,6 +141,15 @@
 export default {
   data() {
     return {
+      headersCurrentStock: [
+        { text: 'ID', value: 'id', sortable: false },
+        { text: 'Cabang', value: 'qty', sortable: true },
+        { text: 'Waktu Stok Awal', value: 'time', sortable: true },
+        { text: 'Waktu Terakhir Transaksi', value: 'type', sortable: true },
+        { text: 'Stok Awal', value: 'qty', sortable: true },
+        { text: 'Stok Akhir', value: 'qty', sortable: true },
+        { text: 'Harga Beli Tertinggi', value: 'qty', sortable: true }
+      ],
       headersHistory: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },

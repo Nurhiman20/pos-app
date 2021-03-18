@@ -233,6 +233,11 @@ const transactionOnDetail = (state) => {
   return transaction;
 }
 
+const viewCurrentStock = () => {
+  let currentStock = [];  
+  return currentStock;
+}
+
 export default {
   listViewProduct,
   listViewInventory,
@@ -246,5 +251,6 @@ export default {
   orderOnDetail,
   receiveOnDetail,
   adjustmentOnDetail,
-  transactionOnDetail
+  transactionOnDetail,
+  viewCurrentStock
 }
