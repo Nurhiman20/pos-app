@@ -52,6 +52,7 @@
     <edit-ingredient-dialog
       :show="dialogEditIngredient"
       :selected="selectedIngredient"
+      :order="selectedReceive.order"
       @closeDialog="closeDialogEdit"
       @edit="editIngredient"
     ></edit-ingredient-dialog>
@@ -151,6 +152,13 @@ export default {
       this.$emit("delete", this.selectedReceive);
     },
     editReceive() {
+      this.selectedReceive.order.receive.forEach(rv => {
+        if (rv.id === this.selectedReceive.id) {
+          rv.ingredients = this.selectedReceive.ingredients;
+          rv.status = this.selectedReceive.status;
+          rv.notes = this.selectedReceive.notes;
+        }
+      });
       let dataForm = {
         ...this.selectedReceive,
         status: this.checkStatus()

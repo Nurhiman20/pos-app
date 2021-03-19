@@ -64,16 +64,6 @@ export default {
       if (val.received !== null || val.received !== undefined) {
         this.received = val.received;
       }
-    },
-    received(val) {
-      console.log(val);
-      // if (val > (parseFloat(this.selectedIngredient.order) - this.totalReceived())) {
-      //   console.log('test');
-      //   let errorText = "Bahan / produk yang sudah diterima: " + this.totalReceived()
-      //   this.$refs.form.setErrors({
-      //     Diterima: errorText
-      //   });
-      // }
     }
   },
   methods: {
@@ -99,20 +89,13 @@ export default {
       return total;
     },
     editIngredient() {
-      if (this.received > (parseFloat(this.selectedIngredient.order) - this.totalReceived())) {
-        let errorText = "Melebihi pesanan. Total yang sudah diterima: " + this.totalReceived()
-        this.$refs.form.setErrors({
-          Diterima: errorText
-        });
-      } else {
-        let dataForm = {
-          ...this.selectedIngredient,
-          received: this.received,
-          total_receive: parseFloat(this.received) + this.totalReceived()
-        }
-        this.$emit('edit', dataForm);
+      let dataForm = {
+        ...this.selectedIngredient,
+        received: this.received,
+        total_receive: parseFloat(this.received) + this.totalReceived()
       }
+      this.$emit('edit', dataForm);
     }
-  },
+  }
 }
 </script>

@@ -165,14 +165,17 @@ export default {
     },
     closeDialogAdd(e) {
       this.$store.dispatch("getReceive");
+      this.$store.dispatch("getOrder");
       this.dialogAddReceive = e;
     },
     closeDialogEdit(e) {
       this.$store.dispatch("getReceive");
+      this.$store.dispatch("getOrder");
       this.dialogEditReceive = e;
     },
     successPutReceive(e) {
       this.$store.dispatch("getReceive");
+      this.$store.dispatch("getOrder");
       this.messageDialog = e;
       this.dialogSuccess = true;
     },
@@ -182,6 +185,7 @@ export default {
     },
     successDelete() {
       this.$store.dispatch("getReceive");
+      this.$store.dispatch("getOrder");
     },
     deleteReceive(e) {
       this.selectedDelete = e;
@@ -192,6 +196,7 @@ export default {
       this.$store.dispatch("deleteReceive", this.selectedDelete)
         .then(() => {          
           this.$store.dispatch("getReceive");
+          this.$store.dispatch("getOrder");
           this.dialogConfirm = false;
           this.messageDialog = "Berhasil menghapus penerimaan";
           this.dialogSuccess = true;

@@ -877,7 +877,7 @@ async function submitReceive({ state, commit }, dataForm) {
   });
 }
 
-async function updateReceive({ commit }, dataForm) {
+async function updateReceive({ state, commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
 
@@ -910,9 +910,24 @@ async function updateReceive({ commit }, dataForm) {
     });
   });
 
-  let transaction = await vuePos.transaction(['receive', 'inventory'], 'readwrite');
+  let orders = { id: null };
+  state.listOrder.forEach(order => {
+    if (order.id === dataForm.id_order) {
+      orders = order;
+    }
+  });
+  orders.receive.forEach(rv => {
+    if (rv.id === dataForm.id) {
+      rv.ingredients = dataForm.ingredients;
+      rv.status = dataForm.status;
+      rv.notes = dataForm.notes;
+    }
+  });
+
+  let transaction = await vuePos.transaction(['receive', 'inventory', 'order'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('receive').put(dataForm);
+    transaction.objectStore('order').put(orders);
     inventories.forEach(inventory => {
       transaction.objectStore('inventory').put(inventory);
     });
@@ -929,7 +944,7 @@ async function updateReceive({ commit }, dataForm) {
   });
 }
 
-async function deleteReceive({ commit }, dataForm) {
+async function deleteReceive({ state, commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
 
@@ -958,9 +973,24 @@ async function deleteReceive({ commit }, dataForm) {
     });
   });
 
-  let transaction = await vuePos.transaction(['receive', 'inventory'], 'readwrite');
+  let orders = { id: null };
+  state.listOrder.forEach(order => {
+    if (order.id === dataForm.id_order) {
+      orders = order;
+    }
+  });
+  let indexReceive = null;
+  orders.receive.forEach((rv, indexRv) => {
+    if (rv.id === dataForm.id) {
+      indexReceive = indexRv;
+    }
+  });
+  orders.receive.splice(indexReceive, 1);
+
+  let transaction = await vuePos.transaction(['receive', 'inventory', 'order'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('receive').delete(dataForm.id);
+    transaction.objectStore('order').put(orders);
     inventories.forEach(inventory => {
       transaction.objectStore('inventory').put(inventory);
     });
