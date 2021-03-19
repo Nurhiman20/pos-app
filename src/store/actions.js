@@ -818,7 +818,7 @@ async function getReceive({ commit }) {
   });
 }
 
-async function submitReceive({ commit }, dataForm) {
+async function submitReceive({ state, commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
 
@@ -849,9 +849,18 @@ async function submitReceive({ commit }, dataForm) {
     if (!cursor) break;
   }
 
-  let transaction = await vuePos.transaction(['receive', 'inventory'], 'readwrite');
+  let orders = { id: null };
+  state.listOrder.forEach(order => {
+    if (order.id === dataForm.id_order) {
+      orders = order;
+      orders.receive.push(dataForm);
+    }
+  });
+
+  let transaction = await vuePos.transaction(['receive', 'inventory', 'order'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('receive').put(dataForm);
+    transaction.objectStore('order').put(orders);
     inventories.forEach(inventory => {
       transaction.objectStore('inventory').put(inventory);
     });

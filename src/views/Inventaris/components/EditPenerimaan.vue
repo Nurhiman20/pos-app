@@ -3,30 +3,16 @@
     <v-dialog v-model="show" persistent width="500">
       <v-card class="pa-3">
         <div class="d-flex flex-row justify-space-between align-center">
-          <v-card-title class="ml-0">Edit Penerimaan</v-card-title>
+          <div class="d-flex flex-column">
+            <v-card-title class="ml-0">Edit Penerimaan</v-card-title>
+            <v-card-subtitle>{{ textOrder(selectedReceive) }}</v-card-subtitle>
+          </div>
           <v-btn color="error" outlined @click="goDelete">
             <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editReceive)">
-            <ValidationProvider v-slot="{ errors }" name="Pemesanan" rules="required">
-              <v-autocomplete
-                :error-messages="errors"
-                v-model="selectedReceive.order"
-                :items="$store.state.listOrder"
-                :item-text="textOrder"
-                :item-value="valueOrder"
-                label="Pemesanan"
-                cache-items
-                class="mb-0 mt-2 px-4"
-                outlined
-                dense
-                hide-no-data
-                hide-details
-                :clearable="true"
-              ></v-autocomplete>
-            </ValidationProvider>
             <div class="px-4 mt-6 mb-6" v-if="selectedReceive.ingredients.length !== 0">
               <v-data-table
                 :headers="headers"
@@ -82,7 +68,15 @@ export default {
   },
   data() {
     return {
-      selectedReceive: {},
+      selectedReceive: {
+        order: { 
+          id: null 
+        },
+        supplier: {
+          name: null,
+          phone_number: null
+        }
+      },
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },

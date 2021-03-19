@@ -26,6 +26,8 @@
                 v-model="received"
                 label="Diterima"
                 :suffix="selectedIngredient.ingredient.unit"
+                :hint="'Total yang sudah diterima: ' + totalReceived()"
+                persistent-hint
                 outlined
                 dense
                 class="mb-0 mt-2 px-4"
@@ -45,7 +47,7 @@
 
 <script>
 export default {
-  props: ['show', 'selected'],
+  props: ['show', 'selected', 'order'],
   data() {
     return {
       received: null,
@@ -62,6 +64,16 @@ export default {
       if (val.received !== null || val.received !== undefined) {
         this.received = val.received;
       }
+    },
+    received(val) {
+      console.log(val);
+      // if (val > (parseFloat(this.selectedIngredient.order) - this.totalReceived())) {
+      //   console.log('test');
+      //   let errorText = "Bahan / produk yang sudah diterima: " + this.totalReceived()
+      //   this.$refs.form.setErrors({
+      //     Diterima: errorText
+      //   });
+      // }
     }
   },
   methods: {
@@ -74,12 +86,32 @@ export default {
     valueIngredient(item) {
       return item
     },
+    totalReceived() {
+      let total = 0;
+      this.order.receive.forEach(rv => {
+        rv.ingredients.forEach(ing => {
+          if (ing.id_ingredient === this.selectedIngredient.id_ingredient) {
+            total += parseFloat(ing.received);
+          }
+        })
+      });
+
+      return total;
+    },
     editIngredient() {
-      let dataForm = {
-        ...this.selectedIngredient,
-        received: this.received
+      if (this.received > (parseFloat(this.selectedIngredient.order) - this.totalReceived())) {
+        let errorText = "Melebihi pesanan. Total yang sudah diterima: " + this.totalReceived()
+        this.$refs.form.setErrors({
+          Diterima: errorText
+        });
+      } else {
+        let dataForm = {
+          ...this.selectedIngredient,
+          received: this.received,
+          total_receive: parseFloat(this.received) + this.totalReceived()
+        }
+        this.$emit('edit', dataForm);
       }
-      this.$emit('edit', dataForm);
     }
   },
 }

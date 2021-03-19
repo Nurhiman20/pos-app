@@ -61,6 +61,7 @@
     <edit-ingredient-dialog
       :show="dialogEditIngredient"
       :selected="selectedIngredient"
+      :order="order"
       @closeDialog="closeDialogEdit"
       @edit="editIngredient"
     ></edit-ingredient-dialog>
@@ -126,6 +127,9 @@ export default {
       this.dialogEditIngredient = e;
     },
     closeDialog() {
+      this.order = null;
+      this.listIngredient = [];
+      this.notes = null;
       this.$emit('closeDialog', false);
     },
     goToEdit(e) {
@@ -148,7 +152,7 @@ export default {
     checkStatus() {
       let countUnfulfilled = 0;
       this.listIngredient.forEach(item => {
-        if (parseFloat(item.order) > parseFloat(item.received)) {
+        if (parseFloat(item.order) > parseFloat(item.total_receive)) {
           countUnfulfilled += 1;
         }
       });
