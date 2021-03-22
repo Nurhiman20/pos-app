@@ -57,6 +57,7 @@
   
     <add-receive-dialog
       :show="dialogAddReceive"
+      @viewDetailHistory="goToDetail"
       @closeDialog="closeDialogAdd"
       @success="successPutReceive"
       @error="failedAddReceive"
@@ -71,6 +72,12 @@
       @delete="deleteReceive"
       @successDelete="successDelete"
     ></edit-receive-dialog>
+
+    <detail-receive-dialog 
+      :show="dialogDetailReceive"
+      :selected="selectedReceive"
+      @closeDialog="closeDialogDetail"
+    ></detail-receive-dialog>
 
     <!-- response dialog -->
     <response-dialog 
@@ -89,12 +96,14 @@
 <script>
 import addReceiveDialog from '../components/TambahPenerimaan';
 import editReceiveDialog from '../components/EditPenerimaan';
+import detailReceiveDialog from '../components/DetailPenerimaan';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
     addReceiveDialog,
     editReceiveDialog,
+    detailReceiveDialog,
     responseDialog
   },
   data() {
@@ -126,6 +135,7 @@ export default {
       },
       dialogAddReceive: false,
       dialogEditReceive: false,
+      dialogDetailReceive: false,
       dialogSuccess: false,
       dialogFailed: false,
       dialogConfirm: false,
@@ -173,6 +183,9 @@ export default {
       this.$store.dispatch("getOrder");
       this.dialogEditReceive = e;
     },
+    closeDialogDetail(e) {
+      this.dialogDetailReceive = e;
+    },
     successPutReceive(e) {
       this.$store.dispatch("getReceive");
       this.$store.dispatch("getOrder");
@@ -210,6 +223,10 @@ export default {
     goToEdit(item) {
       this.selectedReceive = item;
       this.dialogEditReceive = true;
+    },
+    goToDetail(item) {
+      this.selectedReceive = item;
+      this.dialogDetailReceive = true;
     }
   },
   created() {

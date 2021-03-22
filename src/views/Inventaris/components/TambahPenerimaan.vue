@@ -21,7 +21,18 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
+            <div class="px-4 mt-6 mb-6" v-if="order !== null">
+              <p class="mb-2">Riwayat Penerimaan</p>
+              <v-data-table
+                :headers="headersHistory"
+                :items="order.receive"
+                class="elevation-1 scrollbar-custom"
+                hide-default-footer
+                @click:row="viewDetailHistory"
+              ></v-data-table>
+            </div>
             <div class="px-4 mt-6 mb-6" v-if="listIngredient.length !== 0">
+              <p class="mb-2">Penerimaan Baru</p>
               <v-data-table
                 :headers="headers"
                 :items="listIngredient"
@@ -89,6 +100,10 @@ export default {
         { text: 'Total (Rp)', value: 'total', sortable: false },
         { text: 'Diterima', value: 'received', sortable: false }
       ],
+      headersHistory: [
+        { text: 'ID Penerimaan', value: 'id', sortable: false },
+        { text: 'Waktu', value: 'time', sortable: false }
+      ],
       dialogEditIngredient: false
     }
   },
@@ -151,6 +166,9 @@ export default {
 
       this.listIngredient = listIngredient;
       this.dialogEditIngredient = false;
+    },
+    viewDetailHistory(item) {
+      this.$emit('viewDetailHistory', item);
     },
     checkStatus() {
       let countUnfulfilled = 0;
