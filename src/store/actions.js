@@ -840,7 +840,8 @@ async function submitReceive({ state, commit }, dataForm) {
           time: dataForm.time,
           status: dataForm.status,
           notes: dataForm.notes,
-          qty: ing.received
+          qty: ing.received,
+          unit_cost: ing.unit_cost
         })
         inventories.push(cursor.value);
       }
@@ -905,6 +906,7 @@ async function updateReceive({ state, commit }, dataForm) {
           element.status = dataForm.status;
           element.notes = dataForm.notes;
           element.qty = ingredient.received;
+          element.unit_cost = ingredient.unit_cost;
         }
       });
     });

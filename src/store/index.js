@@ -32,6 +32,7 @@ const state = {
       notes: null
     }
   },
+  endingStock: 0,
   
   // Data model
   account: {

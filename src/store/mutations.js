@@ -123,6 +123,10 @@ const SET_DATE_END = (state, payload) => {
   state.dateEnd = payload;
 };
 
+const SET_ENDING_STOCK = (state, payload) => {
+  state.endingStock = payload;
+};
+
 export default {
   SET_LOADING,
   SET_LIST_PRODUCT,
@@ -149,5 +153,6 @@ export default {
   EDIT_SELECTED_PRODUCT,
   SET_EDIT_TX,
   SET_DATE_START,
-  SET_DATE_END
+  SET_DATE_END,
+  SET_ENDING_STOCK
 }

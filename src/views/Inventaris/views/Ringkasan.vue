@@ -185,6 +185,7 @@ export default {
       }
     },
     viewDetail(e) {
+      this.$store.commit("SET_ENDING_STOCK", e.ending_stock);
       this.$router.push('ringkasan/detail/' + e.id);
     }
   },

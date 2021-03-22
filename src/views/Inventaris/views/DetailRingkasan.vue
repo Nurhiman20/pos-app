@@ -9,12 +9,60 @@
           <div class="d-flex flex-row justify-space-between">
             <v-card-title>Stok Saat Ini</v-card-title>
           </div>
-          <v-data-table
-            :headers="headersCurrentStock"
-            :items="$store.getters.viewCurrentStock"
-            class="elevation-1 scrollbar-custom"
-            hide-default-footer
-          ></v-data-table>
+          <v-container>
+            <v-row>
+              <v-col cols="12" md="6" lg="6" xl="6">
+                <v-row no-gutters>
+                  <v-col cols="4">
+                    <p>ID</p>
+                  </v-col>
+                  <v-col cols="8">
+                    <p class="text-bold">{{ this.$store.state.detailInventory.id }}</p>
+                  </v-col>
+                  <v-col cols="4">
+                    <p>Cabang</p>
+                  </v-col>
+                  <v-col cols="8">
+                    <p class="text-bold">{{ this.$store.state.account.name }}</p>
+                  </v-col>
+                  <v-col cols="4">
+                    <p>Waktu Stok Awal</p>
+                  </v-col>
+                  <v-col cols="8">
+                    <p class="text-bold" v-if="this.$store.state.detailInventory.tx !== undefined">{{ this.$store.state.detailInventory.tx[0].time }}</p>
+                  </v-col>
+                  <v-col cols="4">
+                    <p>Waktu Terakhir Transaksi</p>
+                  </v-col>
+                  <v-col cols="8">
+                    <p class="text-bold" v-if="this.$store.state.detailInventory.tx !== undefined">{{ this.$store.state.detailInventory.tx[this.$store.state.detailInventory.tx.length - 1].time }}</p>
+                  </v-col>
+                </v-row>
+              </v-col>            
+              <v-col cols="12" md="6" lg="6" xl="6">
+                <v-row no-gutters>
+                  <v-col cols="4">
+                      <p>Stok Awal</p>
+                    </v-col>
+                    <v-col cols="8">
+                      <p class="text-bold" v-if="this.$store.state.detailInventory.tx !== undefined">{{ this.$store.state.detailInventory.tx[0].qty }}</p>
+                    </v-col>
+                    <v-col cols="4">
+                      <p>Stok Akhir</p>
+                    </v-col>
+                    <v-col cols="8">
+                      <p class="text-bold">{{ this.$store.state.endingStock }}</p>
+                    </v-col>
+                    <v-col cols="4">
+                      <p>Harga Beli Tertinggi</p>
+                    </v-col>
+                    <v-col cols="8">
+                      <p class="text-bold" v-if="this.$store.state.detailInventory.tx !== undefined">{{ this.$store.getters.viewHighestCost }}</p>
+                    </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-card>
       </v-col>
       <v-col cols="12">
@@ -27,7 +75,14 @@
             :items="$store.state.detailInventory.tx"
             class="elevation-1 scrollbar-custom"
             hide-default-footer
-          ></v-data-table>
+          >
+            <template v-slot:item.unit_cost="{item}">
+              <p class="my-auto" v-if="item.id.indexOf('order') !== -1">Rp{{ formatCurrency(item.unit_cost) }},00</p>
+            </template>
+            <template v-slot:item.total_price="{item}">
+              <p class="my-auto" v-if="item.id.indexOf('order') !== -1">Rp{{ formatCurrency(parseFloat(item.unit_cost) * parseFloat(item.qty)) }},00</p>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
       <v-col cols="12" md="6" lg="6" xl="6">
@@ -141,20 +196,13 @@
 export default {
   data() {
     return {
-      headersCurrentStock: [
-        { text: 'ID', value: 'id', sortable: false },
-        { text: 'Cabang', value: 'qty', sortable: true },
-        { text: 'Waktu Stok Awal', value: 'time', sortable: true },
-        { text: 'Waktu Terakhir Transaksi', value: 'type', sortable: true },
-        { text: 'Stok Awal', value: 'qty', sortable: true },
-        { text: 'Stok Akhir', value: 'qty', sortable: true },
-        { text: 'Harga Beli Tertinggi', value: 'qty', sortable: true }
-      ],
       headersHistory: [
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'Jenis', value: 'type', sortable: true },
-        { text: 'Qty', value: 'qty', sortable: true }
+        { text: 'Qty', value: 'qty', sortable: true },
+        { text: 'Harga Satuan', value: 'unit_cost', sortable: true },
+        { text: 'Total Harga', value: 'total_price', sortable: true }
       ],
       headersOrder: [
         { text: 'ID Order', value: 'id', sortable: false },

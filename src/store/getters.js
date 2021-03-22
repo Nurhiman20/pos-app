@@ -238,6 +238,24 @@ const viewCurrentStock = () => {
   return currentStock;
 }
 
+const viewHighestCost = (state) => {
+  let order = [];
+  state.detailInventory.tx.forEach(tx => {
+    if (tx.id.indexOf('order') !== -1) {
+      order.push(parseFloat(tx.unit_cost))
+    }
+  });
+
+  let max = order[0];
+  for (let i = 1; i < order.length; ++i) {
+    if (order[i] > max) {
+      max = order[i];
+    }
+  }
+
+  return max
+}
+
 export default {
   listViewProduct,
   listViewInventory,
@@ -252,5 +270,6 @@ export default {
   receiveOnDetail,
   adjustmentOnDetail,
   transactionOnDetail,
-  viewCurrentStock
+  viewCurrentStock,
+  viewHighestCost
 }
