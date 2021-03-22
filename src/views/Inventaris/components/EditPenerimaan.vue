@@ -13,7 +13,18 @@
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editReceive)">
-            <div class="px-4 mt-6 mb-6" v-if="selectedReceive.ingredients.length !== 0">
+            <ValidationProvider v-slot="{ errors }" name="Waktu" rules="">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedReceive.time"
+                label="Waktu"
+                outlined
+                dense
+                disabled
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
+            <div class="px-4 mt-0 mb-6" v-if="selectedReceive.ingredients.length !== 0">
               <v-data-table
                 :headers="headers"
                 :items="selectedReceive.ingredients"

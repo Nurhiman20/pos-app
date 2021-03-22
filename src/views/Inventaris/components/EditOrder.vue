@@ -10,6 +10,17 @@
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(addOrder)">
+            <ValidationProvider v-slot="{ errors }" name="Waktu" rules="">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedOrder.time"
+                label="Waktu"
+                outlined
+                dense
+                disabled
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Supplier" rules="required">
               <v-autocomplete
                 :error-messages="errors"

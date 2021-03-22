@@ -20,13 +20,24 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Total diterima" rules="required">
+              <v-text-field
+                :error-messages="errors"
+                v-model="total"
+                label="Total Diterima"
+                :suffix="selectedIngredient.ingredient.unit"
+                disabled
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Diterima" rules="required">
               <v-text-field
                 :error-messages="errors"
                 v-model="received"
                 label="Diterima"
                 :suffix="selectedIngredient.ingredient.unit"
-                :hint="'Total yang sudah diterima: ' + totalReceived()"
                 persistent-hint
                 outlined
                 dense
@@ -51,6 +62,7 @@ export default {
   data() {
     return {
       received: null,
+      total: 0,
       selectedIngredient: {
         ingredient: {
           name: null
@@ -63,6 +75,7 @@ export default {
       this.selectedIngredient = val;
       if (val.received !== null || val.received !== undefined) {
         this.received = val.received;
+        this.totalReceived();
       }
     }
   },
@@ -86,7 +99,7 @@ export default {
         })
       });
 
-      return total;
+      this.total = total;
     },
     editIngredient() {
       let dataForm = {

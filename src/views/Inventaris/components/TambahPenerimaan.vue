@@ -13,7 +13,6 @@
                 :item-text="textOrder"
                 :item-value="valueOrder"
                 label="Pemesanan"
-                cache-items
                 class="mb-0 mt-2 px-4"
                 outlined
                 dense
@@ -95,7 +94,11 @@ export default {
   },
   watch: {
     order(val) {
-      this.listIngredient = val.ingredients;
+      if (val !== null) {
+        this.listIngredient = val.ingredients;
+      } else {
+        this.listIngredient = [];
+      }
     }
   },
   methods: {
