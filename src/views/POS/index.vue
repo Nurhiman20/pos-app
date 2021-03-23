@@ -2,21 +2,51 @@
   <div class="app-content">
     <v-container>
       <v-row>
-        <v-col cols="12" md="7" lg="7" xl="7">
-          <product-catalog
-            :categories="$store.state.listCategory"
-            :products="$store.getters.listViewProduct"
-            @setFilter=setFilterProduct
-            @productSelected="openSelectDialog"
-          ></product-catalog>
-        </v-col>
-        <v-col cols="12" md="5" lg="5" xl="5">
-          <product-sale
-            @editProduct="editProduct"
-            @saveTransaction="saveTransaction"
-          ></product-sale>
+        <v-col cols="12">
+          <v-card outlined>
+            <v-tabs
+              v-model="tab"
+              background-color="transparent"
+              color="primary"
+            >
+              <v-tab>
+                Pesanan
+              </v-tab>
+              <v-tab>
+                Pembayaran
+              </v-tab>
+            </v-tabs>
+          </v-card>
         </v-col>
       </v-row>
+        
+      <v-tabs-items v-model="tab" class="mt-4">
+        <v-tab-item>          
+          <v-card outlined color="background">
+            <v-row>
+              <v-col cols="12" md="7" lg="7" xl="7">
+                <product-catalog
+                  :categories="$store.state.listCategory"
+                  :products="$store.getters.listViewProduct"
+                  @setFilter=setFilterProduct
+                  @productSelected="openSelectDialog"
+                ></product-catalog>
+              </v-col>
+              <v-col cols="12" md="5" lg="5" xl="5">
+                <product-sale
+                  @editProduct="editProduct"
+                  @saveTransaction="saveTransaction"
+                ></product-sale>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-tab-item>
+        <v-tab-item color="background">
+          <v-card outlined color="background">
+            <p>Test</p>
+          </v-card>
+        </v-tab-item>
+      </v-tabs-items>
     </v-container>
 
     <select-product-dialog
@@ -78,6 +108,7 @@ export default {
         id: null,
         name: null
       },
+      tab: null,
       selectDialog: false,
       editDialog: false,
       saveDialog: false,
