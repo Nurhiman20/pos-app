@@ -42,9 +42,7 @@
           </v-card>
         </v-tab-item>
         <v-tab-item color="background">
-          <v-card outlined color="background">
-            <p>Test</p>
-          </v-card>
+          <payment-tab></payment-tab>
         </v-tab-item>
       </v-tabs-items>
     </v-container>
@@ -67,7 +65,7 @@
       @close="closeSaveDialog"
       @success="successSaveTransaction"
       @error="failedSaveTransaction"
-    ></save-transaction-dialog>
+    ></save-transaction-dialog>    
 
     <!-- response dialog -->
     <response-dialog 
@@ -87,6 +85,7 @@ import selectProductDialog from './components/DialogPilihProduk';
 import editProductDialog from './components/DialogEditProduk';
 import saveTransactionDialog from './components/DialogSimpanTransaksi';
 import responseDialog from '../../components/ResponseDialog';
+import paymentTab from './components/TabPembayaran';
 
 export default {
   components: {
@@ -95,7 +94,8 @@ export default {
     selectProductDialog,
     editProductDialog,
     saveTransactionDialog,
-    responseDialog
+    responseDialog,
+    paymentTab
   },
   data() {
     return {
@@ -174,6 +174,7 @@ export default {
     this.$store.dispatch("getCategory");    
     this.$store.dispatch("getCustomer");
     this.$store.dispatch("getTable");
+    this.$store.dispatch("getTransaction");
   },
 }
 </script>
