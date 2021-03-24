@@ -27,7 +27,11 @@
               class="elevation-1 scrollbar-custom"
               hide-default-footer
             ></v-data-table>
-            <div class="d-flex flex-row justify-space-between pa-2 pb-0 mt-3 total">
+            <div class="d-flex flex-row justify-space-between mt-6">
+              <p>Diskon</p>
+              <p class="text-bold mr-2">Rp. {{ formatCurrency(discount) }},00</p>
+            </div>
+            <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
               <p>Total</p>
               <p class="text-bold">Rp. {{ formatCurrency(total) }},00</p>
             </div>
@@ -54,7 +58,7 @@
               v-if="paymentMethod === 'Tunai'"
             ></v-text-field>
           </ValidationProvider>
-          <div class="px-4 mb-4" v-if="paymentMethod === 'Tunai'">
+          <div class="px-4 mb-4" v-if="paymentMethod === 'Tunai'">            
             <div class="d-flex flex-row justify-space-between pa-2 pb-0 kembali">
               <p>Kembali</p>
               <p class="text-bold">Rp. {{ formatCurrency(moneyChange) }},00</p>
@@ -91,6 +95,10 @@ export default {
       const totalAll = this.tx.products_sold.reduce((acc, prod) => acc + parseInt(prod.total), 0);
       return totalAll;
     },
+    discount() {
+      const disc = this.tx.products_sold.reduce((acc, prod) => acc + parseInt(prod.discount), 0);
+      return disc
+    },
     moneyChange() {
       if (this.cash === 0) {
         return 0;
@@ -101,7 +109,12 @@ export default {
   },
   methods: {    
     textTx(item) {
-      return item.id + ' | ' + item.time + ' | ' + item.table_number.table_number
+      if (item.table_number !== undefined) {
+        return item.id + ' | ' + item.time + ' | ' + item.table_number.table_number
+      } else {
+        return ''
+      }
+      
     },
     valueTx(item) {
       return item

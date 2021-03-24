@@ -17,7 +17,22 @@
       </div>
       <div class="w-full px-3 mt-4">
         <v-row>
-          <v-col cols="6" md="6" lg="6" class="py-0">
+          <v-col cols="12">
+            <v-autocomplete
+              v-model="customer"
+              :items="$store.state.listCustomer"
+              :item-text="textCustomer"
+              :item-value="valueCustomer"
+              label="Pelanggan"
+              outlined
+              dense
+              hide-no-data
+              hide-details
+              :clearable="true"
+            ></v-autocomplete>
+            <v-btn class="mt-3" block color="secondary2" dark>Pilih Meja</v-btn>
+          </v-col>
+          <!-- <v-col cols="6" md="6" lg="6" class="py-0">
             Diskon
           </v-col>
           <v-col cols="6" md="6" lg="6" class="py-0">
@@ -47,7 +62,7 @@
               <p>Kembali</p>
               <p class="text-bold">Rp. {{ formatCurrency(moneyChange) }},00</p>
             </div>
-          </v-col>
+          </v-col> -->
           <v-col cols="12" md="12" lg="12" class="py-0">
             <v-btn class="mt-3" block color="primary" dark @click="submitTransaction">Transaksi</v-btn>
             <v-btn class="mt-3" block color="secondary" outlined dark @click="cancelEdit" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Batal Edit Transaksi</v-btn>
@@ -63,6 +78,7 @@ export default {
   data() {
     return {
       cash: 0,
+      customer: null,
       headers: [
         { text: 'Produk', value: 'name', sortable: false },        
         { text: 'Harga', value: 'price', sortable: false },
@@ -91,8 +107,11 @@ export default {
     }
   },
   methods: {
-    goToEdit(item) {
-      this.$emit('editProduct', item);
+    textCustomer(item) {
+      return item.name + ' - ' + item.phone_number
+    },
+    valueCustomer(item) {
+      return item
     },
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
@@ -104,6 +123,9 @@ export default {
     },
     dateTime() {
       return new Date().toLocaleString();
+    },
+    goToEdit(item) {
+      this.$emit('editProduct', item);
     },
     cancelEdit() {
       this.$store.commit("SET_EDIT_TX", null);
