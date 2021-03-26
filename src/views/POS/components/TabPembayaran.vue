@@ -2,7 +2,7 @@
   <div>
     <v-card class="pa-3" outlined>
       <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-        <v-form @submit.prevent="handleSubmit(saveTransaction)">
+        <v-form @submit.prevent="handleSubmit(submitTransaction)">
           <ValidationProvider v-slot="{ errors }" name="Pelanggan" rules="">
             <v-autocomplete
               :error-messages="errors"
@@ -97,7 +97,7 @@
             </div>
           </div>
           <div class="px-4 pb-3">
-            <v-btn class="mt-3" block color="primary" dark>Simpan Transaksi</v-btn>
+            <v-btn class="mt-3" block color="primary" dark type="submit" :loading="$store.state.loading">Simpan Transaksi</v-btn>
           </div>
         </v-form>
       </ValidationObserver>
@@ -161,8 +161,7 @@ export default {
         return item.id + ' | ' + item.time + ' | ' + item.table_number.table_number
       } else {
         return ''
-      }
-      
+      }      
     },
     valueTx(item) {
       return item
@@ -176,22 +175,43 @@ export default {
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     },
-    // submitTransaction() {
-    //   let prod = this.$store.state.selectedProduct;
+    randomId() {
+      var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+      var uniqid = 'pay-' + randLetter + Date.now();
+      return uniqid
+    },
+    dateTime() {
+      return new Date().toLocaleString();
+    },
+    submitTransaction() {
+      let dataPayment = {
+        id: this.randomId(),
+        payment_method: this.paymentMethod,
+        time: this.dateTime(),
+      }
 
-    //   let dataForm = {
-    //     id: this.randomId(),
-    //     id_outlet: this.$store.state.account.id,
-    //     products_sold: prod,
-    //     time: this.dateTime(),
-    //     total_discount: this.discount,
-    //     money_change: this.moneyChange,
-    //     cash: this.cash,
-    //     total: this.total
-    //   }
+      if (this.paymentMethod === 'Tunai') {
+        dataPayment.cash = this.cash;
+        dataPayment.moneyChange = this.moneyChange;
+      }
+
+      this.tx.payment.push(dataPayment)
+      this.tx.status = 'Sukses'
       
-    //   this.$emit('saveTransaction', dataForm)
-    // }
+      this.$store.dispatch("submitTransaction", this.tx)
+        .then(() => {
+          this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+          this.customer = null;
+          this.tableNumber = null;
+          this.tx = {};
+          this.paymentMethod = null;
+          this.cash = 0;
+          this.$emit("success", "Transaksi telah disimpan");
+        })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
+    }
   },
 }
 </script>

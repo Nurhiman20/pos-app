@@ -128,11 +128,10 @@ export default {
         id_outlet: this.$store.state.account.id,
         products_sold: prod,
         time: this.dateTime(),
-        // total_discount: this.discount,
-        // money_change: this.moneyChange,
-        // cash: this.cash,
-        // total: this.total,
-        status: 'Antre'
+        total_discount: this.discount,
+        total: this.total,
+        status: 'Antre',
+        payment: []
       }
 
       if (this.customer === null) {
@@ -154,6 +153,8 @@ export default {
           id_outlet: this.$store.state.account.id,
           outlet: this.$store.state.account
         }
+      } else {
+        dataForm.table_number = this.tableNumber;
       }
       
       this.$store.dispatch("submitTransaction", dataForm)

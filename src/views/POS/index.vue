@@ -43,7 +43,10 @@
           </v-card>
         </v-tab-item>
         <v-tab-item color="background">
-          <payment-tab></payment-tab>
+          <payment-tab
+            @success="successSaveTransaction"
+            @error="failedSaveTransaction"
+          ></payment-tab>
         </v-tab-item>
       </v-tabs-items>
     </v-container>
@@ -143,6 +146,7 @@ export default {
     successSaveTransaction(e) {
       this.messageDialog = e;
       this.dialogSuccess = true;
+      this.$store.dispatch("getTransaction");
     },
     failedSaveTransaction(e) {
       this.messageDialog = e;
