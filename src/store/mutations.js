@@ -89,6 +89,10 @@ const ADD_SELECTED_PRODUCT = (state, payload) => {
   }
 };
 
+const SET_CUSTOMER_TX = (state, payload) => {
+  state.customerTx = payload
+};
+
 const SET_TABLE_TX = (state, payload) => {
   state.tableTx = payload
 };
@@ -152,6 +156,7 @@ export default {
   SET_LIST_TABLE,
   SET_FILTER_CATEGORY,
   ADD_SELECTED_PRODUCT,
+  SET_CUSTOMER_TX,
   SET_TABLE_TX,
   REMOVE_SELECTED_PRODUCT,
   CLEAR_SELECTED_PRODUCT,

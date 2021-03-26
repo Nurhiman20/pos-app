@@ -79,7 +79,19 @@ const listViewTransaction = (state) => {
 
 const listQueueTransaction = (state) => {
   let filteredTx = [];
-  if (state.tableTx !== null) {
+  if (state.tableTx !== null && state.customerTx !== null) {
+    state.listTransaction.forEach(tx => {
+      if (tx.status === 'Antre' && tx.table_number.id === state.tableTx.id && tx.customer.id === state.customerTx.id) {
+        filteredTx.push(tx);
+      }
+    })
+  } else if (state.tableTx === null && state.customerTx !== null) {
+    state.listTransaction.forEach(tx => {
+      if (tx.status === 'Antre' && tx.customer.id === state.customerTx.id) {
+        filteredTx.push(tx);
+      }
+    })
+  } else if (state.tableTx !== null && state.customerTx === null) {
     state.listTransaction.forEach(tx => {
       if (tx.status === 'Antre' && tx.table_number.id === state.tableTx.id) {
         filteredTx.push(tx);

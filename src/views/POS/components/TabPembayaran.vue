@@ -3,6 +3,22 @@
     <v-card class="pa-3" outlined>
       <ValidationObserver ref="form" v-slot="{ handleSubmit }">
         <v-form @submit.prevent="handleSubmit(saveTransaction)">
+          <ValidationProvider v-slot="{ errors }" name="Pelanggan" rules="">
+            <v-autocomplete
+              :error-messages="errors"
+              v-model="customer"
+              :items="$store.state.listCustomer"
+              :item-text="textCustomer"
+              :item-value="valueCustomer"
+              label="Pelanggan"
+              class="mt-6 px-4"
+              outlined
+              dense
+              hide-no-data
+              hide-details
+              :clearable="true"
+            ></v-autocomplete>
+          </ValidationProvider>
           <ValidationProvider v-slot="{ errors }" name="Nomor meja" rules="">
             <v-autocomplete
               :error-messages="errors"
@@ -93,6 +109,7 @@
 export default {
   data() {
     return {
+      customer: null,
       tableNumber: null,
       tx: {},
       paymentMethod: null,
@@ -125,11 +142,20 @@ export default {
     }
   },
   watch: {
+    customer(val) {
+      this.$store.commit('SET_CUSTOMER_TX', val);
+    },
     tableNumber(val) {
       this.$store.commit('SET_TABLE_TX', val);
     }
   },
-  methods: {    
+  methods: {
+    textCustomer(item) {
+      return item.name + ' - ' + item.phone_number
+    },
+    valueCustomer(item) {
+      return item
+    },
     textTx(item) {
       if (item.table_number !== undefined) {
         return item.id + ' | ' + item.time + ' | ' + item.table_number.table_number
