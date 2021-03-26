@@ -35,7 +35,8 @@
               <v-col cols="12" md="5" lg="5" xl="5">
                 <product-sale
                   @editProduct="editProduct"
-                  @saveTransaction="saveTransaction"
+                  @success="successSaveTransaction"
+                  @error="failedSaveTransaction"
                 ></product-sale>
               </v-col>
             </v-row>

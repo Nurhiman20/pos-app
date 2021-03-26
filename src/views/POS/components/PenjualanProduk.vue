@@ -30,41 +30,23 @@
               hide-details
               :clearable="true"
             ></v-autocomplete>
-            <v-btn class="mt-3" block color="secondary2" dark>Pilih Meja</v-btn>
-          </v-col>
-          <!-- <v-col cols="6" md="6" lg="6" class="py-0">
-            Diskon
-          </v-col>
-          <v-col cols="6" md="6" lg="6" class="py-0">
-            <div class="d-flex flex-row justify-end">
-              <p class="text-bold mr-2">Rp. {{ formatCurrency(discount) }},00</p>
-            </div>
-          </v-col>
-          <v-col cols="12" md="12" lg="12" class="py-0">
-            <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
-              <p>Total</p>
-              <p class="text-bold">Rp. {{ formatCurrency(total) }},00</p>
-            </div>
-          </v-col>
-          <v-col cols="12" md="6" lg="6" class="py-0">
-            <p class="mt-2">Tunai</p>
-          </v-col>
-          <v-col cols="12" md="6" lg="6" class="py-0">
-            <v-text-field
-              v-model="cash"
+            <v-autocomplete
+              v-model="tableNumber"
+              :items="$store.state.listTable"
+              :item-text="textTable"
+              :item-value="valueTable"
+              label="Nomor Meja"
+              class="mt-6"
               outlined
               dense
-              class="mb-0 mt-2"
-            ></v-text-field>
+              hide-no-data
+              hide-details
+              :clearable="true"
+            ></v-autocomplete>
           </v-col>
           <v-col cols="12" md="12" lg="12" class="py-0">
-            <div class="d-flex flex-row justify-space-between pa-2 pb-0 kembali">
-              <p>Kembali</p>
-              <p class="text-bold">Rp. {{ formatCurrency(moneyChange) }},00</p>
-            </div>
-          </v-col> -->
-          <v-col cols="12" md="12" lg="12" class="py-0">
             <v-btn class="mt-3" block color="primary" dark @click="submitTransaction">Transaksi</v-btn>
+            <v-btn class="mt-3" block color="secondary" dark>Lanjut Pembayaran</v-btn>
             <v-btn class="mt-3" block color="secondary" outlined dark @click="cancelEdit" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Batal Edit Transaksi</v-btn>
           </v-col>
         </v-row>
@@ -79,6 +61,7 @@ export default {
     return {
       cash: 0,
       customer: null,
+      tableNumber: null,
       headers: [
         { text: 'Produk', value: 'name', sortable: false },        
         { text: 'Harga', value: 'price', sortable: false },
@@ -112,6 +95,12 @@ export default {
     },
     valueCustomer(item) {
       return item
+    },    
+    textTable(item) {
+      return item.table_number
+    },
+    valueTable(item) {
+      return item
     },
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
@@ -133,22 +122,50 @@ export default {
     },
     submitTransaction() {
       let prod = this.$store.state.selectedProduct;
-      prod.forEach(element => {
-        element.stock -= element.qty
-      });
 
       let dataForm = {
         id: this.randomId(),
         id_outlet: this.$store.state.account.id,
         products_sold: prod,
         time: this.dateTime(),
-        total_discount: this.discount,
-        money_change: this.moneyChange,
-        cash: this.cash,
-        total: this.total
+        // total_discount: this.discount,
+        // money_change: this.moneyChange,
+        // cash: this.cash,
+        // total: this.total,
+        status: 'Antre'
+      }
+
+      if (this.customer === null) {
+        dataForm.customer = {
+          id: 'default-customer-0000',
+          name: 'Default',
+          phone_number: '-',
+          email: '-'
+        }
+      } else {
+        dataForm.customer = this.customer;
+      }
+
+      if (this.tableNumber === null) {
+        dataForm.table_number = {
+          id: 'default-table-0000',
+          table_number: 0,
+          capacity: '-',
+          id_outlet: this.$store.state.account.id,
+          outlet: this.$store.state.account
+        }
       }
       
-      this.$emit('saveTransaction', dataForm)
+      this.$store.dispatch("submitTransaction", dataForm)
+        .then(() => {
+          this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+          this.customer = null;
+          this.tableNumber = null;
+          this.$emit("success", "Transaksi telah disimpan");
+        })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     },
   },
   created() {

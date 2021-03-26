@@ -69,7 +69,7 @@ const listViewInventory = (state) => {
 const listViewTransaction = (state) => {
   let filteredTx = [];
   state.listTransaction.forEach(tx => {
-    if (moment(tx.time).isBetween(state.dateStart, moment(state.dateEnd).add(1, 'days'), undefined, '[]')) {
+    if (moment(tx.time).isBetween(state.dateStart, moment(state.dateEnd).add(1, 'days'), undefined, '[]') && tx.status !== 'Antre') {
       filteredTx.push(tx);
     }
   })
@@ -77,10 +77,29 @@ const listViewTransaction = (state) => {
   return filteredTx
 }
 
+const listQueueTransaction = (state) => {
+  let filteredTx = [];
+  if (state.tableTx !== null) {
+    state.listTransaction.forEach(tx => {
+      if (tx.status === 'Antre' && tx.table_number.id === state.tableTx.id) {
+        filteredTx.push(tx);
+      }
+    })
+  } else {
+    state.listTransaction.forEach(tx => {
+      if (tx.status === 'Antre') {
+        filteredTx.push(tx);
+      }
+    })
+  }
+
+  return filteredTx;
+}
+
 const totalTransactionToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'day')) {
+    if (moment(element.time).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -91,7 +110,7 @@ const totalTransactionToday = (state) => {
 const totalTransactionMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'month')) {
+    if (moment(element.time).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });
@@ -102,7 +121,7 @@ const totalTransactionMonth = (state) => {
 const totalAmountToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'day')) {
+    if (moment(element.time).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -115,7 +134,7 @@ const totalAmountToday = (state) => {
 const totalAmountMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'month')) {
+    if (moment(element.time).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });
@@ -128,7 +147,7 @@ const totalAmountMonth = (state) => {
 const totalProfitToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'day')) {
+    if (moment(element.time).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -154,7 +173,7 @@ const totalProfitToday = (state) => {
 const totalProfitMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'month')) {
+    if (moment(element.time).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });
@@ -260,6 +279,7 @@ export default {
   listViewProduct,
   listViewInventory,
   listViewTransaction,
+  listQueueTransaction,
   totalTransactionToday,
   totalTransactionMonth,
   totalAmountToday,

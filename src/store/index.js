@@ -33,6 +33,7 @@ const state = {
     }
   },
   endingStock: 0,
+  tableTx: null,
   
   // Data model
   account: {

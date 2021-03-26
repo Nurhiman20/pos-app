@@ -89,6 +89,10 @@ const ADD_SELECTED_PRODUCT = (state, payload) => {
   }
 };
 
+const SET_TABLE_TX = (state, payload) => {
+  state.tableTx = payload
+};
+
 const REMOVE_SELECTED_PRODUCT = (state, payload) => {
   let indexProduct = state.selectedProduct.indexOf(payload);
   state.selectedProduct.splice(indexProduct, 1);
@@ -148,6 +152,7 @@ export default {
   SET_LIST_TABLE,
   SET_FILTER_CATEGORY,
   ADD_SELECTED_PRODUCT,
+  SET_TABLE_TX,
   REMOVE_SELECTED_PRODUCT,
   CLEAR_SELECTED_PRODUCT,
   EDIT_SELECTED_PRODUCT,

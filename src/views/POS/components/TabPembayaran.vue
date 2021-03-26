@@ -3,11 +3,27 @@
     <v-card class="pa-3" outlined>
       <ValidationObserver ref="form" v-slot="{ handleSubmit }">
         <v-form @submit.prevent="handleSubmit(saveTransaction)">
+          <ValidationProvider v-slot="{ errors }" name="Nomor meja" rules="">
+            <v-autocomplete
+              :error-messages="errors"
+              v-model="tableNumber"
+              :items="$store.state.listTable"              
+              :item-text="textTable"
+              :item-value="valueTable"
+              label="Nomor Meja"
+              class="mt-6 px-4"
+              outlined
+              dense
+              hide-no-data
+              hide-details
+              :clearable="true"
+            ></v-autocomplete>
+          </ValidationProvider>
           <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="required">
             <v-autocomplete
               :error-messages="errors"
               v-model="tx"
-              :items="$store.state.listTransaction"
+              :items="$store.getters.listQueueTransaction"
               :item-text="textTx"
               :item-value="valueTx"
               label="Pilih Transaksi"
@@ -77,6 +93,7 @@
 export default {
   data() {
     return {
+      tableNumber: null,
       tx: {},
       paymentMethod: null,
       cash: 0,
@@ -107,6 +124,11 @@ export default {
       }
     }
   },
+  watch: {
+    tableNumber(val) {
+      this.$store.commit('SET_TABLE_TX', val);
+    }
+  },
   methods: {    
     textTx(item) {
       if (item.table_number !== undefined) {
@@ -117,6 +139,12 @@ export default {
       
     },
     valueTx(item) {
+      return item
+    },
+    textTable(item) {
+      return item.table_number
+    },
+    valueTable(item) {
       return item
     },
     formatCurrency(val) {
