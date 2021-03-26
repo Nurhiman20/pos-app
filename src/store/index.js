@@ -35,6 +35,7 @@ const state = {
   endingStock: 0,
   tableTx: null,
   customerTx: null,
+  paymentTx: null,
   
   // Data model
   account: {

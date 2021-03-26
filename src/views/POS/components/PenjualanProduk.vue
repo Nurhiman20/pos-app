@@ -46,7 +46,7 @@
           </v-col>
           <v-col cols="12" md="12" lg="12" class="py-0">
             <v-btn class="mt-3" block color="primary" dark @click="submitTransaction">Transaksi</v-btn>
-            <v-btn class="mt-3" block color="secondary" dark>Lanjut Pembayaran</v-btn>
+            <v-btn class="mt-3" block color="secondary" dark @click="goToPayment">Lanjut Pembayaran</v-btn>
             <v-btn class="mt-3" block color="secondary" outlined dark @click="cancelEdit" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Batal Edit Transaksi</v-btn>
           </v-col>
         </v-row>
@@ -62,6 +62,7 @@ export default {
       cash: 0,
       customer: null,
       tableNumber: null,
+      toPayment: false,
       headers: [
         { text: 'Produk', value: 'name', sortable: false },        
         { text: 'Harga', value: 'price', sortable: false },
@@ -120,6 +121,10 @@ export default {
       this.$store.commit("SET_EDIT_TX", null);
       this.$router.push('/laporan/transaksi');
     },
+    goToPayment() {
+      this.toPayment = true;
+      this.submitTransaction();
+    },
     submitTransaction() {
       let prod = this.$store.state.selectedProduct;
 
@@ -161,8 +166,12 @@ export default {
         .then(() => {
           this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
           this.customer = null;
-          this.tableNumber = null;
+          this.tableNumber = null;          
           this.$emit("success", "Transaksi telah disimpan");
+          if (this.toPayment === true) {            
+            this.$emit("toPayment", dataForm);
+          }
+          this.toPayment = false;
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

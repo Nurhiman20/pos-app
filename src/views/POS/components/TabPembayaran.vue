@@ -107,6 +107,7 @@
 
 <script>
 export default {
+  props: ['txPay'],
   data() {
     return {
       customer: null,
@@ -142,6 +143,9 @@ export default {
     }
   },
   watch: {
+    txPay(val) {
+      this.tx = val;
+    },
     customer(val) {
       this.$store.commit('SET_CUSTOMER_TX', val);
     },
@@ -206,12 +210,13 @@ export default {
           this.tx = {};
           this.paymentMethod = null;
           this.cash = 0;
+          this.$store.commit("SET_PAYMENT_TX", null);
           this.$emit("success", "Transaksi telah disimpan");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
     }
-  },
+  }
 }
 </script>

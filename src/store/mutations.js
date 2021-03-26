@@ -97,6 +97,10 @@ const SET_TABLE_TX = (state, payload) => {
   state.tableTx = payload
 };
 
+const SET_PAYMENT_TX = (state, payload) => {
+  state.paymentTx = payload
+};
+
 const REMOVE_SELECTED_PRODUCT = (state, payload) => {
   let indexProduct = state.selectedProduct.indexOf(payload);
   state.selectedProduct.splice(indexProduct, 1);
@@ -158,6 +162,7 @@ export default {
   ADD_SELECTED_PRODUCT,
   SET_CUSTOMER_TX,
   SET_TABLE_TX,
+  SET_PAYMENT_TX,
   REMOVE_SELECTED_PRODUCT,
   CLEAR_SELECTED_PRODUCT,
   EDIT_SELECTED_PRODUCT,

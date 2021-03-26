@@ -35,6 +35,7 @@
               <v-col cols="12" md="5" lg="5" xl="5">
                 <product-sale
                   @editProduct="editProduct"
+                  @toPayment="goToPayment"
                   @success="successSaveTransaction"
                   @error="failedSaveTransaction"
                 ></product-sale>
@@ -44,6 +45,7 @@
         </v-tab-item>
         <v-tab-item color="background">
           <payment-tab
+            :txPay="tx"
             @success="successSaveTransaction"
             @error="failedSaveTransaction"
           ></payment-tab>
@@ -104,6 +106,7 @@ export default {
   data() {
     return {
       transactionData: {},
+      tx: {},
       selectedItem: {
         id: null,
         name: null
@@ -146,6 +149,7 @@ export default {
     successSaveTransaction(e) {
       this.messageDialog = e;
       this.dialogSuccess = true;
+      this.tx = {};
       this.$store.dispatch("getTransaction");
     },
     failedSaveTransaction(e) {
@@ -162,6 +166,10 @@ export default {
     openSelectDialog(e) {
       this.selectedItem = e;
       this.selectDialog = true;
+    },
+    goToPayment(e) {
+      this.tab = 1;
+      this.tx = e;
     },
     setFilterProduct(e) {
       this.$store.commit("SET_FILTER_CATEGORY", e)
