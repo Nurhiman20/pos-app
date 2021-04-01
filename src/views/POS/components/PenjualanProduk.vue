@@ -45,8 +45,9 @@
             ></v-autocomplete>
           </v-col>
           <v-col cols="12" md="12" lg="12" class="py-0">
-            <v-btn class="mt-3" block color="primary" dark @click="submitTransaction">Transaksi</v-btn>
-            <v-btn class="mt-3" block color="secondary" @click="goToPayment" :disabled="$store.state.selectedProduct.length === 0">Lanjut Pembayaran</v-btn>
+            <v-btn class="mt-3" block color="primary" @click="submitTransaction" v-if="Object.keys(this.$store.state.selectedTx).length === 0">Transaksi</v-btn>
+            <v-btn class="mt-3" block color="secondary" @click="goToPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length === 0">Lanjut Pembayaran</v-btn>
+            <v-btn class="mt-3" block color="primary" @click="goToPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Edit Pembayaran</v-btn>
             <v-btn class="mt-3" block color="secondary" outlined dark @click="cancelEdit" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Batal Edit Transaksi</v-btn>
           </v-col>
         </v-row>
