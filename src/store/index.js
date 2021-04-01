@@ -36,6 +36,7 @@ const state = {
   tableTx: null,
   customerTx: null,
   paymentTx: null,
+  dataReceipt: {},
   
   // Data model
   account: {

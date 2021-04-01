@@ -47,11 +47,11 @@
       </div>
       <div class=" mt-2 d-flex flex-row justify-space-between justify-content-between">
         <p>Tunai</p>
-        <p>Rp{{ formatCurrency(this.selected.cash) }},00</p>
+        <p v-if="this.selected.payment.length !== 0">Rp{{ formatCurrency(this.selected.payment[0].cash) }},00</p>
       </div>
       <div class="mt-n3 d-flex flex-row justify-space-between justify-content-between border-bottom">
-        <p>Change</p>
-        <p>Rp{{ formatCurrency(this.selected.money_change) }},00</p>
+        <p>Kembali</p>
+        <p v-if="this.selected.payment.length !== 0">Rp{{ formatCurrency(this.selected.payment[0].moneyChange) }},00</p>
       </div>
       <div class="d-flex flex-row align-center mt-2" v-if="$store.state.account.receipt.website !== null">
         <img src="../assets/img/web.png" style="width: 18px; height: 18px; margin: auto 0;">

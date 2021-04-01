@@ -98,6 +98,10 @@
           </div>
           <div class="px-4 pb-3">
             <v-btn class="mt-3" block color="primary" dark type="submit" :loading="$store.state.loading">Simpan Transaksi</v-btn>
+            <v-btn class="mt-3" color="secondary" block :loading="$store.state.loading" @click="doPrint" :disabled="cash === 0">
+              <v-icon class="mr-2">mdi-printer</v-icon>
+              Cetak Struk
+            </v-btn>
           </div>
         </v-form>
       </ValidationObserver>
@@ -144,6 +148,7 @@ export default {
   },
   watch: {
     txPay(val) {
+      console.log(val);
       this.tx = val;
     },
     customer(val) {
@@ -187,7 +192,7 @@ export default {
     dateTime() {
       return new Date().toLocaleString();
     },
-    submitTransaction() {
+    addPayment() {
       let dataPayment = {
         id: this.randomId(),
         payment_method: this.paymentMethod,
@@ -200,7 +205,16 @@ export default {
       }
 
       this.tx.payment.push(dataPayment)
-      this.tx.status = 'Sukses'
+
+      return dataPayment
+    },
+    doPrint() {
+      this.addPayment();
+      this.$emit('printReceipt', this.tx);
+    },
+    submitTransaction() {
+      this.addPayment();
+      this.tx.status = 'Sukses';
       
       this.$store.dispatch("submitTransaction", this.tx)
         .then(() => {

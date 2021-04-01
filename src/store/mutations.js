@@ -127,6 +127,10 @@ const SET_EDIT_TX = (state, payload) => {
   }
 };
 
+const SET_DATA_RECEIPT = (state, payload) => {
+  state.dataReceipt = payload;
+}
+
 const SET_DATE_START = (state, payload) => {
   state.dateStart = payload;
 };
@@ -167,6 +171,7 @@ export default {
   CLEAR_SELECTED_PRODUCT,
   EDIT_SELECTED_PRODUCT,
   SET_EDIT_TX,
+  SET_DATA_RECEIPT,
   SET_DATE_START,
   SET_DATE_END,
   SET_ENDING_STOCK

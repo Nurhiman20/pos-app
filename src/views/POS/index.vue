@@ -46,6 +46,7 @@
         <v-tab-item color="background">
           <payment-tab
             :txPay="tx"
+            @printReceipt="openDialogReceipt"
             @success="successSaveTransaction"
             @error="failedSaveTransaction"
           ></payment-tab>
@@ -71,7 +72,13 @@
       @close="closeSaveDialog"
       @success="successSaveTransaction"
       @error="failedSaveTransaction"
-    ></save-transaction-dialog>    
+    ></save-transaction-dialog>
+
+    <receipt-dialog
+      :show="dialogReceipt"
+      :selected="selectedTransaction"
+      @closeDialog="closeDialogReceipt"
+    ></receipt-dialog> 
 
     <!-- response dialog -->
     <response-dialog 
@@ -92,6 +99,7 @@ import editProductDialog from './components/DialogEditProduk';
 import saveTransactionDialog from './components/DialogSimpanTransaksi';
 import responseDialog from '../../components/ResponseDialog';
 import paymentTab from './components/TabPembayaran';
+import receiptDialog from './components/DialogStruk';
 
 export default {
   components: {
@@ -101,7 +109,8 @@ export default {
     editProductDialog,
     saveTransactionDialog,
     responseDialog,
-    paymentTab
+    paymentTab,
+    receiptDialog
   },
   data() {
     return {
@@ -115,10 +124,12 @@ export default {
         id: null,
         name: null
       },
+      selectedTransaction: {},
       tab: null,
       selectDialog: false,
       editDialog: false,
       saveDialog: false,
+      dialogReceipt: false,
       dialogSuccess: false,
       dialogFailed: false,
       messageDialog: null
@@ -146,6 +157,9 @@ export default {
     closeDialogFailed(e) {
       this.dialogFailed = e;
     },
+    closeDialogReceipt(e) {
+      this.dialogReceipt = e;
+    },
     successSaveTransaction(e) {
       this.messageDialog = e;
       this.dialogSuccess = true;
@@ -170,6 +184,11 @@ export default {
     goToPayment(e) {
       this.tab = 1;
       this.tx = e;
+      console.log(this.tx);
+    },
+    openDialogReceipt(e) {
+      this.selectedTransaction = e;
+      this.dialogReceipt = true;
     },
     setFilterProduct(e) {
       this.$store.commit("SET_FILTER_CATEGORY", e)
