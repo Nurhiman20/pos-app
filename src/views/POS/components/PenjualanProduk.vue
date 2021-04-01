@@ -179,8 +179,9 @@ export default {
     },
   },
   created() {
-    if (this.$store.state.selectedTx.cash !== undefined) {
-      this.cash = this.$store.state.selectedTx.cash;
+    if (this.$store.state.selectedTx.customer !== undefined && this.$store.state.selectedTx.table_number !== undefined) {
+      this.customer = this.$store.state.selectedTx.customer;
+      this.tableNumber = this.$store.state.selectedTx.table_number;
     }
   },
 }
