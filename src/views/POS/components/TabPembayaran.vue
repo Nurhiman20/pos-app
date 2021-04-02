@@ -2,7 +2,7 @@
   <div>
     <v-card class="pa-3" outlined>
       <p class="mb-0" v-if="Object.keys($store.state.selectedTx).length !== 0">Transaksi</p>
-      <h2 v-if="Object.keys($store.state.selectedTx).length !== 0">{{ tx.id + ' | ' + tx.time + ' | ' + tx.table_number.table_number }}</h2>
+      <h2 v-if="Object.keys($store.state.selectedTx).length !== 0">{{ $store.state.selectedTx.id + ' | ' + $store.state.selectedTx.time + ' | ' + $store.state.selectedTx.table_number.table_number }}</h2>
       <ValidationObserver ref="form" v-slot="{ handleSubmit }">
         <v-form @submit.prevent="handleSubmit(submitTransaction)">
           <ValidationProvider v-slot="{ errors }" name="Pelanggan" rules="">
@@ -56,11 +56,11 @@
               v-if="Object.keys($store.state.selectedTx).length === 0"
             ></v-autocomplete>
           </ValidationProvider>
-          <div class="px-4 mt-6" v-if="tx.products_sold !== undefined">
+          <div class="px-4 mt-6" v-if="$store.state.selectedProduct.length !== 0">
             <p>Produk Dibeli</p>
             <v-data-table
               :headers="headers"
-              :items="tx.products_sold"
+              :items="$store.state.selectedProduct"
               class="elevation-1 scrollbar-custom"
               hide-default-footer
             ></v-data-table>
@@ -136,11 +136,21 @@ export default {
   },
   computed: {
     total() {
-      const totalAll = this.tx.products_sold.reduce((acc, prod) => acc + parseInt(prod.total), 0);
+      let totalAll = 0;
+      if (this.$store.state.selectedProduct.length !== 0) {
+        totalAll = this.$store.state.selectedProduct.reduce((acc, prod) => acc + parseInt(prod.total), 0);
+      } else {
+        totalAll = this.tx.products_sold.reduce((acc, prod) => acc + parseInt(prod.total), 0);
+      }
       return totalAll;
     },
     discount() {
-      const disc = this.tx.products_sold.reduce((acc, prod) => acc + parseInt(prod.discount), 0);
+      let disc = 0;
+      if (this.$store.state.selectedProduct.length !== 0) {
+        disc = this.$store.state.selectedProduct.reduce((acc, prod) => acc + parseInt(prod.discount), 0);
+      } else {
+        disc = this.tx.products_sold.reduce((acc, prod) => acc + parseInt(prod.discount), 0);
+      }
       return disc
     },
     moneyChange() {
@@ -162,6 +172,8 @@ export default {
     txPay(val) {
       console.log(val);
       this.tx = val;
+      // this.paymentMethod = val[0].payment_method;
+      // this.cash = val[0].cash;
     },
     customer(val) {
       this.$store.commit('SET_CUSTOMER_TX', val);
@@ -243,6 +255,12 @@ export default {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
         });
     }
-  }
+  },
+  created() {
+    if (Object.keys(this.$store.state.selectedTx).length !== 0) {
+      this.paymentMethod = this.$store.state.selectedTx.payment[0].payment_method;
+      this.cash = this.$store.state.selectedTx.payment[0].cash;
+    }
+  },
 }
 </script>
