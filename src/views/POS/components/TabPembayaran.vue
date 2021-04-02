@@ -1,6 +1,8 @@
 <template>
   <div>
     <v-card class="pa-3" outlined>
+      <p class="mb-0" v-if="Object.keys($store.state.selectedTx).length !== 0">Transaksi</p>
+      <h2 v-if="Object.keys($store.state.selectedTx).length !== 0">{{ tx.id + ' | ' + tx.time + ' | ' + tx.table_number.table_number }}</h2>
       <ValidationObserver ref="form" v-slot="{ handleSubmit }">
         <v-form @submit.prevent="handleSubmit(submitTransaction)">
           <ValidationProvider v-slot="{ errors }" name="Pelanggan" rules="">
@@ -17,6 +19,7 @@
               hide-no-data
               hide-details
               :clearable="true"
+              v-if="Object.keys($store.state.selectedTx).length === 0"
             ></v-autocomplete>
           </ValidationProvider>
           <ValidationProvider v-slot="{ errors }" name="Nomor meja" rules="">
@@ -33,6 +36,7 @@
               hide-no-data
               hide-details
               :clearable="true"
+              v-if="Object.keys($store.state.selectedTx).length === 0"
             ></v-autocomplete>
           </ValidationProvider>
           <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="required">
@@ -49,6 +53,7 @@
               hide-no-data
               hide-details
               :clearable="true"
+              v-if="Object.keys($store.state.selectedTx).length === 0"
             ></v-autocomplete>
           </ValidationProvider>
           <div class="px-4 mt-6" v-if="tx.products_sold !== undefined">
@@ -143,6 +148,13 @@ export default {
         return 0;
       } else {
         return this.cash - this.total;
+      }
+    },
+    itemProductSold() {
+      if (Object.keys(this.$store.state.selectedTx).length === 0) {
+        return this.tx.products_sold;
+      } else {
+        return this.$store.state.selectedTx.products_sold;
       }
     }
   },

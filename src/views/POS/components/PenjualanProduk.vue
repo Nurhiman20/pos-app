@@ -47,7 +47,7 @@
           <v-col cols="12" md="12" lg="12" class="py-0">
             <v-btn class="mt-3" block color="primary" @click="submitTransaction" v-if="Object.keys(this.$store.state.selectedTx).length === 0">Transaksi</v-btn>
             <v-btn class="mt-3" block color="secondary" @click="goToPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length === 0">Lanjut Pembayaran</v-btn>
-            <v-btn class="mt-3" block color="primary" @click="goToPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Edit Pembayaran</v-btn>
+            <v-btn class="mt-3" block color="primary" @click="goEditPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Edit Pembayaran</v-btn>
             <v-btn class="mt-3" block color="secondary" outlined dark @click="cancelEdit" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Batal Edit Transaksi</v-btn>
           </v-col>
         </v-row>
@@ -121,6 +121,18 @@ export default {
     cancelEdit() {
       this.$store.commit("SET_EDIT_TX", null);
       this.$router.push('/laporan/transaksi');
+    },
+    goEditPayment() {
+      let editedTx = this.$store.state.selectedTx;
+      if (this.customer !== editedTx.customer) {
+        editedTx.customer = this.customer;
+      }
+      if (this.tableNumber !== editedTx.table_number) {
+        editedTx.table_number = this.tableNumber;
+      }
+      editedTx.products_sold = this.$store.state.selectedProduct;
+
+      this.$emit('goEditPayment', editedTx);
     },
     goToPayment() {
       this.toPayment = true;

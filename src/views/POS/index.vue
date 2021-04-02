@@ -36,6 +36,7 @@
                 <product-sale
                   @editProduct="editProduct"
                   @toPayment="goToPayment"
+                  @goEditPayment="goToPayment"
                   @success="successSaveTransaction"
                   @error="failedSaveTransaction"
                 ></product-sale>
@@ -182,8 +183,9 @@ export default {
       this.selectDialog = true;
     },
     goToPayment(e) {
-      this.tab = 1;
+      console.log(e);
       this.tx = e;
+      this.tab = 1;
       console.log(this.tx);
     },
     openDialogReceipt(e) {
