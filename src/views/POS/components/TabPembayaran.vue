@@ -39,7 +39,7 @@
               v-if="Object.keys($store.state.selectedTx).length === 0"
             ></v-autocomplete>
           </ValidationProvider>
-          <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="required">
+          <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="">
             <v-autocomplete
               :error-messages="errors"
               v-model="tx"
@@ -237,23 +237,39 @@ export default {
       this.$emit('printReceipt', this.tx);
     },
     submitTransaction() {
-      this.addPayment();
-      this.tx.status = 'Sukses';
-      
-      this.$store.dispatch("submitTransaction", this.tx)
-        .then(() => {
-          this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
-          this.customer = null;
-          this.tableNumber = null;
-          this.tx = {};
-          this.paymentMethod = null;
-          this.cash = 0;
-          this.$store.commit("SET_PAYMENT_TX", null);
-          this.$emit("success", "Transaksi telah disimpan");
-        })
-        .catch(() => {
-          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
-        });
+      if (Object.keys(this.$store.state.selectedTx).length === 0) {
+        this.addPayment();
+        this.tx.status = 'Sukses';
+        
+        this.$store.dispatch("submitTransaction", this.tx)
+          .then(() => {
+            this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+            this.customer = null;
+            this.tableNumber = null;
+            this.tx = {};
+            this.paymentMethod = null;
+            this.cash = 0;
+            this.$store.commit("SET_PAYMENT_TX", null);
+            this.$emit("success", "Transaksi telah disimpan");
+          })
+          .catch(() => {
+            this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+          });
+      } else {
+        let dataEditPayment = this.$store.state.selectedTx;
+        dataEditPayment.total = this.total;
+        dataEditPayment.total_discount = this.discount;
+        dataEditPayment.payment[0].cash = this.cash;
+        dataEditPayment.payment[0].moneyChange = this.moneyChange;
+        this.$store.dispatch("updateTransaction", dataEditPayment)
+          .then(() => {
+            this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+            this.$emit("success", "Transaksi telah diperbarui");
+          })
+          .catch(() => {
+            this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+          });
+      }  
     }
   },
   created() {

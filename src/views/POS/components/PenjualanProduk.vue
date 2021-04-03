@@ -132,6 +132,7 @@ export default {
       }
       editedTx.products_sold = this.$store.state.selectedProduct;
 
+      this.$store.commit('SET_EDIT_TX', editedTx);
       this.$emit('goEditPayment', editedTx);
     },
     goToPayment() {
