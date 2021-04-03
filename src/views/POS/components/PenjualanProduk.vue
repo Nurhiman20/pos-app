@@ -17,39 +17,37 @@
       </div>
       <div class="w-full px-3 mt-4">
         <v-row>
-          <v-col cols="6" md="6" lg="6" class="py-0">
-            Diskon
-          </v-col>
-          <v-col cols="6" md="6" lg="6" class="py-0">
-            <div class="d-flex flex-row justify-end">
-              <p class="text-bold mr-2">Rp. {{ formatCurrency(discount) }},00</p>
-            </div>
-          </v-col>
-          <v-col cols="12" md="12" lg="12" class="py-0">
-            <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
-              <p>Total</p>
-              <p class="text-bold">Rp. {{ formatCurrency(total) }},00</p>
-            </div>
-          </v-col>
-          <v-col cols="12" md="6" lg="6" class="py-0">
-            <p class="mt-2">Tunai</p>
-          </v-col>
-          <v-col cols="12" md="6" lg="6" class="py-0">
-            <v-text-field
-              v-model="cash"
+          <v-col cols="12">
+            <v-autocomplete
+              v-model="customer"
+              :items="$store.state.listCustomer"
+              :item-text="textCustomer"
+              :item-value="valueCustomer"
+              label="Pelanggan"
               outlined
               dense
-              class="mb-0 mt-2"
-            ></v-text-field>
+              hide-no-data
+              hide-details
+              :clearable="true"
+            ></v-autocomplete>
+            <v-autocomplete
+              v-model="tableNumber"
+              :items="$store.state.listTable"
+              :item-text="textTable"
+              :item-value="valueTable"
+              label="Nomor Meja"
+              class="mt-6"
+              outlined
+              dense
+              hide-no-data
+              hide-details
+              :clearable="true"
+            ></v-autocomplete>
           </v-col>
           <v-col cols="12" md="12" lg="12" class="py-0">
-            <div class="d-flex flex-row justify-space-between pa-2 pb-0 kembali">
-              <p>Kembali</p>
-              <p class="text-bold">Rp. {{ formatCurrency(moneyChange) }},00</p>
-            </div>
-          </v-col>
-          <v-col cols="12" md="12" lg="12" class="py-0">
-            <v-btn class="mt-3" block color="primary" dark @click="submitTransaction">Transaksi</v-btn>
+            <v-btn class="mt-3" block color="primary" @click="submitTransaction" v-if="Object.keys(this.$store.state.selectedTx).length === 0">Transaksi</v-btn>
+            <v-btn class="mt-3" block color="secondary" @click="goToPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length === 0">Lanjut Pembayaran</v-btn>
+            <v-btn class="mt-3" block color="primary" @click="goEditPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Edit Pembayaran</v-btn>
             <v-btn class="mt-3" block color="secondary" outlined dark @click="cancelEdit" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Batal Edit Transaksi</v-btn>
           </v-col>
         </v-row>
@@ -63,6 +61,9 @@ export default {
   data() {
     return {
       cash: 0,
+      customer: null,
+      tableNumber: null,
+      toPayment: false,
       headers: [
         { text: 'Produk', value: 'name', sortable: false },        
         { text: 'Harga', value: 'price', sortable: false },
@@ -91,8 +92,17 @@ export default {
     }
   },
   methods: {
-    goToEdit(item) {
-      this.$emit('editProduct', item);
+    textCustomer(item) {
+      return item.name + ' - ' + item.phone_number
+    },
+    valueCustomer(item) {
+      return item
+    },    
+    textTable(item) {
+      return item.table_number
+    },
+    valueTable(item) {
+      return item
     },
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
@@ -105,15 +115,32 @@ export default {
     dateTime() {
       return new Date().toLocaleString();
     },
+    goToEdit(item) {
+      this.$emit('editProduct', item);
+    },
     cancelEdit() {
       this.$store.commit("SET_EDIT_TX", null);
       this.$router.push('/laporan/transaksi');
     },
+    goEditPayment() {
+      let editedTx = this.$store.state.selectedTx;
+      if (this.customer !== editedTx.customer) {
+        editedTx.customer = this.customer;
+      }
+      if (this.tableNumber !== editedTx.table_number) {
+        editedTx.table_number = this.tableNumber;
+      }
+      editedTx.products_sold = this.$store.state.selectedProduct;
+
+      this.$store.commit('SET_EDIT_TX', editedTx);
+      this.$emit('goEditPayment', editedTx);
+    },
+    goToPayment() {
+      this.toPayment = true;
+      this.submitTransaction();
+    },
     submitTransaction() {
       let prod = this.$store.state.selectedProduct;
-      prod.forEach(element => {
-        element.stock -= element.qty
-      });
 
       let dataForm = {
         id: this.randomId(),
@@ -121,17 +148,54 @@ export default {
         products_sold: prod,
         time: this.dateTime(),
         total_discount: this.discount,
-        money_change: this.moneyChange,
-        cash: this.cash,
-        total: this.total
+        total: this.total,
+        status: 'Antre',
+        payment: []
+      }
+
+      if (this.customer === null) {
+        dataForm.customer = {
+          id: 'default-customer-0000',
+          name: 'Default',
+          phone_number: '-',
+          email: '-'
+        }
+      } else {
+        dataForm.customer = this.customer;
+      }
+
+      if (this.tableNumber === null) {
+        dataForm.table_number = {
+          id: 'default-table-0000',
+          table_number: 0,
+          capacity: '-',
+          id_outlet: this.$store.state.account.id,
+          outlet: this.$store.state.account
+        }
+      } else {
+        dataForm.table_number = this.tableNumber;
       }
       
-      this.$emit('saveTransaction', dataForm)
+      this.$store.dispatch("submitTransaction", dataForm)
+        .then(() => {
+          this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+          this.customer = null;
+          this.tableNumber = null;          
+          this.$emit("success", "Transaksi telah disimpan");
+          if (this.toPayment === true) {            
+            this.$emit("toPayment", dataForm);
+          }
+          this.toPayment = false;
+        })
+        .catch(() => {
+          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+        });
     },
   },
   created() {
-    if (this.$store.state.selectedTx.cash !== undefined) {
-      this.cash = this.$store.state.selectedTx.cash;
+    if (this.$store.state.selectedTx.customer !== undefined && this.$store.state.selectedTx.table_number !== undefined) {
+      this.customer = this.$store.state.selectedTx.customer;
+      this.tableNumber = this.$store.state.selectedTx.table_number;
     }
   },
 }

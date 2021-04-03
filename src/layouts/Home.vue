@@ -59,7 +59,7 @@ export default {
       }
     }
   },
-  created() {
+  created() {    
     this.$store.dispatch("getOutlet");
     const dark = localStorage.getItem('darkTheme');
     
@@ -68,6 +68,20 @@ export default {
     } else {
       this.$vuetify.theme.dark = false;
     }
+
+    this.$store.dispatch("submitTable", {
+      id: 'default-table-0000',
+      table_number: 0,
+      capacity: '-',
+      id_outlet: this.$store.state.account.id,
+      outlet: this.$store.state.account
+    });
+    this.$store.dispatch("submitCustomer", {
+      id: 'default-customer-0000',
+      name: 'Default',
+      phone_number: '-',
+      email: '-'
+    });
   }
 }
 </script>

@@ -33,6 +33,10 @@ const state = {
     }
   },
   endingStock: 0,
+  tableTx: null,
+  customerTx: null,
+  paymentTx: null,
+  dataReceipt: {},
   
   // Data model
   account: {

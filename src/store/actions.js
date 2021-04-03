@@ -1231,9 +1231,11 @@ async function submitTransaction({ commit }, dataForm) {
   let transaction = await vuePos.transaction(['transaction', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('transaction').put(dataForm);
-    inventories.forEach(inv => {
-      transaction.objectStore('inventory').put(inv);
-    })
+    if (dataForm.status !== 'Antre') {
+      inventories.forEach(inv => {
+        transaction.objectStore('inventory').put(inv);
+      })
+    }
     transaction.done
       .then(result => {
         resolve(result);

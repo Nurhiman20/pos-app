@@ -2,21 +2,57 @@
   <div class="app-content">
     <v-container>
       <v-row>
-        <v-col cols="12" md="7" lg="7" xl="7">
-          <product-catalog
-            :categories="$store.state.listCategory"
-            :products="$store.getters.listViewProduct"
-            @setFilter=setFilterProduct
-            @productSelected="openSelectDialog"
-          ></product-catalog>
-        </v-col>
-        <v-col cols="12" md="5" lg="5" xl="5">
-          <product-sale
-            @editProduct="editProduct"
-            @saveTransaction="saveTransaction"
-          ></product-sale>
+        <v-col cols="12">
+          <v-card outlined>
+            <v-tabs
+              v-model="tab"
+              background-color="transparent"
+              color="primary"
+            >
+              <v-tab>
+                Pesanan
+              </v-tab>
+              <v-tab>
+                Pembayaran
+              </v-tab>
+            </v-tabs>
+          </v-card>
         </v-col>
       </v-row>
+        
+      <v-tabs-items v-model="tab" class="mt-4">
+        <v-tab-item>          
+          <v-card outlined color="background">
+            <v-row>
+              <v-col cols="12" md="7" lg="7" xl="7">
+                <product-catalog
+                  :categories="$store.state.listCategory"
+                  :products="$store.getters.listViewProduct"
+                  @setFilter=setFilterProduct
+                  @productSelected="openSelectDialog"
+                ></product-catalog>
+              </v-col>
+              <v-col cols="12" md="5" lg="5" xl="5">
+                <product-sale
+                  @editProduct="editProduct"
+                  @toPayment="goToPayment"
+                  @goEditPayment="goToPayment"
+                  @success="successSaveTransaction"
+                  @error="failedSaveTransaction"
+                ></product-sale>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-tab-item>
+        <v-tab-item color="background">
+          <payment-tab
+            :txPay="tx"
+            @printReceipt="openDialogReceipt"
+            @success="successSaveTransaction"
+            @error="failedSaveTransaction"
+          ></payment-tab>
+        </v-tab-item>
+      </v-tabs-items>
     </v-container>
 
     <select-product-dialog
@@ -39,6 +75,12 @@
       @error="failedSaveTransaction"
     ></save-transaction-dialog>
 
+    <receipt-dialog
+      :show="dialogReceipt"
+      :selected="selectedTransaction"
+      @closeDialog="closeDialogReceipt"
+    ></receipt-dialog> 
+
     <!-- response dialog -->
     <response-dialog 
       :success="dialogSuccess"
@@ -57,6 +99,8 @@ import selectProductDialog from './components/DialogPilihProduk';
 import editProductDialog from './components/DialogEditProduk';
 import saveTransactionDialog from './components/DialogSimpanTransaksi';
 import responseDialog from '../../components/ResponseDialog';
+import paymentTab from './components/TabPembayaran';
+import receiptDialog from './components/DialogStruk';
 
 export default {
   components: {
@@ -65,11 +109,14 @@ export default {
     selectProductDialog,
     editProductDialog,
     saveTransactionDialog,
-    responseDialog
+    responseDialog,
+    paymentTab,
+    receiptDialog
   },
   data() {
     return {
       transactionData: {},
+      tx: {},
       selectedItem: {
         id: null,
         name: null
@@ -78,9 +125,12 @@ export default {
         id: null,
         name: null
       },
+      selectedTransaction: {},
+      tab: null,
       selectDialog: false,
       editDialog: false,
       saveDialog: false,
+      dialogReceipt: false,
       dialogSuccess: false,
       dialogFailed: false,
       messageDialog: null
@@ -108,9 +158,14 @@ export default {
     closeDialogFailed(e) {
       this.dialogFailed = e;
     },
+    closeDialogReceipt(e) {
+      this.dialogReceipt = e;
+    },
     successSaveTransaction(e) {
       this.messageDialog = e;
       this.dialogSuccess = true;
+      this.tx = {};
+      this.$store.dispatch("getTransaction");
     },
     failedSaveTransaction(e) {
       this.messageDialog = e;
@@ -126,6 +181,16 @@ export default {
     openSelectDialog(e) {
       this.selectedItem = e;
       this.selectDialog = true;
+    },
+    goToPayment(e) {
+      console.log(e);
+      this.tx = e;
+      this.tab = 1;
+      console.log(this.tx);
+    },
+    openDialogReceipt(e) {
+      this.selectedTransaction = e;
+      this.dialogReceipt = true;
     },
     setFilterProduct(e) {
       this.$store.commit("SET_FILTER_CATEGORY", e)
@@ -143,6 +208,7 @@ export default {
     this.$store.dispatch("getCategory");    
     this.$store.dispatch("getCustomer");
     this.$store.dispatch("getTable");
+    this.$store.dispatch("getTransaction");
   },
 }
 </script>

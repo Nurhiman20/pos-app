@@ -89,6 +89,18 @@ const ADD_SELECTED_PRODUCT = (state, payload) => {
   }
 };
 
+const SET_CUSTOMER_TX = (state, payload) => {
+  state.customerTx = payload
+};
+
+const SET_TABLE_TX = (state, payload) => {
+  state.tableTx = payload
+};
+
+const SET_PAYMENT_TX = (state, payload) => {
+  state.paymentTx = payload
+};
+
 const REMOVE_SELECTED_PRODUCT = (state, payload) => {
   let indexProduct = state.selectedProduct.indexOf(payload);
   state.selectedProduct.splice(indexProduct, 1);
@@ -114,6 +126,10 @@ const SET_EDIT_TX = (state, payload) => {
     }
   }
 };
+
+const SET_DATA_RECEIPT = (state, payload) => {
+  state.dataReceipt = payload;
+}
 
 const SET_DATE_START = (state, payload) => {
   state.dateStart = payload;
@@ -148,10 +164,14 @@ export default {
   SET_LIST_TABLE,
   SET_FILTER_CATEGORY,
   ADD_SELECTED_PRODUCT,
+  SET_CUSTOMER_TX,
+  SET_TABLE_TX,
+  SET_PAYMENT_TX,
   REMOVE_SELECTED_PRODUCT,
   CLEAR_SELECTED_PRODUCT,
   EDIT_SELECTED_PRODUCT,
   SET_EDIT_TX,
+  SET_DATA_RECEIPT,
   SET_DATE_START,
   SET_DATE_END,
   SET_ENDING_STOCK
