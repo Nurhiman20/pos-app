@@ -130,7 +130,7 @@ const routes = [
       {
         path: '/inventaris/transfer',
         name: 'Transfer',
-        component: () => import('@/views/Inventaris/views/Transfer.vue'),
+        component: () => import('@/views/Inventaris/views/Transfer'),
         meta: {
           title: 'Transfer | Inventaris | 21FACTORY'
         }
