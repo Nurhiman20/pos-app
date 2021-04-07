@@ -150,7 +150,7 @@ export default {
         dataForm.id = this.$store.state.selectedTx.id;
         this.$store.dispatch("updateTransaction", dataForm)
         .then(() => {
-          this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+          this.$store.commit("SET_SELECTED_PRODUCT", []);
           this.$emit("success", "Transaksi telah diperbarui");
         })
         .catch(() => {
@@ -159,7 +159,7 @@ export default {
       } else {
         this.$store.dispatch("submitTransaction", dataForm)
           .then(() => {
-            this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+            this.$store.commit("SET_SELECTED_PRODUCT", []);
             this.customerName = null;
             this.phoneNumber = null;
             this.tableNumber = null;

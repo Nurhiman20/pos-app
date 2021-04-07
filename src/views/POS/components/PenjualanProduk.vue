@@ -177,12 +177,13 @@ export default {
       }
       
       this.$store.dispatch("submitTransaction", dataForm)
-        .then(() => {
-          this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+        .then(() => {         
+          this.$store.commit("SET_SELECTED_PRODUCT", []);     
           this.customer = null;
           this.tableNumber = null;          
           this.$emit("success", "Transaksi telah disimpan");
-          if (this.toPayment === true) {            
+          if (this.toPayment === true) {
+            this.$store.commit("SET_SELECTED_PRODUCT", dataForm.products_sold);   
             this.$emit("toPayment", dataForm);
           }
           this.toPayment = false;

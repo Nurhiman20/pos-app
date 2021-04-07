@@ -89,6 +89,10 @@ const ADD_SELECTED_PRODUCT = (state, payload) => {
   }
 };
 
+const SET_SELECTED_PRODUCT = (state, payload) => {
+  state.selectedProduct = payload;
+}
+
 const SET_CUSTOMER_TX = (state, payload) => {
   state.customerTx = payload
 };
@@ -104,10 +108,6 @@ const SET_PAYMENT_TX = (state, payload) => {
 const REMOVE_SELECTED_PRODUCT = (state, payload) => {
   let indexProduct = state.selectedProduct.indexOf(payload);
   state.selectedProduct.splice(indexProduct, 1);
-};
-
-const CLEAR_SELECTED_PRODUCT = (state, payload) => {
-  state.selectedProduct = payload;
 };
 
 const EDIT_SELECTED_PRODUCT = (state, payload) => {
@@ -164,11 +164,11 @@ export default {
   SET_LIST_TABLE,
   SET_FILTER_CATEGORY,
   ADD_SELECTED_PRODUCT,
+  SET_SELECTED_PRODUCT,
   SET_CUSTOMER_TX,
   SET_TABLE_TX,
   SET_PAYMENT_TX,
   REMOVE_SELECTED_PRODUCT,
-  CLEAR_SELECTED_PRODUCT,
   EDIT_SELECTED_PRODUCT,
   SET_EDIT_TX,
   SET_DATA_RECEIPT,

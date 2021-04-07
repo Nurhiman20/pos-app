@@ -169,8 +169,14 @@ export default {
     }
   },
   watch: {
+    tx(val) {
+      if (val.products_sold !== undefined) {
+        this.$store.commit('SET_SELECTED_PRODUCT', val.products_sold);        
+      } else {
+        this.$store.commit('SET_SELECTED_PRODUCT', []); 
+      }
+    },
     txPay(val) {
-      console.log(val);
       this.tx = val;
       // this.paymentMethod = val[0].payment_method;
       // this.cash = val[0].cash;
@@ -243,7 +249,7 @@ export default {
         
         this.$store.dispatch("submitTransaction", this.tx)
           .then(() => {
-            this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+            this.$store.commit("SET_SELECTED_PRODUCT", []);
             this.customer = null;
             this.tableNumber = null;
             this.tx = {};
@@ -263,7 +269,7 @@ export default {
         dataEditPayment.payment[0].moneyChange = this.moneyChange;
         this.$store.dispatch("updateTransaction", dataEditPayment)
           .then(() => {
-            this.$store.commit("CLEAR_SELECTED_PRODUCT", []);
+            this.$store.commit("SET_SELECTED_PRODUCT", []);
             this.$emit("success", "Transaksi telah diperbarui");
           })
           .catch(() => {

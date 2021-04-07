@@ -183,10 +183,8 @@ export default {
       this.selectDialog = true;
     },
     goToPayment(e) {
-      console.log(e);
       this.tx = e;
       this.tab = 1;
-      console.log(this.tx);
     },
     openDialogReceipt(e) {
       this.selectedTransaction = e;
