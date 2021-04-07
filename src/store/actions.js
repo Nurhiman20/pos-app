@@ -46,7 +46,8 @@ async function submitProduct({ state, commit }, dataForm) {
         id_outlet: state.account.id,
         time: dataForm.time,
         qty: dataForm.stock,
-        unit: dataForm.unit
+        unit: dataForm.unit,
+        unit_cost: dataForm.price_cost
       }
       inv.tx.push(firstTx);
       transaction.objectStore('inventory').put(inv);
@@ -116,6 +117,7 @@ async function updateProduct({ state, commit }, dataForm) {
     if (tx.id === 'first-000000') {
       tx.qty = dataForm.stock;
       tx.unit = dataForm.unit;
+      tx.unit_cost = dataForm.price_cost;
     }
   });
 
@@ -135,7 +137,8 @@ async function updateProduct({ state, commit }, dataForm) {
         id_outlet: state.account.id,
         time: dataForm.time,
         qty: dataForm.stock,
-        unit: dataForm.unit
+        unit: dataForm.unit,
+        unit_cost: dataForm.price_cost
       }
     ]
   };
@@ -315,7 +318,8 @@ async function submitIngredient({ state, commit }, dataForm) {
         id_outlet: state.account.id,
         time: dataForm.time,
         qty: dataForm.stock,
-        unit: dataForm.unit
+        unit: dataForm.unit,
+        unit_cost: dataForm.price
       }
     ]
   };
@@ -368,7 +372,8 @@ async function updateIngredient({ commit }, dataForm) {
   updatedInv.tx.forEach(tx => {
     if (tx.id === 'first-000000') {
       tx.qty = dataForm.stock;
-      tx.unit = dataForm.unit;
+      tx.unit = dataForm.unit;      
+      tx.unit_cost = dataForm.price;
     }
   });
 

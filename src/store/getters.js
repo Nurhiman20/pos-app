@@ -272,7 +272,7 @@ const viewCurrentStock = () => {
 const viewHighestCost = (state) => {
   let order = [];
   state.detailInventory.tx.forEach(tx => {
-    if (tx.id.indexOf('order') !== -1) {
+    if (tx.id.indexOf('rv') !== -1 || tx.id.indexOf('first') !== -1) {
       order.push(parseFloat(tx.unit_cost))
     }
   });
