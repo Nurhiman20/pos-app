@@ -51,13 +51,25 @@
                       <p>Stok Akhir</p>
                     </v-col>
                     <v-col cols="8">
-                      <p class="text-bold">{{ this.$store.state.endingStock }}</p>
+                      <p class="text-bold">{{ this.$store.state.detailInventory.ending_stock }}</p>
                     </v-col>
                     <v-col cols="4">
                       <p>Harga Beli Tertinggi</p>
                     </v-col>
                     <v-col cols="8">
                       <p class="text-bold" v-if="this.$store.state.detailInventory.tx !== undefined">Rp{{ formatCurrency(this.$store.getters.viewHighestCost) }},00</p>
+                    </v-col>
+                    <v-col cols="4">
+                      <p v-if="this.$store.state.detailInventory.tx !== undefined && this.$store.state.detailInventory.id.indexOf('prod') !== -1">Profit</p>
+                    </v-col>
+                    <v-col cols="8">
+                      <p class="text-bold" v-if="this.$store.state.detailInventory.tx !== undefined && this.$store.state.detailInventory.id.indexOf('prod') !== -1">Rp{{ formatCurrency(this.$store.getters.profitInventory) }},00</p>
+                    </v-col>                    
+                    <v-col cols="4">
+                      <p v-if="this.$store.state.detailInventory.tx !== undefined">Value</p>
+                    </v-col>
+                    <v-col cols="8">
+                      <p class="text-bold" v-if="this.$store.state.detailInventory.tx !== undefined">Rp{{ formatCurrency(this.$store.getters.valueInventory) }},00</p>
                     </v-col>
                 </v-row>
               </v-col>
@@ -262,11 +274,12 @@ export default {
     goToEdit() {}
   },
   created() {
+    this.$store.dispatch("getInventory");
     this.$store.dispatch("getInventoryById", this.$route.params.id);
     this.$store.dispatch("getOrder");
     this.$store.dispatch("getReceive");
     this.$store.dispatch("getAdjustment");
-    this.$store.dispatch("getTransaction");
-  },
+    this.$store.dispatch("getTransaction");    
+  }
 }
 </script>

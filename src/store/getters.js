@@ -264,27 +264,86 @@ const transactionOnDetail = (state) => {
   return transaction;
 }
 
-const viewCurrentStock = () => {
-  let currentStock = [];  
-  return currentStock;
-}
-
 const viewHighestCost = (state) => {
-  let order = [];
+  let txUnitCost = [];
   state.detailInventory.tx.forEach(tx => {
     if (tx.id.indexOf('rv') !== -1 || tx.id.indexOf('first') !== -1) {
-      order.push(parseFloat(tx.unit_cost))
+      txUnitCost.push(parseFloat(tx.unit_cost))
     }
   });
 
-  let max = order[0];
-  for (let i = 1; i < order.length; ++i) {
-    if (order[i] > max) {
-      max = order[i];
+  let max = txUnitCost[0];
+  for (let i = 1; i < txUnitCost.length; ++i) {
+    if (txUnitCost[i] > max) {
+      max = txUnitCost[i];
     }
   }
 
   return max
+}
+
+const profitInventory = (state) => {
+  let txUnitCost = txWithUnitCost(state);
+
+  let countTotalPurchase = 0;
+  let totalQtyReceived = 0;
+  txUnitCost.forEach(tx => {
+    countTotalPurchase += parseFloat(tx.qty) * parseFloat(tx.unit_cost);
+    totalQtyReceived += parseFloat(tx.qty)
+  });
+  
+  let currentAvg = countTotalPurchase / totalQtyReceived;
+  let currentValue = parseFloat(state.detailInventory.ending_stock) * currentAvg;
+
+  let txSales = txWithSales(state);
+  let totalSales = 0;
+
+  txSales.forEach(tx => {
+    totalSales += parseFloat(tx.qty) * parseFloat(tx.price);
+  });
+
+  let profit = (currentValue + totalSales) - countTotalPurchase;
+
+  return parseInt(profit);
+}
+
+const valueInventory = (state) => {
+  let txUnitCost = txWithUnitCost(state);
+
+  let countTotalPurchase = 0;
+  let totalQtyReceived = 0;
+  txUnitCost.forEach(tx => {
+    countTotalPurchase += parseFloat(tx.qty) * parseFloat(tx.unit_cost);
+    totalQtyReceived += parseFloat(tx.qty)
+  });
+
+  let currentAvg = countTotalPurchase / totalQtyReceived;
+  console.log(currentAvg);
+  let currentValue = parseFloat(state.detailInventory.ending_stock) * currentAvg;
+
+  return parseInt(currentValue);
+}
+
+const txWithUnitCost = (state) => {
+  let txUnitCost = [];
+  state.detailInventory.tx.forEach(tx => {
+    if (tx.id.indexOf('rv') !== -1 || tx.id.indexOf('first') !== -1) {
+      txUnitCost.push(tx)
+    }
+  });
+
+  return txUnitCost
+}
+
+const txWithSales = (state) => {
+  let txSales = [];
+  state.detailInventory.tx.forEach(tx => {
+    if (tx.id.indexOf('tr') !== -1) {
+      txSales.push(tx)
+    }
+  });
+
+  return txSales
 }
 
 export default {
@@ -302,6 +361,7 @@ export default {
   receiveOnDetail,
   adjustmentOnDetail,
   transactionOnDetail,
-  viewCurrentStock,
-  viewHighestCost
+  viewHighestCost,
+  profitInventory,
+  valueInventory
 }

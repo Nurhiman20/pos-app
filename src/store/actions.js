@@ -47,7 +47,8 @@ async function submitProduct({ state, commit }, dataForm) {
         time: dataForm.time,
         qty: dataForm.stock,
         unit: dataForm.unit,
-        unit_cost: dataForm.price_cost
+        unit_cost: dataForm.price_cost,
+        price: dataForm.price
       }
       inv.tx.push(firstTx);
       transaction.objectStore('inventory').put(inv);
@@ -118,6 +119,7 @@ async function updateProduct({ state, commit }, dataForm) {
       tx.qty = dataForm.stock;
       tx.unit = dataForm.unit;
       tx.unit_cost = dataForm.price_cost;
+      tx.price = dataForm.price;
     }
   });
 
@@ -138,7 +140,8 @@ async function updateProduct({ state, commit }, dataForm) {
         time: dataForm.time,
         qty: dataForm.stock,
         unit: dataForm.unit,
-        unit_cost: dataForm.price_cost
+        unit_cost: dataForm.price_cost,
+        price: dataForm.price
       }
     ]
   };
@@ -540,14 +543,20 @@ async function getInventory({ commit }) {
   });
 }
 
-async function getInventoryById({ commit }, id) {
+async function getInventoryById({ getters, commit }, id) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
   return new Promise((resolve, reject) => {
     vuePos
-      .get('inventory', id)
+      .getAll('inventory')
       .then(result => {
-        commit('SET_DETAIL_INVENTORY', result);
+        commit('SET_LIST_INVENTORY', result);
+        getters.listViewInventory.forEach(inv => {
+          if (inv.id === id) {
+            commit('SET_DETAIL_INVENTORY', inv);
+            commit('SET_ENDING_STOCK', inv.ending_stock);
+          }
+        });
         resolve(result);
       })
       .catch(error => {
@@ -1210,7 +1219,8 @@ async function submitTransaction({ commit }, dataForm) {
             id_ingredient: prod.id,
             id_outlet: dataForm.id_outlet,
             time: dataForm.time,
-            qty: parseFloat(prod.qty)
+            qty: parseFloat(prod.qty),
+            price: parseFloat(prod.price)
           })
         }
       } else {
@@ -1325,7 +1335,8 @@ async function updateTransaction({ commit }, dataForm) {
               id_ingredient: prod.id,
               id_outlet: dataForm.id_outlet,
               time: dataForm.time,
-              qty: parseFloat(prod.qty)
+              qty: parseFloat(prod.qty),
+              price: parseFloat(prod.price)
             })
           }
         } else {
