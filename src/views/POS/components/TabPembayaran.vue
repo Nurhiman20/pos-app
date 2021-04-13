@@ -242,8 +242,27 @@ export default {
       this.addPayment();
       this.$emit('printReceipt', this.tx);
     },
-    submitTransaction() {
-      if (Object.keys(this.$store.state.selectedTx).length === 0) {
+    submitTransaction() {      
+      if (Object.keys(this.$store.state.selectedTx).length !== 0 && this.$store.state.selectedTx.payment.length !== 0) {
+        let dataEditPayment = this.$store.state.selectedTx;
+        dataEditPayment.total = this.total;
+        dataEditPayment.total_discount = this.discount;
+        dataEditPayment.payment[0].cash = this.cash;
+        dataEditPayment.payment[0].moneyChange = this.moneyChange;
+        this.$store.dispatch("updateTransaction", dataEditPayment)
+          .then(() => {
+            this.$store.commit("SET_SELECTED_PRODUCT", []);
+            this.$emit("success", "Transaksi telah diperbarui");
+            this.$store.commit("SET_EDIT_TX", {});
+            this.$router.push('/laporan/transaksi');
+          })
+          .catch(() => {
+            this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+          });
+      } else {
+        if (Object.keys(this.$store.state.selectedTx).length !== 0) {
+          this.tx = this.$store.state.selectedTx;
+        }        
         this.addPayment();
         this.tx.status = 'Sukses';
         
@@ -256,21 +275,8 @@ export default {
             this.paymentMethod = null;
             this.cash = 0;
             this.$store.commit("SET_PAYMENT_TX", null);
+            this.$store.commit("SET_EDIT_TX", {});
             this.$emit("success", "Transaksi telah disimpan");
-          })
-          .catch(() => {
-            this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
-          });
-      } else {
-        let dataEditPayment = this.$store.state.selectedTx;
-        dataEditPayment.total = this.total;
-        dataEditPayment.total_discount = this.discount;
-        dataEditPayment.payment[0].cash = this.cash;
-        dataEditPayment.payment[0].moneyChange = this.moneyChange;
-        this.$store.dispatch("updateTransaction", dataEditPayment)
-          .then(() => {
-            this.$store.commit("SET_SELECTED_PRODUCT", []);
-            this.$emit("success", "Transaksi telah diperbarui");
           })
           .catch(() => {
             this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

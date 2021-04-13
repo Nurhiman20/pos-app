@@ -149,11 +149,11 @@ export default {
     closeDialogSuccess(e) {
       this.saveDialog = false;
       this.dialogSuccess = e;
-      if (this.$store.state.selectedTx.id !== undefined) {
-        this.$store.commit("SET_EDIT_TX", null);
-        this.$router.push('/laporan/transaksi');
-      }      
-      this.$store.commit("SET_EDIT_TX", {});
+      // if (this.$store.state.selectedTx.id !== undefined) {
+      //   this.$store.commit("SET_EDIT_TX", null);
+      //   this.$router.push('/laporan/transaksi');
+      // }      
+      // this.$store.commit("SET_EDIT_TX", {});
     },
     closeDialogFailed(e) {
       this.dialogFailed = e;
@@ -184,6 +184,7 @@ export default {
     },
     goToPayment(e) {
       this.tx = e;
+      this.$store.commit("SET_EDIT_TX", e);
       this.tab = 1;
     },
     openDialogReceipt(e) {
