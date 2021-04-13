@@ -105,7 +105,7 @@ export default {
       let dataForm = {
         ...this.selectedIngredient,
         received: this.received,
-        total_receive: parseFloat(this.received) + this.totalReceived()
+        total_receive: parseFloat(this.received) + this.total
       }
       this.$emit('edit', dataForm);
     }
