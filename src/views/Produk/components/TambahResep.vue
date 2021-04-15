@@ -121,7 +121,7 @@ export default {
     },
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = 'cat-' + randLetter + Date.now();
+      var uniqid = 'rec-' + randLetter + Date.now();
       return uniqid
     },    
     textProduct(item) {

@@ -105,6 +105,7 @@ export default {
         { text: 'ID', value: 'id', sortable: false },
         { text: 'Produk', value: 'product.name', sortable: true },
         { text: 'Varian', value: 'variant', sortable: false },
+        { text: 'Harga', value: 'price', sortable: false },
         { text: 'Bahan', value: 'ingredients', sortable: false }
       ],
       jsonFields: {

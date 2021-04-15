@@ -16,11 +16,22 @@
             <ValidationProvider v-slot="{ errors }" name="Varian" rules="required">
               <v-text-field
                 :error-messages="errors"
-                v-model="selectedRecipe.varian"
+                v-model="selectedRecipe.variant"
                 label="Varian"
                 outlined
                 dense
                 class="mb-0 mt-6 px-4"
+              ></v-text-field>
+            </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Harga" rules="required|integer">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selectedRecipe.price"
+                label="Harga"
+                outlined
+                dense
+                type="number" 
+                class="mb-0 px-4"
               ></v-text-field>
             </ValidationProvider>
             <div class="px-4 mt-2">
