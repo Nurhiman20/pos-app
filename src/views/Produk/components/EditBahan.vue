@@ -20,7 +20,7 @@
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
+            <!-- <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedIngredient.variant"
@@ -29,7 +29,7 @@
                 dense
                 class="mb-0 mt-2 px-4"
               ></v-text-field>
-            </ValidationProvider>
+            </ValidationProvider> -->
             <ValidationProvider v-slot="{ errors }" name="Kategori bahan" rules="required">
               <v-select
                 v-model="selectedIngredient.category"

@@ -461,8 +461,22 @@ async function submitRecipe({ commit }, dataForm) {
 
   // set product data
   let prod = {
-    ...product,
-    ingredients: dataForm.ingredients
+    ...product
+  }
+
+  if (dataForm.variant === null) {
+    prod.ingredients = dataForm.ingredients;
+  } else {
+    var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+    var uniqid = 'var-' + randLetter + Date.now();
+    let variant = {
+      id: uniqid,
+      name: dataForm.variant,
+      price: dataForm.variant,
+      ingredients: dataForm.ingredients
+    }
+
+    prod.variant.push(variant);
   }
 
   // submit recipe to collection product and recipe

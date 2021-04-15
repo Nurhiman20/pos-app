@@ -63,7 +63,7 @@
                   class="mb-0 mt-2 px-4"
                 ></v-text-field>
               </ValidationProvider>
-              <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
+              <!-- <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
                 <v-text-field
                   :error-messages="errors"
                   v-model="selectedProduct.variant"
@@ -72,7 +72,7 @@
                   dense
                   class="mb-0 mt-2 px-4"
                 ></v-text-field>
-              </ValidationProvider>
+              </ValidationProvider> -->
               <ValidationProvider v-slot="{ errors }" name="Stok awal" rules="">
                 <v-text-field
                   :error-messages="errors"
@@ -204,7 +204,7 @@ export default {
       } else {
         this.selectedProduct.ingredients = [];
         delete this.selectedProduct["price_cost"];
-        delete this.selectedProduct["variant"];
+        // delete this.selectedProduct["variant"];
         delete this.selectedProduct["stock"];
         delete this.selectedProduct["unit"];
       }

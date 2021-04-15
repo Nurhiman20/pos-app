@@ -58,7 +58,7 @@
                   class="mb-0 mt-2 px-4"
                 ></v-text-field>
               </ValidationProvider>
-              <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
+              <!-- <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
                 <v-text-field
                   :error-messages="errors"
                   v-model="variantIngredient"
@@ -67,7 +67,7 @@
                   dense
                   class="mb-0 mt-2 px-4"
                 ></v-text-field>
-              </ValidationProvider>
+              </ValidationProvider> -->
               <ValidationProvider v-slot="{ errors }" name="Stok awal" rules="">
                 <v-text-field
                   :error-messages="errors"
@@ -152,7 +152,7 @@ export default {
       imageProduct: null,
       withoutIngredient: false,
       priceCost: null,
-      variantIngredient: null,
+      // variantIngredient: null,
       stockIngredient: null,
       unitIngredient: null,
       rulesImage: [
@@ -188,12 +188,12 @@ export default {
       let dataForm = {
         id: this.randomId(),
         name: this.nameProduct,
+        variant: [],
         price: this.priceProduct,
         category: this.categoryProduct,
         description: this.descriptionProduct,
         without_ingredient: this.withoutIngredient,
         price_cost: this.priceCost,
-        variant: this.variantIngredient,
         stock: this.stockIngredient,
         unit: this.unitIngredient,
         image: this.imageProduct,
@@ -209,7 +209,7 @@ export default {
           this.previewImage = null;
           this.withoutIngredient = false;
           this.priceCost = null;
-          this.variantIngredient = null;
+          // this.variantIngredient = null;
           this.stockIngredient = null;
           this.unitIngredient = null;
           this.$emit("success", "Produk telah disimpan");

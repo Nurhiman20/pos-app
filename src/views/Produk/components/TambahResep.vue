@@ -25,14 +25,25 @@
             <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
               <v-text-field
                 :error-messages="errors"
-                v-model="varian"
+                v-model="variant"
                 label="Varian"
                 outlined
                 dense
                 class="mb-0 mt-4 px-4"
               ></v-text-field>
             </ValidationProvider>
-            <div class="px-4 mt-6">
+            <ValidationProvider v-slot="{ errors }" name="Harga" rules="required|integer">
+              <v-text-field
+                :error-messages="errors"
+                v-model="price"
+                label="Harga"
+                outlined
+                dense
+                type="number" 
+                class="mb-0 px-4"
+              ></v-text-field>
+            </ValidationProvider>
+            <div class="px-4 mt-2">
               <v-data-table
                 :headers="headers"
                 :items="listIngredient"
@@ -86,7 +97,8 @@ export default {
   data() {
     return {
       product: null,
-      varian: null,
+      variant: null,
+      price: null,
       listIngredient: [],
       selectedIngredient: {},
       headers: [
@@ -96,6 +108,11 @@ export default {
       ],
       dialogAddIngredient: false,      
       dialogEditIngredient: false
+    }
+  },
+  watch: {
+    product(val) {
+      this.price = val.price;
     }
   },
   methods: {
@@ -159,12 +176,16 @@ export default {
         id: this.randomId(),
         id_product: this.product.id,
         product: this.product,
-        varian: this.varian,
+        variant: this.variant,
+        price: this.price,
         ingredients: this.listIngredient
       };
       this.$store.dispatch("submitRecipe", dataForm)
         .then(() => {
-          this.nameCategory = null;          
+          this.product = null;
+          this.variant = null;
+          this.price = null;
+          this.listIngredient = [];       
           this.$emit("success", "Resep telah disimpan");
         })
         .catch(() => {
