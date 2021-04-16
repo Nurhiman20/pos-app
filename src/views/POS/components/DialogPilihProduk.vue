@@ -105,6 +105,7 @@ export default {
       return item
     },
     closeDialog() {
+      this.variant = null;
       this.$emit('close', false);
     },
     minQuantity() {
@@ -142,8 +143,19 @@ export default {
       this.selectedProduct.qty = this.quantity;
       this.selectedProduct.discount = this.discount;
       this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.price) - parseInt(this.discount);
+
+      let productData = {
+        ...this.selectedProduct
+      }
+
+      if (this.variant !== null) {
+        productData.name = this.variant.name;
+        productData.price = this.variant.price;
+        productData.ingredients = this.variant.ingredients;
+        productData.total = parseInt(this.quantity) * parseInt(productData.price) - parseInt(this.discount);
+      }
       if (this.checkDiscount()) {
-        this.$store.commit("ADD_SELECTED_PRODUCT", this.selectedProduct);
+        this.$store.commit("ADD_SELECTED_PRODUCT", productData);
         this.quantity = 1;
         this.discount = 0;
         this.closeDialog();

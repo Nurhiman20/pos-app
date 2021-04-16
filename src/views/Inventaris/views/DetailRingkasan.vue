@@ -86,7 +86,6 @@
             :headers="headersHistory"
             :items="$store.state.detailInventory.tx"
             class="elevation-1 scrollbar-custom"
-            hide-default-footer
           >
             <template v-slot:item.unit_cost="{item}">
               <p class="my-auto" v-if="item.id.indexOf('rv') !== -1 || item.id.indexOf('first') !== -1">Rp{{ formatCurrency(item.unit_cost) }},00</p>
