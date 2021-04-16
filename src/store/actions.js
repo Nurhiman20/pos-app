@@ -470,7 +470,7 @@ async function submitRecipe({ commit }, dataForm) {
     let variant = {
       id: dataForm.id,
       name: dataForm.variant,
-      price: dataForm.variant,
+      price: dataForm.price,
       ingredients: dataForm.ingredients
     }
 
@@ -514,8 +514,19 @@ async function deleteRecipe({ commit }, dataForm) {
 
   // set product data
   let prod = {
-    ...product,
-    ingredients: []
+    ...product
+  }
+
+  if (dataForm.variant === null) {
+    prod.ingredients = []
+  } else {
+    let indexDelete = null;
+    prod.variant.forEach((variant, indexVariant) => {
+      if (variant.id === dataForm.id) {
+        indexDelete = indexVariant;
+      }
+    });
+    prod.variant.splice(indexDelete, 1);
   }
 
   // delete recipe in collection recipe and update in product
