@@ -6,6 +6,20 @@
         <v-card-subtitle>{{ selectedProduct.name }}</v-card-subtitle>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(selectProduct)">
+            <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
+              <v-select
+                v-model="variant"
+                :error-messages="errors"
+                :items="selectedProduct.variant"
+                :item-text="textVariant"
+                :item-value="valueVariant"
+                label="Varian"
+                class="mb-0 mt-2 px-4"
+                outlined
+                dense
+                v-if="selectedProduct.variant.length !== 0"
+              ></v-select>
+            </ValidationProvider>
             <v-row no-gutters>
               <v-col cols="6">
                 <ValidationProvider v-slot="{ errors }" name="Kuantitas" rules="required|integer">
@@ -75,11 +89,21 @@ export default {
   props: ['show', 'selectedProduct'],
   data() {
     return {
+      variant: null,
       quantity: 1,
       discount: 0
     }
   },
   methods: {
+    formatCurrency(val) {
+      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+    },
+    textVariant(item) {
+      return item.name + ' - ' + 'Rp' + this.formatCurrency(item.price) + ',00'
+    },
+    valueVariant(item) {
+      return item
+    },
     closeDialog() {
       this.$emit('close', false);
     },
