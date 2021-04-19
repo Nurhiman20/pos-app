@@ -180,11 +180,11 @@ async function deleteProduct({ commit }, dataForm) {
   // search product in collection recipe
   let tx = vuePos.transaction('recipe').store;
   let cursor = await tx.openCursor();
-  let productRecipe = { id: null, product: null };
+  let productRecipe = [];
   const loopCursor = true;
   while (loopCursor) {
     if (cursor.value.id_product === dataForm.id) {
-      productRecipe = cursor.value;
+      productRecipe.push(cursor.value);
     }
     cursor = await cursor.continue();
     if (!cursor) break;
@@ -207,8 +207,10 @@ async function deleteProduct({ commit }, dataForm) {
   let transaction = await vuePos.transaction(['product', 'recipe', 'inventory'], 'readwrite');
   return new Promise((resolve, reject) => {
     transaction.objectStore('product').delete(dataForm.id);
-    if (productRecipe.id !== null) {   
-      transaction.objectStore('recipe').delete(productRecipe.id);
+    if (productRecipe.length !== 0) {
+      productRecipe.forEach(recipe => {
+        transaction.objectStore('recipe').delete(recipe.id);
+      });
     }
     if (inv.id !== null) {   
       transaction.objectStore('inventory').delete(dataForm.id);
