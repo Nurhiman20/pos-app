@@ -13,7 +13,7 @@
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editRecipe)">
-            <ValidationProvider v-slot="{ errors }" name="Varian" rules="required">
+            <ValidationProvider v-slot="{ errors }" name="Varian" rules="">
               <v-text-field
                 :error-messages="errors"
                 v-model="selectedRecipe.variant"
@@ -21,6 +21,7 @@
                 outlined
                 dense
                 class="mb-0 mt-6 px-4"
+                :disabled="selectedRecipe.variant === null ? true : false"
               ></v-text-field>
             </ValidationProvider>
             <ValidationProvider v-slot="{ errors }" name="Harga" rules="required|integer">
@@ -166,7 +167,7 @@ export default {
       this.$emit("delete", this.selectedRecipe);
     },
     editRecipe() {
-      this.$store.dispatch("submitRecipe", this.selectedRecipe)
+      this.$store.dispatch("updateRecipe", this.selectedRecipe)
         .then(() => {
           this.$emit("success", "Resep telah disimpan");
         })

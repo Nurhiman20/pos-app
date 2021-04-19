@@ -466,6 +466,7 @@ async function submitRecipe({ commit }, dataForm) {
 
   if (dataForm.variant === null) {
     prod.ingredients = dataForm.ingredients;
+    prod.price = dataForm.price;
   } else {
     let variant = {
       id: dataForm.id,
@@ -475,6 +476,67 @@ async function submitRecipe({ commit }, dataForm) {
     }
 
     prod.variant.push(variant);
+  }
+
+  // submit recipe to collection product and recipe
+  let transaction = await vuePos.transaction(['recipe', 'product'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('recipe').put(dataForm);    
+    transaction.objectStore('product').put(prod); 
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function updateRecipe({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search product in collection product
+  let tx = vuePos.transaction('product').store;
+  let cursor = await tx.openCursor();
+  let product = { id: null, ingredients: null };
+  const loopCursor = true;
+  while (loopCursor) {
+    if (cursor.value.id === dataForm.id_product) {
+      product = cursor.value;
+    }
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  // set product data
+  let prod = {
+    ...product
+  }
+
+  if (dataForm.variant === null) {
+    prod.ingredients = dataForm.ingredients;
+    prod.price = dataForm.price;
+  } else {
+    let updatedVariant = {
+      id: dataForm.id,
+      name: dataForm.variant,
+      price: dataForm.price,
+      ingredients: dataForm.ingredients
+    }
+    
+    let indexVariant = null;
+    prod.variant.forEach((variant, index) => {
+      if (variant.id === updatedVariant.id) {
+        indexVariant = index;
+      }
+    });
+
+    prod.variant[indexVariant] = updatedVariant;
   }
 
   // submit recipe to collection product and recipe
@@ -1962,6 +2024,7 @@ export default {
   deleteIngredient,
   getRecipe,
   submitRecipe,
+  updateRecipe,
   deleteRecipe,
   getInventory,
   getInventoryById,
