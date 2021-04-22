@@ -66,6 +66,17 @@ const listViewInventory = (state) => {
   return inventory;
 }
 
+const listOrderTransfer = (state) => {
+  let orderTransfer = [];
+  state.listTransfer.forEach(tf => {
+    if (tf.status === 'Pesanan') {
+      orderTransfer.push(tf);
+    }
+  })
+
+  return orderTransfer;
+}
+
 const listViewTransaction = (state) => {
   let filteredTx = [];
   state.listTransaction.forEach(tx => {
@@ -349,6 +360,7 @@ const txWithSales = (state) => {
 export default {
   listViewProduct,
   listViewInventory,
+  listOrderTransfer,
   listViewTransaction,
   listQueueTransaction,
   totalTransactionToday,

@@ -1110,6 +1110,73 @@ async function deleteReceive({ state, commit }, dataForm) {
   });
 }
 
+async function getTransfer({ commit }) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .getAll('transfer')
+      .then(result => {
+        commit('SET_LIST_TRANSFER', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function submitTransfer({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        cursor.value.tx.push({
+          id: dataForm.id,
+          type: 'Pesanan transfer',
+          id_ingredient: ing.id_ingredient,
+          id_outlet: dataForm.id_outlet,
+          time: dataForm.time,
+          destination_outlet: dataForm.destination_outlet,
+          qty: ing.qty,
+          unit_cost: ing.unit_cost
+        })
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  let transaction = await vuePos.transaction(['transfer', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('transfer').put(dataForm);
+    inventories.forEach(inv => {
+      transaction.objectStore('inventory').put(inv);
+    })
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getAdjustment({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -2042,6 +2109,8 @@ export default {
   updateReceive,
   deleteReceive,
   deleteSupplier,
+  getTransfer,
+  submitTransfer,
   getAdjustment,
   submitAdjustment,
   updateAdjustment,

@@ -20,34 +20,61 @@
             ></v-autocomplete>
           </v-col>
         </v-row>
-        <v-btn class="ml-2 align-center" color="primary" small>Tambah Pesanan</v-btn>
+        <v-btn class="ml-2 align-center" color="primary" small @click="showDialogAdd">Tambah Pesanan</v-btn>
       </div>
       <v-data-table
         :headers="headers"
-        :items="listOrder"
+        :items="$store.getters.listOrderTransfer"
         :search="search"
         class="elevation-1 scrollbar-custom mt-3"
         hide-default-footer
       >
       </v-data-table>
     </v-card>
+
+    <add-order-dialog
+      :show="dialogAdd"
+      @success="successPutOrder"
+      @error="failedAddOrder"
+      @closeDialog="closeDialogAdd"
+    ></add-order-dialog>
+
+    <!-- response dialog -->
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+    ></response-dialog>
   </div>
 </template>
 
 <script>
+import addOrderDialog from './TambahPesanan';
+import responseDialog from '@/components/ResponseDialog';
+
 export default {
+  components: {
+    addOrderDialog,
+    responseDialog
+  },
   data() {
     return {
       search: null,
       select: null,
       itemOrder: [],
-      listOrder: [],
       headers: [
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
-        { text: 'Cabang Tujuan', value: 'outlet', sortable: true },
+        { text: 'Cabang Tujuan', value: 'destination_outlet.name', sortable: true },
         { text: 'Bahan', value: 'ingredient', sortable: false }
       ],
+      dialogAdd: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      dialogConfirm: false,
+      messageDialog: null
     }
   },
   watch: {
@@ -57,11 +84,39 @@ export default {
   },
   methods: {
     querySelections(v) {
-      // let listOrder = this.$store.state.listOrder.map(item => item.supplier.name);
-      let listOrder = this.listOrder;
+      let listOrder = this.$store.getters.listOrderTransfer.map(item => item.destination_outlet);
       this.itemOrder = listOrder.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
+    },
+    closeDialogAdd(e) {
+      this.dialogAdd = e;
+    },
+    showDialogAdd() {
+      this.dialogAdd = true;
+    },
+    closeDialogSuccess(e) {
+      this.dialogAdd = false;
+      // this.dialogEditOrder = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    closeDialogConfirm(e) {
+      this.dialogConfirm = e;
+    },
+    successPutOrder(e) {
+      this.$store.dispatch("getTransfer");
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedAddOrder(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
+    },
+    successDelete() {
+      this.$store.dispatch("getTransfer");
     },
   },
 }

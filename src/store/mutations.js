@@ -38,6 +38,10 @@ const SET_LIST_RECEIVE = (state, payload) => {
   state.listReceive = payload;
 }
 
+const SET_LIST_TRANSFER = (state, payload) => {
+  state.listTransfer = payload;
+}
+
 const SET_LIST_ADJUSTMENT = (state, payload) => {
   state.listAdjustment = payload;
 };
@@ -154,6 +158,7 @@ export default {
   SET_LIST_SUPPLIER,
   SET_LIST_ORDER,
   SET_LIST_RECEIVE,
+  SET_LIST_TRANSFER,
   SET_LIST_ADJUSTMENT,
   SET_LIST_TRANSACTION,
   SET_LIST_CUSTOMER,

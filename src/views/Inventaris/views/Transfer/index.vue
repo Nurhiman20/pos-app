@@ -51,6 +51,10 @@ export default {
     receiveOrderTab,
     deliveryTab,
     receiveTab
-  }
+  },
+  created() {
+    this.$store.dispatch("getInventory");    
+    this.$store.dispatch("getTransfer");
+  },
 }
 </script>

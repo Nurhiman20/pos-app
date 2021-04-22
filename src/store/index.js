@@ -55,6 +55,7 @@ const state = {
   listSupplier: [],
   listOrder: [],
   listReceive: [],
+  listTransfer: [],
   listAdjustment: []
 }
 
