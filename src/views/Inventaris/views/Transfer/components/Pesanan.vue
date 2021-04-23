@@ -28,6 +28,7 @@
         :search="search"
         class="elevation-1 scrollbar-custom mt-3"
         hide-default-footer
+        @click:row="showDialogEdit"
       >
         <template v-slot:item.ingredients="{item}">
           <p class="my-auto">{{ item.ingredients.length }}</p>
@@ -38,28 +39,42 @@
     <add-order-dialog
       :show="dialogAdd"
       @success="successPutOrder"
-      @error="failedAddOrder"
+      @error="failedPutOrder"
       @closeDialog="closeDialogAdd"
     ></add-order-dialog>
+
+    <edit-order-dialog
+      :show="dialogEdit"
+      :selected="selectedOrder"
+      @success="successPutOrder"
+      @error="failedPutOrder"
+      @closeDialog="closeDialogEdit"
+      @delete="deleteOrder"
+    ></edit-order-dialog>
 
     <!-- response dialog -->
     <response-dialog 
       :success="dialogSuccess"
       :failed="dialogFailed"
+      :confirm="dialogConfirm"
       :message="messageDialog"
       @closeSuccess="closeDialogSuccess"
       @closeFailed="closeDialogFailed"
+      @closeConfirm="closeDialogConfirm"
+      @deleteConfirmed="doDelete"
     ></response-dialog>
   </div>
 </template>
 
 <script>
 import addOrderDialog from './TambahPesanan';
+import editOrderDialog from './EditPesanan';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
     addOrderDialog,
+    editOrderDialog,
     responseDialog
   },
   data() {
@@ -67,6 +82,8 @@ export default {
       search: null,
       select: null,
       itemOrder: [],
+      selectedOrder: {},
+      selectedDelete: {},
       headers: [
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
@@ -74,6 +91,7 @@ export default {
         { text: 'Bahan', value: 'ingredients', sortable: false }
       ],
       dialogAdd: false,
+      dialogEdit: false,
       dialogSuccess: false,
       dialogFailed: false,
       dialogConfirm: false,
@@ -95,12 +113,19 @@ export default {
     closeDialogAdd(e) {
       this.dialogAdd = e;
     },
+    closeDialogEdit(e) {
+      this.dialogEdit = e;
+    },
     showDialogAdd() {
       this.dialogAdd = true;
     },
+    showDialogEdit(e) {
+      this.selectedOrder = e;
+      this.dialogEdit = true;
+    },
     closeDialogSuccess(e) {
       this.dialogAdd = false;
-      // this.dialogEditOrder = false;
+      this.dialogEdit = false;
       this.dialogSuccess = e;
     },
     closeDialogFailed(e) {
@@ -114,12 +139,28 @@ export default {
       this.messageDialog = e;
       this.dialogSuccess = true;
     },
-    failedAddOrder(e) {
+    failedPutOrder(e) {
       this.messageDialog = e;
       this.dialogFailed = true;
     },
-    successDelete() {
-      this.$store.dispatch("getTransfer");
+    deleteOrder(e) {
+      this.selectedDelete = e;
+      this.messageDialog = "Kamu yakin akan menghapus pesanan transfer ini?"
+      this.dialogConfirm = true;
+    },
+    doDelete() {
+      this.$store.dispatch("deleteTransfer", this.selectedDelete)
+        .then(() => {          
+          this.$store.dispatch("getTransfer");
+          this.dialogConfirm = false;
+          this.messageDialog = "Berhasil menghapus pesanan order";
+          this.dialogSuccess = true;
+        })
+        .catch(() => {
+          this.dialogConfirm = false;
+          this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
+          this.dialogFailed = true;
+        })
     },
   },
 }

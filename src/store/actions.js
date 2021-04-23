@@ -1148,8 +1148,7 @@ async function submitTransfer({ commit }, dataForm) {
           id_outlet: dataForm.id_outlet,
           time: dataForm.time,
           destination_outlet: dataForm.destination_outlet,
-          qty: ing.qty,
-          unit_cost: ing.unit_cost
+          qty: ing.qty
         })
         inventories.push(cursor.value);
       }
@@ -1164,6 +1163,106 @@ async function submitTransfer({ commit }, dataForm) {
     inventories.forEach(inv => {
       transaction.objectStore('inventory').put(inv);
     })
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function updateTransfer({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach((ingredient, indexIngredient) => {
+      inventory.tx.forEach((element, indexTx) => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient && ingredient.qty != 0) {
+          element.destination_outlet = dataForm.destination_outlet;
+          element.qty = ingredient.qty;
+        } else if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient && ingredient.qty == 0) {
+          inventory.tx.splice(indexTx, 1);
+          dataForm.ingredients.splice(indexIngredient, 1);
+        }
+      });
+    });
+  });
+
+  let transaction = await vuePos.transaction(['transfer', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('transfer').put(dataForm);
+    inventories.forEach(inv => {
+      transaction.objectStore('inventory').put(inv);
+    })
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function deleteTransfer({ commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach(ingredient => {
+      inventory.tx.forEach((element, indexTx) => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient) {
+          inventory.tx.splice(indexTx, 1);
+        }
+      });
+    });
+  });
+
+  let transaction = await vuePos.transaction(['transfer', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('transfer').delete(dataForm.id);
+    inventories.forEach(inv => { 
+      transaction.objectStore('inventory').put(inv);
+    });
     transaction.done
       .then(result => {
         resolve(result);
@@ -2111,6 +2210,8 @@ export default {
   deleteSupplier,
   getTransfer,
   submitTransfer,
+  updateTransfer,
+  deleteTransfer,
   getAdjustment,
   submitAdjustment,
   updateAdjustment,

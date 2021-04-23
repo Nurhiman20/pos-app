@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Bahan</v-card-title>
+        <v-card-title class="ml-0">Tambah Bahan / Produk</v-card-title>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(addIngredient)">
             <ValidationProvider v-slot="{ errors }" name="Nama bahan" rules="required">

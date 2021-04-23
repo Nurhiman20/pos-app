@@ -2,13 +2,18 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Pesanan Transfer</v-card-title>
+        <div class="d-flex flex-row justify-space-between align-center">
+          <v-card-title class="ml-0">Edit Pesanan Transfer</v-card-title>
+          <v-btn color="error" outlined @click="goDelete">
+            <v-icon class="mr-1">mdi-delete</v-icon>Hapus
+          </v-btn>
+        </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(addOrder)">
+          <v-form @submit.prevent="handleSubmit(editOrder)">
             <ValidationProvider v-slot="{ errors }" name="Cabang tujuan" rules="required">
               <v-autocomplete
                 :error-messages="errors"
-                v-model="outlet"
+                v-model="selectedOrder.destination_outlet"
                 :items="$store.state.listOutlet"
                 :item-text="textOutlet"
                 :item-value="valueOutlet"
@@ -25,19 +30,19 @@
             <div class="px-4 mt-2">
               <v-data-table
                 :headers="headers"
-                :items="listIngredient"
-                class="elevation-1 scrollbar-custom"
+                :items="selectedOrder.ingredients"
+                class="elevation-1 scrollbar-custom mb-4"
                 hide-default-footer
                 @click:row="goToEdit"
               ></v-data-table>
             </div>
-            <div class="px-4 mt-3 mb-6">
+            <!-- <div class="px-4 mt-3 mb-6">
               <v-btn color="secondary" dark block @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
-            </div>
+            </div> -->
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Tambahkan</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Perbarui</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -61,20 +66,18 @@
 </template>
 
 <script>
-import * as moment from 'moment';
 import addIngredientDialog from '@/components/DialogTambahBahan';
 import editIngredientDialog from '@/components/DialogEditBahan';
 
 export default {
-  props: ['show'],
+  props: ['show', 'selected'],
   components: {
     addIngredientDialog,
     editIngredientDialog
   },
   data() {
     return {
-      outlet: null,
-      listIngredient: [],
+      selectedOrder: {},
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
@@ -83,6 +86,11 @@ export default {
       ],
       dialogAddIngredient: false,
       dialogEditIngredient: false
+    }
+  },
+  watch: {
+    selected(val) {
+      this.selectedOrder = val
     }
   },
   methods: {
@@ -126,7 +134,7 @@ export default {
     },
     editIngredient(e) {
       let listIngredient = [];
-      this.listIngredient.forEach(element => {
+      this.selectedOrder.ingredients.forEach(element => {
         if (element.id_ingredient === e.id_ingredient) {
           listIngredient.push(e);
         } else {
@@ -134,28 +142,20 @@ export default {
         }
       });
 
-      this.listIngredient = listIngredient;
+      this.selectedOrder.ingredients = listIngredient;
       this.dialogEditIngredient = false;
     },
     addIngredient(e) {
-      this.listIngredient.push(e);
+      this.selectedOrder.ingredients.push(e);
       this.dialogAddIngredient = false;
     },
-    addOrder() {
-      let dataForm = {
-        id: this.randomId(),
-        id_outlet: this.$store.state.account.id,
-        outlet: this.$store.state.account,
-        destination_outlet: this.outlet,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a'),
-        ingredients: this.listIngredient,
-        status: 'Pesanan'
-      };
-      this.$store.dispatch("submitTransfer", dataForm)
-        .then(() => {
-          this.outlet = null;
-          this.listIngredient = [];       
-          this.$emit("success", "Pesanan telah disimpan");
+    goDelete() {
+      this.$emit("delete", this.selectedOrder);
+    },
+    editOrder() {
+      this.$store.dispatch("updateTransfer", this.selectedOrder)
+        .then(() => { 
+          this.$emit("success", "Pesanan telah diperbarui");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
