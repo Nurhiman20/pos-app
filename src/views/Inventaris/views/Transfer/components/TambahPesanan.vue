@@ -150,6 +150,7 @@ export default {
       let dataForm = {
         id: this.randomId(),
         id_outlet: this.$store.state.account.id,
+        outlet: this.$store.state.account,
         destination_outlet: this.outlet,
         time: moment().format('MM/DD/YYYY, h:mm:ss a'),
         ingredients: this.listIngredient,

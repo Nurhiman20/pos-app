@@ -20,15 +20,17 @@
             ></v-autocomplete>
           </v-col>
         </v-row>
-        <v-btn class="ml-2 align-center" color="primary" small>Tambah Pesanan Diterima</v-btn>
       </div>
       <v-data-table
         :headers="headers"
-        :items="listOrder"
+        :items="$store.getters.listRvOrderTransfer"
         :search="search"
         class="elevation-1 scrollbar-custom mt-3"
         hide-default-footer
       >
+        <template v-slot:item.ingredients="{item}">
+          <p class="my-auto">{{ item.ingredients.length }}</p>
+        </template>
       </v-data-table>
     </v-card>
   </div>
@@ -45,8 +47,8 @@ export default {
       headers: [
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
-        { text: 'Cabang Pengirim', value: 'outlet', sortable: true },
-        { text: 'Bahan', value: 'ingredient', sortable: false }
+        { text: 'Cabang Pengirim', value: 'outlet.name', sortable: true },
+        { text: 'Bahan', value: 'ingredients', sortable: false }
       ],
     }
   },
@@ -57,8 +59,7 @@ export default {
   },
   methods: {
     querySelections(v) {
-      // let listOrder = this.$store.state.listOrder.map(item => item.supplier.name);
-      let listOrder = this.listOrder;
+      let listOrder = this.$store.getters.listRvOrderTransfer.map(item => item.outlet.name);
       this.itemOrder = listOrder.filter(e => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });

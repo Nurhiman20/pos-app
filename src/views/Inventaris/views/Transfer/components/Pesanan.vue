@@ -29,6 +29,9 @@
         class="elevation-1 scrollbar-custom mt-3"
         hide-default-footer
       >
+        <template v-slot:item.ingredients="{item}">
+          <p class="my-auto">{{ item.ingredients.length }}</p>
+        </template>
       </v-data-table>
     </v-card>
 
@@ -68,7 +71,7 @@ export default {
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'Cabang Tujuan', value: 'destination_outlet.name', sortable: true },
-        { text: 'Bahan', value: 'ingredient', sortable: false }
+        { text: 'Bahan', value: 'ingredients', sortable: false }
       ],
       dialogAdd: false,
       dialogSuccess: false,

@@ -77,6 +77,17 @@ const listOrderTransfer = (state) => {
   return orderTransfer;
 }
 
+const listRvOrderTransfer = (state) => {
+  let rvOrderTransfer = [];
+  state.listTransfer.forEach(tf => {
+    if (tf.destination_outlet.id === state.account.id) {
+      rvOrderTransfer.push(tf);
+    }
+  })
+
+  return rvOrderTransfer;
+}
+
 const listViewTransaction = (state) => {
   let filteredTx = [];
   state.listTransaction.forEach(tx => {
@@ -361,6 +372,7 @@ export default {
   listViewProduct,
   listViewInventory,
   listOrderTransfer,
+  listRvOrderTransfer,
   listViewTransaction,
   listQueueTransaction,
   totalTransactionToday,
