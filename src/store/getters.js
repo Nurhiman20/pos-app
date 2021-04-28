@@ -19,7 +19,7 @@ const listViewInventory = (state) => {
   state.listInventory.forEach(inv => {
     // count total order
     inv.tx.forEach(order => {
-      if (order.id.indexOf('order') !== -1) {
+      if (order.id.indexOf('order') !== -1 && order.id.indexOf('tf') === -1) {
         orderCount += parseFloat(order.qty);
         inv.order = orderCount;
       }
