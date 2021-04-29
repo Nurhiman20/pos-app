@@ -80,12 +80,23 @@ const listOrderTransfer = (state) => {
 const listRvOrderTransfer = (state) => {
   let rvOrderTransfer = [];
   state.listTransfer.forEach(tf => {
-    if (tf.destination_outlet.id === state.account.id) {
+    if (tf.destination_outlet.id === state.account.id && tf.status !== 'Pengiriman') {
       rvOrderTransfer.push(tf);
     }
   })
 
   return rvOrderTransfer;
+}
+
+const listDeliveryTransfer = (state) => {
+  let delivTransfer = [];
+  state.listTransfer.forEach(tf => {
+    if (tf.status === 'Pengiriman') {
+      delivTransfer.push(tf);
+    }
+  })
+
+  return delivTransfer;
 }
 
 const listViewTransaction = (state) => {
@@ -373,6 +384,7 @@ export default {
   listViewInventory,
   listOrderTransfer,
   listRvOrderTransfer,
+  listDeliveryTransfer,
   listViewTransaction,
   listQueueTransaction,
   totalTransactionToday,

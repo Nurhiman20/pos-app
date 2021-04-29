@@ -13,7 +13,6 @@
                 :item-text="textOrder"
                 :item-value="valueOrder"
                 label="Pesanan Diterima"
-                cache-items
                 class="mb-0 mt-2 px-4"
                 outlined
                 dense
@@ -22,17 +21,17 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
-            <div class="px-4 mt-6">
-              <p class="mb-2">Bahan / produk dipesan</p>
+            <div class="px-4 mt-6" v-if="rvOrder !== null">
+              <p class="mb-2">Riwayat Pengiriman</p>
               <v-data-table
-                :headers="headersOrdered"
-                :items="listOrderedIngredient"
+                :headers="headersHistory"
+                :items="rvOrder.delivery"
                 class="elevation-1 scrollbar-custom"
                 hide-default-footer
               ></v-data-table>
             </div>
-            <div class="px-4 mt-6">
-              <p class="mb-2">Bahan / produk yang akan dikirim</p>
+            <div class="px-4 my-6">
+              <p class="mb-2">Pengiriman Baru</p>
               <v-data-table
                 :headers="headers"
                 :items="listIngredient"
@@ -40,9 +39,6 @@
                 hide-default-footer
                 @click:row="goToEdit"
               ></v-data-table>
-            </div>
-            <div class="px-4 mt-3 mb-6">
-              <v-btn color="secondary" dark block @click="dialogAddIngredient = true">Tambah Bahan</v-btn>
             </div>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -54,31 +50,23 @@
       </v-card>
     </v-dialog>
 
-    <add-ingredient-dialog
-      :show="dialogAddIngredient"
-      @closeDialog="closeDialogAdd"
-      @add="addIngredient"
-    ></add-ingredient-dialog>
-
     <edit-ingredient-dialog
       :show="dialogEditIngredient"
       :selected="selectedIngredient"
+      :rvOrder="rvOrder"
       @closeDialog="closeDialogEdit"
       @edit="editIngredient"
-      @delete="deleteIngredient"
     ></edit-ingredient-dialog>
   </div>
 </template>
 
 <script>
 import * as moment from 'moment';
-import addIngredientDialog from './DialogTambahBahan';
-import editIngredientDialog from './DialogEditBahan';
+import editIngredientDialog from './EditBahanPengiriman';
 
 export default {
   props: ['show'],
   components: {
-    addIngredientDialog,
     editIngredientDialog
   },
   data() {
@@ -90,20 +78,23 @@ export default {
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
         { text: 'Qty', value: 'qty', sortable: false },
-        { text: 'Unit', value: 'ingredient.unit', sortable: false }
+        { text: 'Unit', value: 'ingredient.unit', sortable: false },
+        { text: 'Kirim', value: 'delivered', sortable: false }
+      ],   
+      headersHistory: [
+        { text: 'ID Pesanan Diterima', value: 'id', sortable: false },
+        { text: 'Waktu', value: 'time', sortable: false }
       ],
-      headersOrdered: [
-        { text: 'Bahan', value: 'ingredient.name', sortable: false },
-        { text: 'Qty', value: 'qty', sortable: false },
-        { text: 'Unit', value: 'ingredient.unit', sortable: false }
-      ],
-      dialogAddIngredient: false,
       dialogEditIngredient: false
     }
   },
   watch: {
     rvOrder(val) {
-      this.listOrderedIngredient = val.ingredients;
+      if (val !== null) {
+        this.listIngredient = val.ingredients;
+      } else {
+        this.listIngredient = [];
+      }
     }
   },
   methods: {
@@ -112,17 +103,14 @@ export default {
     },
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = 'order-tf-' + randLetter + Date.now();
+      var uniqid = 'deliv-tf-' + randLetter + Date.now();
       return uniqid
     },    
     textOrder(item) {
-      return item.destination_outlet.name + ' - ' + item.ingredients.length + ' bahan'
+      return item.destination_outlet.name + ' - ' + item.ingredients.length + ' bahan' + ' - ' + item.time
     },
     valueOrder(item) {
       return item
-    },  
-    closeDialogAdd(e) {
-      this.dialogAddIngredient = e;
     },
     closeDialogEdit(e) {
       this.dialogEditIngredient = e;
@@ -133,17 +121,6 @@ export default {
     goToEdit(e) {
       this.selectedIngredient = e;
       this.dialogEditIngredient = true;
-    },    
-    deleteIngredient(e) {
-      let listIngredient = [];
-      this.listIngredient.forEach(element => {
-        if (element.id_ingredient !== e.id_ingredient) {
-          listIngredient.push(element);
-        }
-      });
-
-      this.listIngredient = listIngredient;
-      this.dialogEditIngredient = false;
     },
     editIngredient(e) {
       let listIngredient = [];
@@ -158,25 +135,40 @@ export default {
       this.listIngredient = listIngredient;
       this.dialogEditIngredient = false;
     },
-    addIngredient(e) {
-      this.listIngredient.push(e);
-      this.dialogAddIngredient = false;
+    checkStatus() {
+      let countUnfulfilled = 0;
+      this.listIngredient.forEach(item => {
+        if (parseFloat(item.qty) > parseFloat(item.total_deliver)) {
+          countUnfulfilled += 1;
+        }
+      });
+
+      if (countUnfulfilled === 0) {
+        countUnfulfilled = 0;
+        return 'Terpenuhi'
+      } else {        
+        countUnfulfilled = 0;
+        return 'Belum Terpenuhi'
+      }
     },
-    addOrder() {
+    addDelivery() {
       let dataForm = {
         id: this.randomId(),
         id_outlet: this.$store.state.account.id,
         outlet: this.$store.state.account,
-        destination_outlet: this.outlet,
+        id_order: this.rvOrder.id,
+        order: this.rvOrder,
+        destination_outlet: this.rvOrder.outlet,
         time: moment().format('MM/DD/YYYY, h:mm:ss a'),
         ingredients: this.listIngredient,
-        status: 'Pesanan'
+        status: 'Pengiriman',
+        delivery_status: this.checkStatus()
       };
-      this.$store.dispatch("submitTransfer", dataForm)
+      this.$store.dispatch("submitDeliveryTransfer", dataForm)
         .then(() => {
-          this.outlet = null;
+          this.rvOrder = null;
           this.listIngredient = [];       
-          this.$emit("success", "Pesanan telah disimpan");
+          this.$emit("success", "Pengiriman telah disimpan");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

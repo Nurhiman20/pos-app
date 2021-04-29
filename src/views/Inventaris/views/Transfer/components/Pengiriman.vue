@@ -24,27 +24,52 @@
       </div>
       <v-data-table
         :headers="headers"
-        :items="listOrder"
+        :items="$store.getters.listDeliveryTransfer"
         :search="search"
         class="elevation-1 scrollbar-custom mt-3"
         hide-default-footer
       >
+        <template v-slot:item.ingredients="{item}">
+          <p class="my-auto">{{ item.ingredients.length }}</p>
+        </template>
+        <template v-slot:item.delivery_status="{item}">
+          <div class="d-flex flex-row">
+            <v-icon color="success" v-if="item.delivery_status === 'Terpenuhi'">mdi-check-decagram</v-icon>
+            <v-icon color="error" v-else>mdi-alert-decagram</v-icon>
+            <p class="my-auto ml-1">{{ item.delivery_status }}</p>
+          </div>
+        </template>
       </v-data-table>
     </v-card>
 
     <add-delivery-dialog
       :show="dialogAdd"      
       @closeDialog="closeDialogAdd"
+      @success="successPutOrder"
+      @error="failedPutOrder"
     ></add-delivery-dialog>
+
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :confirm="dialogConfirm"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+      @closeConfirm="closeDialogConfirm"
+      @deleteConfirmed="doDelete"
+    ></response-dialog>
   </div>
 </template>
 
 <script>
 import addDeliveryDialog from './Dialog/TambahPengiriman';
+import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
-    addDeliveryDialog
+    addDeliveryDialog,
+    responseDialog
   },
   data() {
     return {
@@ -55,10 +80,15 @@ export default {
       headers: [
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
-        { text: 'Cabang Tujuan', value: 'outlet', sortable: true },
-        { text: 'Bahan', value: 'ingredient', sortable: false }
+        { text: 'Cabang Tujuan', value: 'outlet.name', sortable: true },
+        { text: 'Bahan', value: 'ingredients', sortable: false },
+        { text: 'Status', value: 'delivery_status', sortable: false }
       ],
-      dialogAdd: false
+      dialogAdd: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      dialogConfirm: false,
+      messageDialog: null
     }
   },
   watch: {
@@ -79,6 +109,45 @@ export default {
     },
     closeDialogAdd(e) {
       this.dialogAdd = e;
+    },
+    closeDialogSuccess(e) {
+      this.dialogAdd = false;
+      // this.dialogEdit = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    closeDialogConfirm(e) {
+      this.dialogConfirm = e;
+    },
+    successPutOrder(e) {
+      this.$store.dispatch("getTransfer");
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedPutOrder(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
+    },
+    deleteOrder(e) {
+      this.selectedDelete = e;
+      this.messageDialog = "Kamu yakin akan menghapus pengiriman ini?"
+      this.dialogConfirm = true;
+    },
+    doDelete() {
+      this.$store.dispatch("deleteTransfer", this.selectedDelete)
+        .then(() => {          
+          this.$store.dispatch("getTransfer");
+          this.dialogConfirm = false;
+          this.messageDialog = "Berhasil menghapus pengiriman";
+          this.dialogSuccess = true;
+        })
+        .catch(() => {
+          this.dialogConfirm = false;
+          this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
+          this.dialogFailed = true;
+        })
     }
   }
 }

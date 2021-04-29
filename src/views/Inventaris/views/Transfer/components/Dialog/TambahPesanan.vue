@@ -146,7 +146,8 @@ export default {
         destination_outlet: this.outlet,
         time: moment().format('MM/DD/YYYY, h:mm:ss a'),
         ingredients: this.listIngredient,
-        status: 'Pesanan'
+        status: 'Pesanan',
+        delivery: []
       };
       this.$store.dispatch("submitTransfer", dataForm)
         .then(() => {
