@@ -66,8 +66,8 @@
 </template>
 
 <script>
-import addIngredientDialog from '@/components/DialogTambahBahan';
-import editIngredientDialog from '@/components/DialogEditBahan';
+import addIngredientDialog from './DialogTambahBahan';
+import editIngredientDialog from './DialogEditBahan';
 
 export default {
   props: ['show', 'selected'],

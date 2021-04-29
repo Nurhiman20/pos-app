@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import receiveOrderDialog from './DetailPesananDiterima';
+import receiveOrderDialog from './Dialog/DetailPesananDiterima';
 
 export default {
   components: {

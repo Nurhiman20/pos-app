@@ -2,17 +2,17 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Pesanan Transfer</v-card-title>
+        <v-card-title class="ml-0">Tambah Pengiriman</v-card-title>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
-          <v-form @submit.prevent="handleSubmit(addOrder)">
-            <ValidationProvider v-slot="{ errors }" name="Cabang tujuan" rules="required">
+          <v-form @submit.prevent="handleSubmit(addDelivery)">
+            <ValidationProvider v-slot="{ errors }" name="Pesanan diterima" rules="required">
               <v-autocomplete
                 :error-messages="errors"
-                v-model="outlet"
-                :items="$store.state.listOutlet"
-                :item-text="textOutlet"
-                :item-value="valueOutlet"
-                label="Cabang Tujuan"
+                v-model="rvOrder"
+                :items="$store.getters.listRvOrderTransfer"
+                :item-text="textOrder"
+                :item-value="valueOrder"
+                label="Pesanan Diterima"
                 cache-items
                 class="mb-0 mt-2 px-4"
                 outlined
@@ -22,7 +22,17 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
-            <div class="px-4 mt-2">
+            <div class="px-4 mt-6">
+              <p class="mb-2">Bahan / produk dipesan</p>
+              <v-data-table
+                :headers="headersOrdered"
+                :items="listOrderedIngredient"
+                class="elevation-1 scrollbar-custom"
+                hide-default-footer
+              ></v-data-table>
+            </div>
+            <div class="px-4 mt-6">
+              <p class="mb-2">Bahan / produk yang akan dikirim</p>
               <v-data-table
                 :headers="headers"
                 :items="listIngredient"
@@ -37,7 +47,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Tambahkan</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Kirim</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
@@ -62,8 +72,8 @@
 
 <script>
 import * as moment from 'moment';
-import addIngredientDialog from '@/components/DialogTambahBahan';
-import editIngredientDialog from '@/components/DialogEditBahan';
+import addIngredientDialog from './DialogTambahBahan';
+import editIngredientDialog from './DialogEditBahan';
 
 export default {
   props: ['show'],
@@ -73,16 +83,27 @@ export default {
   },
   data() {
     return {
-      outlet: null,
+      rvOrder: null,
       listIngredient: [],
+      listOrderedIngredient: [],
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
         { text: 'Qty', value: 'qty', sortable: false },
         { text: 'Unit', value: 'ingredient.unit', sortable: false }
       ],
+      headersOrdered: [
+        { text: 'Bahan', value: 'ingredient.name', sortable: false },
+        { text: 'Qty', value: 'qty', sortable: false },
+        { text: 'Unit', value: 'ingredient.unit', sortable: false }
+      ],
       dialogAddIngredient: false,
       dialogEditIngredient: false
+    }
+  },
+  watch: {
+    rvOrder(val) {
+      this.listOrderedIngredient = val.ingredients;
     }
   },
   methods: {
@@ -94,12 +115,12 @@ export default {
       var uniqid = 'order-tf-' + randLetter + Date.now();
       return uniqid
     },    
-    textOutlet(item) {
-      return item.name
+    textOrder(item) {
+      return item.destination_outlet.name + ' - ' + item.ingredients.length + ' bahan'
     },
-    valueOutlet(item) {
+    valueOrder(item) {
       return item
-    },    
+    },  
     closeDialogAdd(e) {
       this.dialogAddIngredient = e;
     },

@@ -67,8 +67,8 @@
 </template>
 
 <script>
-import addOrderDialog from './TambahPesanan';
-import editOrderDialog from './EditPesanan';
+import addOrderDialog from './Dialog/TambahPesanan';
+import editOrderDialog from './Dialog/EditPesanan';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {

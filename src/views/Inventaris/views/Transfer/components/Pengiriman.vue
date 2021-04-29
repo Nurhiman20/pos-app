@@ -20,7 +20,7 @@
             ></v-autocomplete>
           </v-col>
         </v-row>
-        <v-btn class="ml-2 align-center" color="primary" small>Tambah Pengiriman</v-btn>
+        <v-btn class="ml-2 align-center" color="primary" small @click="showDialogAdd">Tambah Pengiriman</v-btn>
       </div>
       <v-data-table
         :headers="headers"
@@ -31,11 +31,21 @@
       >
       </v-data-table>
     </v-card>
+
+    <add-delivery-dialog
+      :show="dialogAdd"      
+      @closeDialog="closeDialogAdd"
+    ></add-delivery-dialog>
   </div>
 </template>
 
 <script>
+import addDeliveryDialog from './Dialog/TambahPengiriman';
+
 export default {
+  components: {
+    addDeliveryDialog
+  },
   data() {
     return {
       search: null,
@@ -48,6 +58,7 @@ export default {
         { text: 'Cabang Tujuan', value: 'outlet', sortable: true },
         { text: 'Bahan', value: 'ingredient', sortable: false }
       ],
+      dialogAdd: false
     }
   },
   watch: {
@@ -63,6 +74,12 @@ export default {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
-  },
+    showDialogAdd() {
+      this.dialogAdd = true;
+    },
+    closeDialogAdd(e) {
+      this.dialogAdd = e;
+    }
+  }
 }
 </script>
