@@ -1334,6 +1334,64 @@ async function submitDeliveryTransfer({ state, commit }, dataForm) {
   });
 }
 
+async function submitReceiveTransfer({ state, commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        cursor.value.tx.push({
+          id: dataForm.id,
+          type: 'Penerimaan transfer',
+          id_ingredient: ing.id_ingredient,
+          id_outlet: dataForm.id_outlet,
+          id_order: dataForm.id_order,
+          order: dataForm.order,
+          time: dataForm.time,
+          status: dataForm.status,
+          qty: ing.received
+        })
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  let orders = { id: null };
+  state.listTransfer.forEach(tf => {
+    if (tf.id === dataForm.id_order) {
+      orders = tf;
+      orders.receive.push(dataForm);
+    }
+  });
+
+  let transaction = await vuePos.transaction(['transfer', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('transfer').put(dataForm);
+    transaction.objectStore('transfer').put(orders);
+    inventories.forEach(inventory => {
+      transaction.objectStore('inventory').put(inventory);
+    });
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getAdjustment({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -2271,6 +2329,7 @@ export default {
   updateTransfer,
   deleteTransfer,
   submitDeliveryTransfer,
+  submitReceiveTransfer,
   getAdjustment,
   submitAdjustment,
   updateAdjustment,
