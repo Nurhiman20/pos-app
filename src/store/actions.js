@@ -29,7 +29,8 @@ async function submitProduct({ state, commit }, dataForm) {
     order: 0,
     receive: 0,
     usage: 0,
-    transfer: 0,
+    transfer_in: 0,
+    transfer_out: 0,
     adjustment: 0,
     ending_stock: 0,
     tx: []
@@ -129,7 +130,8 @@ async function updateProduct({ state, commit }, dataForm) {
     order: 0,
     receive: 0,
     usage: 0,
-    transfer: 0,
+    transfer_in: 0,
+    transfer_out: 0,
     adjustment: 0,
     ending_stock: 0,
     tx: [
@@ -313,7 +315,8 @@ async function submitIngredient({ state, commit }, dataForm) {
     order: 0,
     receive: 0,
     usage: 0,
-    transfer: 0,
+    transfer_in: 0,
+    transfer_out: 0,
     adjustment: 0,
     ending_stock: 0,
     tx: [

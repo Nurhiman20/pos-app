@@ -112,7 +112,8 @@ export default {
         { text: 'Pemesanan', value: 'order', sortable: false },        
         { text: 'Penerimaan', value: 'receive', sortable: false },
         { text: 'Usage', value: 'usage', sortable: false },
-        { text: 'Transfer', value: 'transfer', sortable: false },
+        { text: 'Transfer Masuk', value: 'transfer_in', sortable: false },
+        { text: 'Transfer Keluar', value: 'transfer_out', sortable: false },
         { text: 'Adjustment', value: 'adjustment', sortable: false },
         { text: 'Stok Akhir', value: 'ending_stock', sortable: false },
         { text: 'Unit', value: 'unit', sortable: false }
@@ -194,6 +195,7 @@ export default {
     this.$store.dispatch("getReceive");
     this.$store.dispatch("getAdjustment");
     this.$store.dispatch("getTransaction");
+    this.$store.dispatch("getTransfer");
   },
 }
 </script>
