@@ -102,6 +102,9 @@ export default {
 
       this.listIngredient = listIngredient;
       this.dialogEditIngredient = false;
+    },    
+    goDelete() {
+      this.$emit("delete", this.selectedDelivery);
     },
     checkStatus() {
       let countUnfulfilled = 0;

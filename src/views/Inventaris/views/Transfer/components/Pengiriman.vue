@@ -46,8 +46,8 @@
     <add-delivery-dialog
       :show="dialogAdd"      
       @closeDialog="closeDialogAdd"
-      @success="successPutOrder"
-      @error="failedPutOrder"
+      @success="successPutDeliv"
+      @error="failedPutDeliv"
     ></add-delivery-dialog>
 
     <detail-delivery-dialog
@@ -55,6 +55,7 @@
       :selected="selectedDelivery"
       :type="'edit'"
       @close="closeDialogDetail"
+      @delete="deleteDelivery"
     ></detail-delivery-dialog>
 
     <response-dialog 
@@ -88,6 +89,7 @@ export default {
       itemOrder: [],
       listOrder: [],
       selectedDelivery: {},
+      selectedDelete: {},
       headers: [
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
@@ -127,7 +129,7 @@ export default {
     },
     closeDialogSuccess(e) {
       this.dialogAdd = false;
-      // this.dialogEdit = false;
+      this.dialogDetail = false;
       this.dialogSuccess = e;
     },
     closeDialogFailed(e) {
@@ -136,22 +138,22 @@ export default {
     closeDialogConfirm(e) {
       this.dialogConfirm = e;
     },
-    successPutOrder(e) {
+    successPutDeliv(e) {
       this.$store.dispatch("getTransfer");
       this.messageDialog = e;
       this.dialogSuccess = true;
     },
-    failedPutOrder(e) {
+    failedPutDeliv(e) {
       this.messageDialog = e;
       this.dialogFailed = true;
     },
-    deleteOrder(e) {
+    deleteDelivery(e) {
       this.selectedDelete = e;
       this.messageDialog = "Kamu yakin akan menghapus pengiriman ini?"
       this.dialogConfirm = true;
     },
     doDelete() {
-      this.$store.dispatch("deleteTransfer", this.selectedDelete)
+      this.$store.dispatch("deleteDeliveryTransfer", this.selectedDelete)
         .then(() => {          
           this.$store.dispatch("getTransfer");
           this.dialogConfirm = false;
