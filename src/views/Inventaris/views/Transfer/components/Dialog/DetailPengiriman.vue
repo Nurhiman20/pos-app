@@ -6,7 +6,7 @@
           <div class="d-flex flex-column">
             <v-card-title class="ml-0">Detail Pengiriman</v-card-title>
             <v-card-subtitle>{{ textOrder(selectedDelivery) }}</v-card-subtitle>
-          </div>          
+          </div>
           <v-btn color="error" outlined @click="goDelete" v-if="type === 'edit'">
             <v-icon class="mr-1">mdi-delete</v-icon>Hapus
           </v-btn>
@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import * as moment from 'moment';
 import editIngredientDialog from './EditBahanPengiriman';
 
 export default {
@@ -54,7 +53,6 @@ export default {
   data() {
     return {
       selectedDelivery: {},
-      listIngredient: [],
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
@@ -92,7 +90,7 @@ export default {
     },
     editIngredient(e) {
       let listIngredient = [];
-      this.listIngredient.forEach(element => {
+      this.selectedDelivery.ingredients.forEach(element => {
         if (element.id_ingredient === e.id_ingredient) {
           listIngredient.push(e);
         } else {
@@ -100,7 +98,7 @@ export default {
         }
       });
 
-      this.listIngredient = listIngredient;
+      this.selectedDelivery.ingredients = listIngredient;
       this.dialogEditIngredient = false;
     },    
     goDelete() {
@@ -108,7 +106,7 @@ export default {
     },
     checkStatus() {
       let countUnfulfilled = 0;
-      this.listIngredient.forEach(item => {
+      this.selectedDelivery.ingredients.forEach(item => {
         if (parseFloat(item.qty) > parseFloat(item.total_deliver)) {
           countUnfulfilled += 1;
         }
@@ -123,24 +121,19 @@ export default {
       }
     },
     addDelivery() {
+      this.selectedDelivery.order.delivery.forEach(rv => {
+        if (rv.id === this.selectedDelivery.id) {
+          rv.ingredients = this.selectedDelivery.ingredients;
+          rv.status = this.selectedDelivery.status;
+        }
+      });
       let dataForm = {
-        id: this.randomId(),
-        id_outlet: this.$store.state.account.id,
-        outlet: this.$store.state.account,
-        id_order: this.rvOrder.id,
-        order: this.rvOrder,
-        destination_outlet: this.rvOrder.outlet,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a'),
-        ingredients: this.listIngredient,
-        status: 'Pengiriman',
-        delivery_status: this.checkStatus(),
-        receive: []
-      };
-      this.$store.dispatch("submitDeliveryTransfer", dataForm)
+        ...this.selectedDelivery,
+        delivery_status: this.checkStatus()
+      }
+      this.$store.dispatch("updateDeliveryTransfer", dataForm)
         .then(() => {
-          this.rvOrder = null;
-          this.listIngredient = [];       
-          this.$emit("success", "Pengiriman telah disimpan");
+          this.$emit("success", "Pengiriman telah diperbarui");
         })
         .catch(() => {
           this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");

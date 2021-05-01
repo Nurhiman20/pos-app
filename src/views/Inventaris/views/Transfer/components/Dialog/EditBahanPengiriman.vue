@@ -35,7 +35,7 @@
             <ValidationProvider v-slot="{ errors }" name="Kirim" rules="required">
               <v-text-field
                 :error-messages="errors"
-                v-model="deliver"
+                v-model="delivered"
                 label="Kirim"
                 :suffix="selectedIngredient.ingredient.unit"
                 persistent-hint
@@ -61,7 +61,7 @@ export default {
   props: ['show', 'selected', 'rvOrder'],
   data() {
     return {
-      deliver: null,
+      delivered: null,
       total: 0,
       selectedIngredient: {
         ingredient: {
@@ -74,7 +74,7 @@ export default {
     selected(val) {
       this.selectedIngredient = val;
       if (val.delivered !== null || val.delivered !== undefined) {
-        this.deliver = val.delivered;
+        this.delivered = val.delivered;
         this.totalDeliver();
       }
     }
@@ -104,8 +104,8 @@ export default {
     editIngredient() {
       let dataForm = {
         ...this.selectedIngredient,
-        delivered: this.deliver,
-        total_deliver: parseFloat(this.deliver) + this.total
+        delivered: this.delivered,
+        total_deliver: parseFloat(this.delivered) + this.total
       }
       this.$emit('edit', dataForm);
     }

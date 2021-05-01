@@ -55,6 +55,8 @@
       :selected="selectedDelivery"
       :type="'edit'"
       @close="closeDialogDetail"
+      @success="successPutDeliv"
+      @error="failedPutDeliv"
       @delete="deleteDelivery"
     ></detail-delivery-dialog>
 

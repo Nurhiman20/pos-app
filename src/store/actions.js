@@ -1299,7 +1299,7 @@ async function submitDeliveryTransfer({ state, commit }, dataForm) {
           id_order: dataForm.id_order,
           order: dataForm.order,
           time: dataForm.time,
-          status: dataForm.status,
+          status: dataForm.delivery_status,
           qty: ing.delivered
         })
         inventories.push(cursor.value);
@@ -1314,6 +1314,71 @@ async function submitDeliveryTransfer({ state, commit }, dataForm) {
     if (tf.id === dataForm.id_order) {
       orders = tf;
       orders.delivery.push(dataForm);
+    }
+  });
+
+  let transaction = await vuePos.transaction(['transfer', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('transfer').put(dataForm);
+    transaction.objectStore('transfer').put(orders);
+    inventories.forEach(inventory => {
+      transaction.objectStore('inventory').put(inventory);
+    });
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
+async function updateDeliveryTransfer({ state, commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach(ingredient => {
+      inventory.tx.forEach(element => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient) {
+          element.id_order = dataForm.order.id;
+          element.order = dataForm.order;
+          element.status = dataForm.delivery_status;
+          element.qty = ingredient.delivered;
+        }
+      });
+    });
+  });
+
+  let orders = { id: null };
+  state.listTransfer.forEach(order => {
+    if (order.id === dataForm.id_order) {
+      orders = order;
+    }
+  });
+  orders.delivery.forEach(dv => {
+    if (dv.id === dataForm.id) {
+      dv.ingredients = dataForm.ingredients;
+      dv.delivery_status = dataForm.delivery_status;
     }
   });
 
@@ -2395,6 +2460,7 @@ export default {
   updateTransfer,
   deleteTransfer,
   submitDeliveryTransfer,
+  updateDeliveryTransfer,
   deleteDeliveryTransfer,
   submitReceiveTransfer,
   getAdjustment,
