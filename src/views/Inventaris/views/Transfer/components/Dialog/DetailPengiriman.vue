@@ -2,40 +2,21 @@
   <div>
     <v-dialog v-model="show" persistent width="400">
       <v-card class="pa-3">
-        <v-card-title class="ml-0">Tambah Pengiriman</v-card-title>
+        <div class="d-flex flex-row justify-space-between align-center">
+          <div class="d-flex flex-column">
+            <v-card-title class="ml-0">Detail Pengiriman</v-card-title>
+            <v-card-subtitle>{{ textOrder(selectedDelivery) }}</v-card-subtitle>
+          </div>          
+          <v-btn color="error" outlined @click="goDelete" v-if="type === 'edit'">
+            <v-icon class="mr-1">mdi-delete</v-icon>Hapus
+          </v-btn>
+        </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(addDelivery)">
-            <ValidationProvider v-slot="{ errors }" name="Pesanan diterima" rules="required">
-              <v-autocomplete
-                :error-messages="errors"
-                v-model="rvOrder"
-                :items="$store.getters.listRvOrderTransfer"
-                :item-text="textOrder"
-                :item-value="valueOrder"
-                label="Pesanan Diterima"
-                class="mb-0 mt-2 px-4"
-                outlined
-                dense
-                hide-no-data
-                hide-details
-                :clearable="true"
-              ></v-autocomplete>
-            </ValidationProvider>
-            <div class="px-4 mt-6" v-if="rvOrder !== null">
-              <p class="mb-2">Riwayat Pengiriman</p>
-              <v-data-table
-                :headers="headersHistory"
-                :items="rvOrder.delivery"
-                class="elevation-1 scrollbar-custom"
-                hide-default-footer                
-                @click:row="goToDetail"
-              ></v-data-table>
-            </div>
-            <div class="px-4 my-6">
-              <p class="mb-2">Pengiriman Baru</p>
+            <div class="px-4 mt-2 mb-6">
               <v-data-table
                 :headers="headers"
-                :items="listIngredient"
+                :items="selectedDelivery.ingredients"
                 class="elevation-1 scrollbar-custom"
                 hide-default-footer
                 @click:row="goToEdit"
@@ -44,24 +25,17 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
-              <v-btn color="primary" dark type="submit" :loading="$store.state.loading">Kirim</v-btn>
+              <v-btn color="primary" dark type="submit" :loading="$store.state.loading" v-if="type === 'edit'">Edit</v-btn>
             </v-card-actions>
           </v-form>
         </ValidationObserver>
       </v-card>
     </v-dialog>
 
-    <detail-history-dialog      
-      :show="dialogHistory"
-      :selected="selectedHistory"
-      :type="'add'"
-      @close="closeDialogHistory"
-    ></detail-history-dialog>
-
     <edit-ingredient-dialog
       :show="dialogEditIngredient"
       :selected="selectedIngredient"
-      :rvOrder="rvOrder"
+      :rvOrder="selectedDelivery.order"
       @closeDialog="closeDialogEdit"
       @edit="editIngredient"
     ></edit-ingredient-dialog>
@@ -70,76 +44,51 @@
 
 <script>
 import * as moment from 'moment';
-import detailHistoryDialog from './DetailPengiriman';
 import editIngredientDialog from './EditBahanPengiriman';
 
 export default {
-  props: ['show'],
+  props: ['show', 'selected', 'type'],
   components: {
-    detailHistoryDialog,
     editIngredientDialog
   },
   data() {
     return {
-      rvOrder: null,
+      selectedDelivery: {},
       listIngredient: [],
-      listOrderedIngredient: [],
-      selectedHistory: {},
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
         { text: 'Qty', value: 'qty', sortable: false },
         { text: 'Unit', value: 'ingredient.unit', sortable: false },
         { text: 'Kirim', value: 'delivered', sortable: false }
-      ],   
-      headersHistory: [
-        { text: 'ID Pesanan Diterima', value: 'id', sortable: false },
-        { text: 'Waktu', value: 'time', sortable: false }
       ],
-      dialogHistory: false,
       dialogEditIngredient: false
     }
   },
   watch: {
-    rvOrder(val) {
-      if (val !== null) {
-        this.listIngredient = val.ingredients;
-      } else {
-        this.listIngredient = [];
-      }
+    selected(val) {
+      this.selectedDelivery = val;
     }
   },
   methods: {
     formatCurrency(val) {
       return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
     },
-    randomId() {
-      var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-      var uniqid = 'deliv-tf-' + randLetter + Date.now();
-      return uniqid
-    },    
-    textOrder(item) {
-      return item.destination_outlet.name + ' - ' + item.ingredients.length + ' bahan' + ' - ' + item.time
-    },
-    valueOrder(item) {
-      return item
+    textOrder(item) {      
+      let strText = '(' + item.id + ') ' + item.destination_outlet.name + ' - ' + item.time;
+      return strText
     },
     closeDialogEdit(e) {
       this.dialogEditIngredient = e;
     },
     closeDialog() {
-      this.$emit('closeDialog', false);
-    },
-    closeDialogHistory(e) {
-      this.dialogHistory = e;
-    },
-    goToDetail(e) {
-      this.selectedHistory = e;
-      this.dialogHistory = true;
+      this.$emit('close', false);
     },
     goToEdit(e) {
-      this.selectedIngredient = e;
-      this.dialogEditIngredient = true;
+      if (this.type === 'edit') {
+        this.selectedIngredient = e;
+        this.dialogEditIngredient = true;        
+      }
     },
     editIngredient(e) {
       let listIngredient = [];

@@ -15,8 +15,8 @@ const listViewInventory = (state) => {
   let receiveCount = 0;
   let adjustmentCount = 0;
   let usageCount = 0;
-  let transferInCount = 0;
-  let transferOutCount = 0;
+  // let transferInCount = 0;
+  // let transferOutCount = 0;
 
   state.listInventory.forEach(inv => {
     // count total order
@@ -51,24 +51,25 @@ const listViewInventory = (state) => {
       }
     });
 
-    // count total transfer in
-    inv.tx.forEach(tx => {
-      if (tx.id.indexOf('rv-tf-') !== -1) {
-        transferInCount += parseFloat(tx.qty);
-        inv.transfer_in = transferInCount.toFixed(2);
-      }
-    });
+    // // count total transfer in
+    // inv.tx.forEach(tx => {
+    //   if (tx.id.indexOf('rv-tf-') !== -1) {
+    //     transferInCount += parseFloat(tx.qty);
+    //     inv.transfer_in = transferInCount.toFixed(2);
+    //   }
+    // });
 
-    // count total transfer out
-    inv.tx.forEach(tx => {
-      if (tx.id.indexOf('deliv-tf-') !== -1) {
-        transferOutCount += parseFloat(tx.qty);
-        inv.transfer_out = transferOutCount.toFixed(2);
-      }
-    });
+    // // count total transfer out
+    // inv.tx.forEach(tx => {
+    //   if (tx.id.indexOf('deliv-tf-') !== -1) {
+    //     transferOutCount += parseFloat(tx.qty);
+    //     inv.transfer_out = transferOutCount.toFixed(2);
+    //   }
+    // });
 
     // count ending stock
-    let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer_out) + parseFloat(inv.transfer_in) - parseFloat(inv.adjustment);
+    // let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer_out) + parseFloat(inv.transfer_in) - parseFloat(inv.adjustment);  
+    let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
     let invData = {
       ...inv,
       ending_stock: endingStock.toFixed(2)
@@ -98,8 +99,10 @@ const listOrderTransfer = (state) => {
 const listRvOrderTransfer = (state) => {
   let rvOrderTransfer = [];
   state.listTransfer.forEach(tf => {
-    if (tf.destination_outlet.id === state.account.id && tf.status !== 'Pengiriman') {
-      rvOrderTransfer.push(tf);
+    if (tf.status === 'Pesanan') {
+      if (tf.destination_outlet.id === state.account.id) {
+        rvOrderTransfer.push(tf);
+      }      
     }
   })
 
@@ -120,8 +123,10 @@ const listDeliveryTransfer = (state) => {
 const listRvDelivery = (state) => {
   let rvDelivery = [];
   state.listTransfer.forEach(tf => {
-    if (tf.destination_outlet.id === state.account.id && tf.status === 'Pengiriman') {
-      rvDelivery.push(tf);
+    if (tf.status === 'Pengiriman') {
+      if (tf.destination_outlet.id === state.account.id) {
+        rvDelivery.push(tf);
+      }
     }
   })
 

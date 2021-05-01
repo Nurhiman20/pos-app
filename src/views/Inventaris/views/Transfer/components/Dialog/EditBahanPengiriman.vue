@@ -73,8 +73,8 @@ export default {
   watch: {
     selected(val) {
       this.selectedIngredient = val;
-      if (val.deliver !== null || val.deliver !== undefined) {
-        this.deliver = val.deliver;
+      if (val.delivered !== null || val.delivered !== undefined) {
+        this.deliver = val.delivered;
         this.totalDeliver();
       }
     }

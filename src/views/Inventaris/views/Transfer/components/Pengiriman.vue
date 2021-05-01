@@ -28,6 +28,7 @@
         :search="search"
         class="elevation-1 scrollbar-custom mt-3"
         hide-default-footer
+        @click:row="goToDetail"
       >
         <template v-slot:item.ingredients="{item}">
           <p class="my-auto">{{ item.ingredients.length }}</p>
@@ -49,6 +50,13 @@
       @error="failedPutOrder"
     ></add-delivery-dialog>
 
+    <detail-delivery-dialog
+      :show="dialogDetail"
+      :selected="selectedDelivery"
+      :type="'edit'"
+      @close="closeDialogDetail"
+    ></detail-delivery-dialog>
+
     <response-dialog 
       :success="dialogSuccess"
       :failed="dialogFailed"
@@ -64,11 +72,13 @@
 
 <script>
 import addDeliveryDialog from './Dialog/TambahPengiriman';
+import detailDeliveryDialog from './Dialog/DetailPengiriman';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
     addDeliveryDialog,
+    detailDeliveryDialog,
     responseDialog
   },
   data() {
@@ -77,6 +87,7 @@ export default {
       select: null,
       itemOrder: [],
       listOrder: [],
+      selectedDelivery: {},
       headers: [
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
@@ -85,6 +96,7 @@ export default {
         { text: 'Status', value: 'delivery_status', sortable: false }
       ],
       dialogAdd: false,
+      dialogDetail: false,
       dialogSuccess: false,
       dialogFailed: false,
       dialogConfirm: false,
@@ -109,6 +121,9 @@ export default {
     },
     closeDialogAdd(e) {
       this.dialogAdd = e;
+    },
+    closeDialogDetail(e) {
+      this.dialogDetail = e;
     },
     closeDialogSuccess(e) {
       this.dialogAdd = false;
@@ -148,6 +163,10 @@ export default {
           this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
           this.dialogFailed = true;
         })
+    },
+    goToDetail(e) {
+      this.selectedDelivery = e;
+      this.dialogDetail = true;
     }
   }
 }
