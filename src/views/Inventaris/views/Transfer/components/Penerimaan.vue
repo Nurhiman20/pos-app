@@ -28,6 +28,7 @@
         :search="search"
         class="elevation-1 scrollbar-custom mt-3"
         hide-default-footer
+        @click:row="goToDetail"
       >
         <template v-slot:item.ingredients="{item}">
           <p class="my-auto">{{ item.ingredients.length }}</p>
@@ -45,9 +46,19 @@
     <add-receive-tf-dialog
       :show="dialogAdd"      
       @closeDialog="closeDialogAdd"
-      @success="successPutOrder"
-      @error="failedPutOrder"
-    ></add-receive-tf-dialog>
+      @success="successPutRvDeliv"
+      @error="failedPutRvDeliv"
+    ></add-receive-tf-dialog>    
+
+    <detail-receive-tf-dialog
+      :show="dialogDetail"
+      :selected="selectedRvDeliv"
+      :type="'edit'"
+      @close="closeDialogDetail"
+      @success="successPutRvDeliv"
+      @error="failedPutRvDeliv"
+      @delete="deleteRvDeliv"
+    ></detail-receive-tf-dialog>
 
     <response-dialog 
       :success="dialogSuccess"
@@ -64,11 +75,13 @@
 
 <script>
 import addReceiveTfDialog from './Dialog/TambahPenerimaan';
+import detailReceiveTfDialog from './Dialog/DetailPenerimaan';
 import responseDialog from '@/components/ResponseDialog';
 
 export default {
   components: {
     addReceiveTfDialog,
+    detailReceiveTfDialog,
     responseDialog
   },
   data() {
@@ -77,6 +90,7 @@ export default {
       select: null,
       itemOrder: [],
       listOrder: [],
+      selectedRvDeliv: {},
       headers: [
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
@@ -85,6 +99,7 @@ export default {
         { text: 'Status', value: 'receive_status', sortable: false }
       ],
       dialogAdd: false,
+      dialogDetail: false,
       dialogSuccess: false,
       dialogFailed: false,
       dialogConfirm: false,
@@ -109,10 +124,13 @@ export default {
     },
     closeDialogAdd(e) {
       this.dialogAdd = e;
+    },    
+    closeDialogDetail(e) {
+      this.dialogDetail = e;
     },
     closeDialogSuccess(e) {
       this.dialogAdd = false;
-      // this.dialogEdit = false;
+      this.dialogDetail = false;
       this.dialogSuccess = e;
     },
     closeDialogFailed(e) {
@@ -121,16 +139,16 @@ export default {
     closeDialogConfirm(e) {
       this.dialogConfirm = e;
     },
-    successPutOrder(e) {
+    successPutRvDeliv(e) {
       this.$store.dispatch("getTransfer");
       this.messageDialog = e;
       this.dialogSuccess = true;
     },
-    failedPutOrder(e) {
+    failedPutRvDeliv(e) {
       this.messageDialog = e;
       this.dialogFailed = true;
     },
-    deleteOrder(e) {
+    deleteRvDeliv(e) {
       this.selectedDelete = e;
       this.messageDialog = "Kamu yakin akan menghapus penerimaan ini?"
       this.dialogConfirm = true;
@@ -148,6 +166,10 @@ export default {
           this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
           this.dialogFailed = true;
         })
+    },
+    goToDetail(e) {
+      this.selectedRvDeliv = e;
+      this.dialogDetail = true;
     }
   },
 }

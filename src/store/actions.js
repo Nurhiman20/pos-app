@@ -1523,6 +1523,71 @@ async function submitReceiveTransfer({ state, commit }, dataForm) {
   });
 }
 
+async function updateReceiveTransfer({ state, commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach(ingredient => {
+      inventory.tx.forEach(element => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient) {
+          element.id_order = dataForm.order.id;
+          element.order = dataForm.order;
+          element.status = dataForm.receive_status;
+          element.qty = ingredient.received;
+        }
+      });
+    });
+  });
+
+  let orders = { id: null };
+  state.listTransfer.forEach(order => {
+    if (order.id === dataForm.id_order) {
+      orders = order;
+    }
+  });
+  orders.receive.forEach(dv => {
+    if (dv.id === dataForm.id) {
+      dv.ingredients = dataForm.ingredients;
+      dv.receive_status = dataForm.receive_status;
+    }
+  });
+
+  let transaction = await vuePos.transaction(['transfer', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('transfer').put(dataForm);
+    transaction.objectStore('transfer').put(orders);
+    inventories.forEach(inventory => {
+      transaction.objectStore('inventory').put(inventory);
+    });
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getAdjustment({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -2463,6 +2528,7 @@ export default {
   updateDeliveryTransfer,
   deleteDeliveryTransfer,
   submitReceiveTransfer,
+  updateReceiveTransfer,
   getAdjustment,
   submitAdjustment,
   updateAdjustment,

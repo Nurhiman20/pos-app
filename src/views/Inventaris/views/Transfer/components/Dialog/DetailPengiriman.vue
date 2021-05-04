@@ -124,7 +124,7 @@ export default {
       this.selectedDelivery.order.delivery.forEach(rv => {
         if (rv.id === this.selectedDelivery.id) {
           rv.ingredients = this.selectedDelivery.ingredients;
-          rv.status = this.selectedDelivery.status;
+          rv.delivery_status = this.selectedDelivery.delivery_status;
         }
       });
       let dataForm = {
