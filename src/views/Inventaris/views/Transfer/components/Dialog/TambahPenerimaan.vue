@@ -28,6 +28,7 @@
                 :items="rvDeliver.receive"
                 class="elevation-1 scrollbar-custom"
                 hide-default-footer
+                @click:row="goToDetail"
               ></v-data-table>
             </div>
             <div class="px-4 my-6">
@@ -49,6 +50,13 @@
         </ValidationObserver>
       </v-card>
     </v-dialog>
+    
+    <detail-history-dialog      
+      :show="dialogHistory"
+      :selected="selectedHistory"
+      :type="'add'"
+      @close="closeDialogHistory"
+    ></detail-history-dialog>
 
     <edit-ingredient-dialog
       :show="dialogEditIngredient"
@@ -62,11 +70,13 @@
 
 <script>
 import * as moment from 'moment';
+import detailHistoryDialog from './DetailPenerimaan';
 import editIngredientDialog from './EditBahanPenerimaan';
 
 export default {
   props: ['show'],
   components: {
+    detailHistoryDialog,
     editIngredientDialog
   },
   data() {
@@ -75,6 +85,7 @@ export default {
       listIngredient: [],
       listOrderedIngredient: [],
       selectedIngredient: {},
+      selectedHistory: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
         { text: 'Dipesan', value: 'qty', sortable: false },
@@ -86,7 +97,8 @@ export default {
         { text: 'ID Penerimaan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: false }
       ],
-      dialogEditIngredient: false
+      dialogEditIngredient: false,
+      dialogHistory: false
     }
   },
   watch: {
@@ -116,12 +128,19 @@ export default {
     closeDialogEdit(e) {
       this.dialogEditIngredient = e;
     },
+    closeDialogHistory(e) {
+      this.dialogHistory = e;
+    },
     closeDialog() {
       this.$emit('closeDialog', false);
     },
     goToEdit(e) {
       this.selectedIngredient = e;
       this.dialogEditIngredient = true;
+    },
+    goToDetail(e) {
+      this.selectedHistory = e;
+      this.dialogHistory = true;
     },
     editIngredient(e) {
       let listIngredient = [];
