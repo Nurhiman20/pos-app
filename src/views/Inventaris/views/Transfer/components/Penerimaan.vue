@@ -154,7 +154,7 @@ export default {
       this.dialogConfirm = true;
     },
     doDelete() {
-      this.$store.dispatch("deleteTransfer", this.selectedDelete)
+      this.$store.dispatch("deleteReceiveTransfer", this.selectedDelete)
         .then(() => {          
           this.$store.dispatch("getTransfer");
           this.dialogConfirm = false;

@@ -1588,6 +1588,69 @@ async function updateReceiveTransfer({ state, commit }, dataForm) {
   });
 }
 
+async function deleteReceiveTransfer({ state, commit }, dataForm) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+
+  // search ingredient in inventory collection
+  let tx = vuePos.transaction('inventory').store;
+  let cursor = await tx.openCursor();
+  let inventories = [];
+  const loopCursor = true;
+  while (loopCursor) {
+    dataForm.ingredients.forEach(ing => {
+      if (cursor.value.id === ing.ingredient.id) {
+        inventories.push(cursor.value);
+      }
+    });
+    cursor = await cursor.continue();
+    if (!cursor) break;
+  }
+
+  inventories.forEach(inventory => {
+    dataForm.ingredients.forEach(ingredient => {
+      inventory.tx.forEach((element, indexTx) => {
+        if (element.id === dataForm.id && element.id_ingredient === ingredient.id_ingredient) {
+          inventory.tx.splice(indexTx, 1);
+        }
+      });
+    });
+  });
+
+  let orders = { id: null };
+  state.listTransfer.forEach(order => {
+    if (order.id === dataForm.id_order) {
+      orders = order;
+    }
+  });
+  let indexDeliv = null;
+  orders.receive.forEach((dv, indexDv) => {
+    if (dv.id === dataForm.id) {
+      indexDeliv = indexDv;
+    }
+  });
+  orders.receive.splice(indexDeliv, 1);
+
+  let transaction = await vuePos.transaction(['transfer', 'inventory'], 'readwrite');
+  return new Promise((resolve, reject) => {
+    transaction.objectStore('transfer').delete(dataForm.id);
+    transaction.objectStore('transfer').put(orders);
+    inventories.forEach(inventory => {
+      transaction.objectStore('inventory').put(inventory);
+    });
+    transaction.done
+      .then(result => {
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function getAdjustment({ commit }) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -2529,6 +2592,7 @@ export default {
   deleteDeliveryTransfer,
   submitReceiveTransfer,
   updateReceiveTransfer,
+  deleteReceiveTransfer,
   getAdjustment,
   submitAdjustment,
   updateAdjustment,
