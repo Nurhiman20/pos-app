@@ -15,8 +15,8 @@ const listViewInventory = (state) => {
   let receiveCount = 0;
   let adjustmentCount = 0;
   let usageCount = 0;
-  // let transferInCount = 0;
-  // let transferOutCount = 0;
+  let transferInCount = 0;
+  let transferOutCount = 0;
 
   state.listInventory.forEach(inv => {
     // count total order
@@ -51,25 +51,25 @@ const listViewInventory = (state) => {
       }
     });
 
-    // // count total transfer in
-    // inv.tx.forEach(tx => {
-    //   if (tx.id.indexOf('rv-tf-') !== -1) {
-    //     transferInCount += parseFloat(tx.qty);
-    //     inv.transfer_in = transferInCount.toFixed(2);
-    //   }
-    // });
+    // count total transfer in
+    inv.tx.forEach(tx => {
+      if (tx.id.indexOf('rv-tf-') !== -1) {
+        transferInCount += parseFloat(tx.qty);
+        inv.transfer_in = transferInCount.toFixed(2);
+      }
+    });
 
-    // // count total transfer out
-    // inv.tx.forEach(tx => {
-    //   if (tx.id.indexOf('deliv-tf-') !== -1) {
-    //     transferOutCount += parseFloat(tx.qty);
-    //     inv.transfer_out = transferOutCount.toFixed(2);
-    //   }
-    // });
+    // count total transfer out
+    inv.tx.forEach(tx => {
+      if (tx.id.indexOf('deliv-tf-') !== -1) {
+        transferOutCount += parseFloat(tx.qty);
+        inv.transfer_out = transferOutCount.toFixed(2);
+      }
+    });
 
     // count ending stock
-    // let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer_out) + parseFloat(inv.transfer_in) - parseFloat(inv.adjustment);  
-    let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
+    let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer_out) + parseFloat(inv.transfer_in) - parseFloat(inv.adjustment);  
+    // let endingStock = parseFloat(inv.stock) + parseFloat(inv.receive) - parseFloat(inv.usage) - parseFloat(inv.transfer) - parseFloat(inv.adjustment);
     let invData = {
       ...inv,
       ending_stock: endingStock.toFixed(2)
