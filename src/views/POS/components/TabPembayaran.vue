@@ -39,23 +39,33 @@
               v-if="Object.keys($store.state.selectedTx).length === 0"
             ></v-autocomplete>
           </ValidationProvider>
-          <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="">
-            <v-autocomplete
-              :error-messages="errors"
-              v-model="tx"
-              :items="$store.getters.listQueueTransaction"
-              :item-text="textTx"
-              :item-value="valueTx"
-              label="Pilih Transaksi"
-              class="mt-6 px-4"
-              outlined
-              dense
-              hide-no-data
-              hide-details
-              :clearable="true"
-              v-if="Object.keys($store.state.selectedTx).length === 0"
-            ></v-autocomplete>
-          </ValidationProvider>
+          <v-row class="mt-3 px-4 align-center">
+            <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="min-width: 100px; max-width: 100%;">
+              <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="">
+                <v-autocomplete
+                  :error-messages="errors"
+                  v-model="tx"
+                  :items="$store.getters.listQueueTransaction"
+                  :item-text="textTx"
+                  :item-value="valueTx"
+                  label="Pilih Transaksi"
+                  class=""
+                  outlined
+                  dense
+                  hide-no-data
+                  hide-details
+                  :clearable="true"
+                  v-if="Object.keys($store.state.selectedTx).length === 0"
+                ></v-autocomplete>
+              </ValidationProvider>
+            </v-col>
+            <v-col cols="3">
+              <div class="d-flex flex-row justify-end">
+                <v-btn color="secondary" dark outlined>Gabung</v-btn>
+                <v-btn class="ml-5" color="secondary" dark outlined>Bagi / Split</v-btn>
+              </div>
+            </v-col>
+          </v-row>
           <div class="px-4 mt-6" v-if="$store.state.selectedProduct.length !== 0">
             <p>Produk Dibeli</p>
             <v-data-table
