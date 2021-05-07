@@ -61,8 +61,8 @@
             </v-col>
             <v-col cols="3">
               <div class="d-flex flex-row justify-end">
-                <v-btn color="success" dark :outlined="groupPayment ? false : true" @click="groupPayment = !groupPayment">Gabung</v-btn>
-                <v-btn class="ml-5" color="success" dark :outlined="splitPayment ? false : true" @click="splitPayment = !splitPayment">Bagi / Split</v-btn>
+                <v-btn color="success" dark :outlined="groupPayment ? false : true" @click="groupPayment = !groupPayment" :disabled="splitPayment ? true: false">Gabung</v-btn>
+                <v-btn class="ml-5" color="success" dark :outlined="splitPayment ? false : true" @click="splitPayment = !splitPayment" :disabled="groupPayment ? true: false">Bagi / Split</v-btn>
               </div>
             </v-col>
           </v-row>
