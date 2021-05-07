@@ -61,8 +61,8 @@
             </v-col>
             <v-col cols="3">
               <div class="d-flex flex-row justify-end">
-                <v-btn color="secondary" dark outlined>Gabung</v-btn>
-                <v-btn class="ml-5" color="secondary" dark outlined>Bagi / Split</v-btn>
+                <v-btn color="success" dark :outlined="groupPayment ? false : true" @click="groupPayment = !groupPayment">Gabung</v-btn>
+                <v-btn class="ml-5" color="success" dark :outlined="splitPayment ? false : true" @click="splitPayment = !splitPayment">Bagi / Split</v-btn>
               </div>
             </v-col>
           </v-row>
@@ -134,6 +134,8 @@ export default {
       tx: {},
       paymentMethod: null,
       cash: 0,
+      groupPayment: false,
+      splitPayment: false,
       paymentMethods: ['Tunai'],
       headers:  [
         { text: 'Produk', value: 'name', sortable: false },        
