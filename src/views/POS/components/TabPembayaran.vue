@@ -83,6 +83,58 @@
               <p class="text-bold">Rp. {{ formatCurrency(total) }},00</p>
             </div>
           </div>
+
+          <div v-if="groupPayment === true">
+            <div v-for="(oTx, i) in otherTx" :key="i">
+              <v-row class="mt-6 px-4 align-center">
+                <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="min-width: 100px; max-width: 100%;">
+                  <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="">
+                    <v-autocomplete
+                      :error-messages="errors"
+                      v-model="oTx.tx"
+                      :items="$store.getters.listQueueTransaction"
+                      :item-text="textTx"
+                      :item-value="valueTx"
+                      :label="'Pilih Transaksi Ke-' + (i+2)"
+                      class=""
+                      outlined
+                      dense
+                      hide-no-data
+                      hide-details
+                      :clearable="true"
+                      v-if="Object.keys($store.state.selectedTx).length === 0"
+                    ></v-autocomplete>
+                  </ValidationProvider>
+                </v-col>
+                <v-col cols="2">
+                  <div class="d-flex flex-row justify-end">
+                    <v-btn color="error" dark outlined @click="removeTransaction(i)"><v-icon>mdi-delete</v-icon>Hapus</v-btn>
+                  </div>
+                </v-col>
+              </v-row>
+              <div class="px-4 mt-6" v-if="oTx.tx !== null">
+                <p>Produk Transaksi Ke-{{ i+2 }}</p>
+                <v-data-table
+                  :headers="headers"
+                  :items="oTx.tx.products_sold"
+                  class="elevation-1 scrollbar-custom"
+                  hide-default-footer
+                ></v-data-table>
+                <div class="d-flex flex-row justify-space-between mt-6">
+                  <p>Diskon</p>
+                  <p class="text-bold mr-2">Rp. {{ oTx.tx.total_discount }},00</p>
+                </div>
+                <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
+                  <p>Total</p>
+                  <p class="text-bold">Rp. {{ oTx.tx.total }},00</p>
+                </div>
+              </div>
+            </div>
+            <div class="px-4 mt-6">
+              <v-btn color="success" dark @click="addTransaction">Tambah Transaksi</v-btn>
+            </div>
+          </div>
+          
           <ValidationProvider v-slot="{ errors }" name="Metode pembayaran" rules="required">
             <v-select
               v-model="paymentMethod"
@@ -137,6 +189,11 @@ export default {
       groupPayment: false,
       splitPayment: false,
       paymentMethods: ['Tunai'],
+      otherTx: [
+        {
+          tx: null
+        }
+      ],
       headers:  [
         { text: 'Produk', value: 'name', sortable: false },        
         { text: 'Harga', value: 'price', sortable: false },
@@ -233,6 +290,14 @@ export default {
     },
     dateTime() {
       return new Date().toLocaleString();
+    },
+    removeTransaction(index) {
+      this.otherTx.splice(index, 1);
+    },
+    addTransaction() {
+      this.otherTx.push({
+        tx: null
+      })
     },
     addPayment() {
       let dataPayment = {
