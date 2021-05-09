@@ -78,8 +78,8 @@
               <p>Diskon</p>
               <p class="text-bold mr-2">Rp. {{ formatCurrency(discount) }},00</p>
             </div>
-            <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
-              <p>Total</p>
+            <div class="d-flex flex-row justify-space-between pa-2 pb-0" :class="groupPayment !== true ? 'total' : ''">
+              <p :class="groupPayment === true ? 'text-bold ml-n2' : ''">Total</p>
               <p class="text-bold">Rp. {{ formatCurrency(total) }},00</p>
             </div>
           </div>
@@ -124,14 +124,20 @@
                   <p>Diskon</p>
                   <p class="text-bold mr-2">Rp. {{ oTx.tx.total_discount }},00</p>
                 </div>
-                <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
-                  <p>Total</p>
-                  <p class="text-bold">Rp. {{ oTx.tx.total }},00</p>
+                <div class="d-flex flex-row justify-space-between pa-2 pb-0">
+                  <p class="text-bold ml-n2">Total</p>
+                  <p class="text-bold">Rp. {{ formatCurrency(oTx.tx.total) }},00</p>
                 </div>
               </div>
             </div>
             <div class="px-4 mt-6">
               <v-btn color="success" dark @click="addTransaction">Tambah Transaksi</v-btn>
+            </div>
+            <div class="px-4 mt-6">
+              <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
+                <p>Total Transaksi</p>
+                <p class="text-bold">Rp. {{ formatCurrency(totalTx()) }},00</p>
+              </div>
             </div>
           </div>
           
@@ -225,8 +231,10 @@ export default {
     moneyChange() {
       if (this.cash === 0) {
         return 0;
-      } else {
+      } else if (this.cash !== 0 && this.groupPayment === false) {
         return this.cash - this.total;
+      } else {
+        return this.cash - this.totalTx();
       }
     },
     itemProductSold() {
@@ -290,6 +298,15 @@ export default {
     },
     dateTime() {
       return new Date().toLocaleString();
+    },
+    totalTx() {
+      if (this.otherTx[0].tx !== null) {
+        let totalOtherTx = this.otherTx.reduce((acc, tx) => acc + parseInt(tx.tx.total), 0);      
+        let countTotal = this.total + totalOtherTx;
+        return countTotal;
+      } else {
+        return this.total;
+      }      
     },
     removeTransaction(index) {
       this.otherTx.splice(index, 1);
