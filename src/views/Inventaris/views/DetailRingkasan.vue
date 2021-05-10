@@ -88,10 +88,10 @@
             class="elevation-1 scrollbar-custom"
           >
             <template v-slot:item.unit_cost="{item}">
-              <p class="my-auto" v-if="item.id.indexOf('rv') !== -1 || item.id.indexOf('first') !== -1">Rp{{ formatCurrency(item.unit_cost) }},00</p>
+              <p class="my-auto" v-if="(item.id.indexOf('rv') !== -1 && item.id.indexOf('tf') === -1) || item.id.indexOf('first') !== -1">Rp{{ formatCurrency(item.unit_cost) }},00</p>
             </template>
             <template v-slot:item.total_price="{item}">
-              <p class="my-auto" v-if="item.id.indexOf('rv') !== -1 || item.id.indexOf('first') !== -1">Rp{{ formatCurrency(parseFloat(item.unit_cost) * parseFloat(item.qty)) }},00</p>
+              <p class="my-auto" v-if="(item.id.indexOf('rv') !== -1 && item.id.indexOf('tf') === -1) || item.id.indexOf('first') !== -1">Rp{{ formatCurrency(parseFloat(item.unit_cost) * parseFloat(item.qty)) }},00</p>
             </template>
           </v-data-table>
         </v-card>

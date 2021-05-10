@@ -52,7 +52,11 @@ export default {
   },
   data() {
     return {
-      selectedRvDelivery: {},
+      selectedRvDelivery: {
+        outlet: {
+          name: null
+        }
+      },
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },

@@ -7,14 +7,14 @@
         </div>
         <ValidationObserver ref="form" v-slot="{ handleSubmit }">
           <v-form @submit.prevent="handleSubmit(editOrder)">
-            <ValidationProvider v-slot="{ errors }" name="Cabang pengirim" rules="required">
+            <ValidationProvider v-slot="{ errors }" name="Cabang pemesan" rules="required">
               <v-autocomplete
                 :error-messages="errors"
                 v-model="selectedOrder.destination_outlet"
                 :items="$store.state.listOutlet"
                 :item-text="textOutlet"
                 :item-value="valueOutlet"
-                label="Cabang Pengirim"
+                label="Cabang Pemesan"
                 cache-items
                 class="mb-0 mt-2 px-4"
                 outlined

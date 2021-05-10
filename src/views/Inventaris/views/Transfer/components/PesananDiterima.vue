@@ -60,7 +60,7 @@ export default {
       headers: [
         { text: 'ID Pesanan', value: 'id', sortable: false },
         { text: 'Waktu', value: 'time', sortable: true },
-        { text: 'Cabang Pengirim', value: 'outlet.name', sortable: true },
+        { text: 'Cabang Pemesan', value: 'outlet.name', sortable: true },
         { text: 'Bahan', value: 'ingredients', sortable: false }
       ],
       dialogDetail: false

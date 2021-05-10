@@ -29,7 +29,7 @@ const listViewInventory = (state) => {
 
     // count total received
     inv.tx.forEach(receive => {
-      if (receive.id.indexOf('rv') !== -1) {
+      if (receive.id.indexOf('rv') !== -1 && receive.id.indexOf('tf') === -1) {
         receiveCount += parseFloat(receive.qty);
         inv.receive = receiveCount;
       }
@@ -396,7 +396,6 @@ const valueInventory = (state) => {
   });
 
   let currentAvg = countTotalPurchase / totalQtyReceived;
-  console.log(currentAvg);
   let currentValue = parseFloat(state.detailInventory.ending_stock) * currentAvg;
 
   return parseInt(currentValue);
@@ -405,7 +404,7 @@ const valueInventory = (state) => {
 const txWithUnitCost = (state) => {
   let txUnitCost = [];
   state.detailInventory.tx.forEach(tx => {
-    if (tx.id.indexOf('rv') !== -1 || tx.id.indexOf('first') !== -1) {
+    if ((tx.id.indexOf('rv') !== -1 && tx.id.indexOf('tf') === -1) || tx.id.indexOf('first') !== -1) {
       txUnitCost.push(tx)
     }
   });
