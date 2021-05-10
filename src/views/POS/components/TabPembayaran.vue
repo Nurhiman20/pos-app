@@ -39,23 +39,33 @@
               v-if="Object.keys($store.state.selectedTx).length === 0"
             ></v-autocomplete>
           </ValidationProvider>
-          <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="">
-            <v-autocomplete
-              :error-messages="errors"
-              v-model="tx"
-              :items="$store.getters.listQueueTransaction"
-              :item-text="textTx"
-              :item-value="valueTx"
-              label="Pilih Transaksi"
-              class="mt-6 px-4"
-              outlined
-              dense
-              hide-no-data
-              hide-details
-              :clearable="true"
-              v-if="Object.keys($store.state.selectedTx).length === 0"
-            ></v-autocomplete>
-          </ValidationProvider>
+          <v-row class="mt-3 px-4 align-center">
+            <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="min-width: 100px; max-width: 100%;">
+              <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="">
+                <v-autocomplete
+                  :error-messages="errors"
+                  v-model="tx"
+                  :items="$store.getters.listQueueTransaction"
+                  :item-text="textTx"
+                  :item-value="valueTx"
+                  label="Pilih Transaksi"
+                  class=""
+                  outlined
+                  dense
+                  hide-no-data
+                  hide-details
+                  :clearable="true"
+                  v-if="Object.keys($store.state.selectedTx).length === 0"
+                ></v-autocomplete>
+              </ValidationProvider>
+            </v-col>
+            <v-col cols="3">
+              <div class="d-flex flex-row justify-end">
+                <v-btn color="success" dark :outlined="groupPayment ? false : true" @click="groupPayment = !groupPayment" :disabled="splitPayment ? true: false">Gabung</v-btn>
+                <v-btn class="ml-5" color="success" dark :outlined="splitPayment ? false : true" @click="splitPayment = !splitPayment" :disabled="groupPayment ? true: false">Bagi / Split</v-btn>
+              </div>
+            </v-col>
+          </v-row>
           <div class="px-4 mt-6" v-if="$store.state.selectedProduct.length !== 0">
             <p>Produk Dibeli</p>
             <v-data-table
@@ -68,11 +78,69 @@
               <p>Diskon</p>
               <p class="text-bold mr-2">Rp. {{ formatCurrency(discount) }},00</p>
             </div>
-            <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
-              <p>Total</p>
+            <div class="d-flex flex-row justify-space-between pa-2 pb-0" :class="groupPayment !== true ? 'total' : ''">
+              <p :class="groupPayment === true ? 'text-bold ml-n2' : ''">Total</p>
               <p class="text-bold">Rp. {{ formatCurrency(total) }},00</p>
             </div>
           </div>
+
+          <div v-if="groupPayment === true">
+            <div v-for="(oTx, i) in otherTx" :key="i">
+              <v-row class="mt-6 px-4 align-center">
+                <v-col cols="1" class="flex-grow-1 flex-shrink-0" style="min-width: 100px; max-width: 100%;">
+                  <ValidationProvider v-slot="{ errors }" name="Pilih transaksi" rules="">
+                    <v-autocomplete
+                      :error-messages="errors"
+                      v-model="oTx.tx"
+                      :items="$store.getters.listQueueTransaction"
+                      :item-text="textTx"
+                      :item-value="valueTx"
+                      :label="'Pilih Transaksi Ke-' + (i+2)"
+                      class=""
+                      outlined
+                      dense
+                      hide-no-data
+                      hide-details
+                      :clearable="true"
+                      v-if="Object.keys($store.state.selectedTx).length === 0"
+                    ></v-autocomplete>
+                  </ValidationProvider>
+                </v-col>
+                <v-col cols="2">
+                  <div class="d-flex flex-row justify-end">
+                    <v-btn color="error" dark outlined @click="removeTransaction(i)"><v-icon>mdi-delete</v-icon>Hapus</v-btn>
+                  </div>
+                </v-col>
+              </v-row>
+              <div class="px-4 mt-6" v-if="oTx.tx !== null">
+                <p>Produk Transaksi Ke-{{ i+2 }}</p>
+                <v-data-table
+                  :headers="headers"
+                  :items="oTx.tx.products_sold"
+                  class="elevation-1 scrollbar-custom"
+                  hide-default-footer
+                ></v-data-table>
+                <div class="d-flex flex-row justify-space-between mt-6">
+                  <p>Diskon</p>
+                  <p class="text-bold mr-2">Rp. {{ oTx.tx.total_discount }},00</p>
+                </div>
+                <div class="d-flex flex-row justify-space-between pa-2 pb-0">
+                  <p class="text-bold ml-n2">Total</p>
+                  <p class="text-bold">Rp. {{ formatCurrency(oTx.tx.total) }},00</p>
+                </div>
+              </div>
+            </div>
+            <div class="px-4 mt-6">
+              <v-btn color="success" dark @click="addTransaction">Tambah Transaksi</v-btn>
+            </div>
+            <div class="px-4 mt-6">
+              <div class="d-flex flex-row justify-space-between pa-2 pb-0 total">
+                <p>Total Transaksi</p>
+                <p class="text-bold">Rp. {{ formatCurrency(totalTx()) }},00</p>
+              </div>
+            </div>
+          </div>
+          
           <ValidationProvider v-slot="{ errors }" name="Metode pembayaran" rules="required">
             <v-select
               v-model="paymentMethod"
@@ -124,7 +192,14 @@ export default {
       tx: {},
       paymentMethod: null,
       cash: 0,
+      groupPayment: false,
+      splitPayment: false,
       paymentMethods: ['Tunai'],
+      otherTx: [
+        {
+          tx: null
+        }
+      ],
       headers:  [
         { text: 'Produk', value: 'name', sortable: false },        
         { text: 'Harga', value: 'price', sortable: false },
@@ -156,8 +231,10 @@ export default {
     moneyChange() {
       if (this.cash === 0) {
         return 0;
-      } else {
+      } else if (this.cash !== 0 && this.groupPayment === false) {
         return this.cash - this.total;
+      } else {
+        return this.cash - this.totalTx();
       }
     },
     itemProductSold() {
@@ -221,6 +298,23 @@ export default {
     },
     dateTime() {
       return new Date().toLocaleString();
+    },
+    totalTx() {
+      if (this.otherTx[0].tx !== null) {
+        let totalOtherTx = this.otherTx.reduce((acc, tx) => acc + parseInt(tx.tx.total), 0);      
+        let countTotal = this.total + totalOtherTx;
+        return countTotal;
+      } else {
+        return this.total;
+      }      
+    },
+    removeTransaction(index) {
+      this.otherTx.splice(index, 1);
+    },
+    addTransaction() {
+      this.otherTx.push({
+        tx: null
+      })
     },
     addPayment() {
       let dataPayment = {
