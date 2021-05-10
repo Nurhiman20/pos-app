@@ -113,6 +113,7 @@ export default {
   watch: {
     product(val) {
       this.price = val.price;
+      this.listIngredient = val.ingredients;
     }
   },
   methods: {
