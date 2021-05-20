@@ -2,6 +2,7 @@
   <div>
     <div class="d-flex flex-row justify-space-between mb-2">
       <h1>{{ this.$store.state.detailCustomer.name }}</h1>
+      <v-btn class="ml-2" color="primary" small @click="goToEdit">Edit</v-btn>
     </div>
     <v-row>
       <v-col cols="12">
@@ -88,20 +89,57 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- dialog edit customer -->
+    <edit-customer-dialog 
+      :show="dialogEditCustomer"
+      :selected.sync="selectedCustomer"
+      @closeDialog="closeDialogEdit"
+      @success="successPutCustomer"
+      @error="failedPutCustomer"
+      @delete="deleteCustomer"
+      @successDelete="successDelete"
+    ></edit-customer-dialog>
+
+    <!-- response dialog -->
+    <response-dialog 
+      :success="dialogSuccess"
+      :failed="dialogFailed"
+      :confirm="dialogConfirm"
+      :message="messageDialog"
+      @closeSuccess="closeDialogSuccess"
+      @closeFailed="closeDialogFailed"
+      @closeConfirm="closeDialogConfirm"
+      @deleteConfirmed="doDelete"
+    ></response-dialog>
   </div>
 </template>
 
 <script>
+import editCustomerDialog from '../components/EditPelanggan';
+import responseDialog from '@/components/ResponseDialog';
+
 export default {
+  components: {
+    editCustomerDialog,
+    responseDialog
+  },
   data() {
     return {
+      selectedCustomer: {},
+      selectedDelete: {},
       headersTransaction: [
         { text: 'Tanggal', value: 'date', sortable: true },
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'ID Transaksi', value: 'id', sortable: false },
         { text: 'Produk', value: 'products_sold', sortable: false },
         { text: 'Total Harga', value: 'total', sortable: false }
-      ]
+      ],
+      dialogEditCustomer: false,
+      dialogSuccess: false,
+      dialogFailed: false,
+      dialogConfirm: false,
+      messageDialog: null
     }
   },
   methods: {
@@ -115,7 +153,55 @@ export default {
         return null;
       }
     },
-    goToEdit() {}
+    closeDialogEdit(e) {
+      this.dialogEditCustomer = e;
+    },
+    closeDialogSuccess(e) {
+      this.dialogEditCustomer = false;
+      this.dialogSuccess = e;
+    },
+    closeDialogFailed(e) {
+      this.dialogFailed = e;
+    },
+    closeDialogConfirm(e) {
+      this.dialogConfirm = e;
+    },
+    successDelete() {
+      this.$store.dispatch("getCustomer");
+    },
+    successPutCustomer(e) {
+      this.$store.dispatch("getCustomer");
+      this.messageDialog = e;
+      this.dialogSuccess = true;
+    },
+    failedPutCustomer(e) {
+      this.messageDialog = e;
+      this.dialogFailed = true;
+    },
+    deleteCustomer(e) {
+      this.selectedDelete = e;
+      this.messageDialog = "Kamu yakin akan menghapus pelanggan ini?"
+      this.dialogConfirm = true;
+    },
+    doDelete() {
+      this.$store.dispatch("deleteCustomer", this.selectedDelete)
+        .then(() => {          
+          this.$store.dispatch("getCustomer");
+          this.dialogConfirm = false;
+          this.messageDialog = "Berhasil menghapus pelanggan";
+          this.dialogSuccess = true;
+          this.$router.push('/pelanggan/list');
+        })
+        .catch(() => {
+          this.dialogConfirm = false;
+          this.messageDialog = "Terjadi kesalahan. Silahkan coba lagi nanti";
+          this.dialogFailed = true;
+        })
+    },
+    goToEdit() {
+      this.selectedCustomer = this.$store.state.detailCustomer;
+      this.dialogEditCustomer = true;
+    }
   },
   created() {
     this.$store.dispatch("getCustomer");
