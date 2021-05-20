@@ -323,6 +323,29 @@ const adjustmentOnDetail = (state) => {
   return adjustments;
 }
 
+
+const countCustomerTx = (state) => {
+  let transaction = [];
+  state.listTransaction.forEach(tx => {
+    if (tx.customer.id === state.detailCustomer.id) {
+      transaction.push(tx);
+    }
+  });
+
+  return transaction.length
+}
+
+const viewCustomerTx = (state) => {
+  let transaction = [];
+  state.listTransaction.forEach(tx => {
+    if (tx.customer.id === state.detailCustomer.id) {
+      transaction.push(tx);
+    }
+  });
+  
+  return transaction;
+}
+
 const transactionOnDetail = (state) => {
   let transaction = [];
   state.listTransaction.forEach(tx => {
@@ -442,6 +465,8 @@ export default {
   orderOnDetail,
   receiveOnDetail,
   adjustmentOnDetail,
+  countCustomerTx,
+  viewCustomerTx,
   transactionOnDetail,
   viewHighestCost,
   profitInventory,

@@ -54,6 +54,10 @@ const SET_LIST_CUSTOMER = (state, payload) => {
   state.listCustomer = payload;
 };
 
+const SET_DETAIL_CUSTOMER = (state, payload) => {
+  state.detailCustomer = payload;
+};
+
 const SET_LIST_OUTLET = (state, payload) => {
   state.listOutlet = payload;
   
@@ -162,6 +166,7 @@ export default {
   SET_LIST_ADJUSTMENT,
   SET_LIST_TRANSACTION,
   SET_LIST_CUSTOMER,
+  SET_DETAIL_CUSTOMER,
   SET_LIST_OUTLET,
   SET_DETAIL_OUTLET,
   SET_ACCOUNT,

@@ -41,7 +41,7 @@
         :search="search"
         class="elevation-1 scrollbar-custom"
         hide-default-footer
-        @click:row="goToEdit"
+        @click:row="goToDetail"
       >
       </v-data-table>
     </v-card>
@@ -179,9 +179,8 @@ export default {
           this.dialogFailed = true;
         })
     },
-    goToEdit(item) {
-      this.selectedCustomer = item;
-      this.dialogEditCustomer = true;
+    goToDetail(e) {
+      this.$router.push('list/detail/' + e.id);
     }
   },
   created() {

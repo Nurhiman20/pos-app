@@ -32,6 +32,7 @@ const state = {
       notes: null
     }
   },
+  detailCustomer: {},
   endingStock: 0,
   tableTx: null,
   customerTx: null,

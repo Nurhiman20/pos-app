@@ -2030,6 +2030,25 @@ async function getCustomer({ commit }) {
   });
 }
 
+async function getCustomerById({ commit }, id) {
+  commit("SET_LOADING");
+  const vuePos = await openDB('vue-pos', 3);
+  return new Promise((resolve, reject) => {
+    vuePos
+      .get('customer', id)
+      .then(result => {
+        commit('SET_DETAIL_CUSTOMER', result);
+        resolve(result);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      .finally(() => {
+        commit("SET_LOADING", false);
+      });
+  });
+}
+
 async function submitCustomer({ commit }, dataForm) {
   commit("SET_LOADING");
   const vuePos = await openDB('vue-pos', 3);
@@ -2601,6 +2620,7 @@ export default {
   submitTransaction,
   updateTransaction,
   getCustomer,
+  getCustomerById,
   submitCustomer,
   updateCustomer,
   deleteCustomer,

@@ -152,12 +152,28 @@ const routes = [
     component: () => import('@/layouts/Home'),
     children: [
       {
-        path: '/pelanggan/list',
-        name: 'Data Pelanggan',
-        component: () => import('@/views/Pelanggan/views/DataPelanggan.vue'),
-        meta: {
-          title: 'Data Pelanggan | 21FACTORY'
-        }
+        path: '/pelanggan/index',
+        name: 'Pelanggan',
+        redirect: '/pelanggan/list',
+        component: () => import('@/views/Pelanggan/index.vue'),
+        children: [
+          {
+            path: '/pelanggan/list',
+            name: 'Daftar Pelanggan',
+            component: () => import('@/views/Pelanggan/views/DataPelanggan.vue'),
+            meta: {
+              title: 'Daftar Pelanggan | Pelanggan | 21FACTORY'
+            }
+          },
+          {
+            path: '/pelanggan/list/detail/:id',
+            name: 'Detail Pelanggan',
+            component: () => import('@/views/Pelanggan/views/DetailPelanggan.vue'),
+            meta: {
+              title: 'Detail Pelanggan | Pelanggan | 21FACTORY'
+            }
+          }
+        ]
       }
     ]
   },
