@@ -61,17 +61,34 @@
                 </v-btn>
               </v-col>
             </v-row>
-            <ValidationProvider v-slot="{ errors }" name="Diskon" rules="required|integer">
-              <v-text-field
-                :error-messages="errors"
-                v-model="discount"
-                label="Diskon"
-                placeholder="1000"
-                outlined
-                dense
-                class="mb-0 mt-2 px-4"
-              ></v-text-field>
-            </ValidationProvider>
+            <v-row no-gutters>
+              <v-col cols="4">
+                <ValidationProvider v-slot="{ errors }" name="Diskon" rules="required|integer">
+                  <v-text-field
+                    :error-messages="errors"
+                    v-model="discount"
+                    label="Diskon"
+                    placeholder="1000"
+                    outlined
+                    dense
+                    class="mb-0 mt-2 px-4"
+                  ></v-text-field>
+                </ValidationProvider>
+              </v-col>
+              <v-col cols="8">
+                <ValidationProvider v-slot="{ errors }" name="Satuan diskon" rules="required">
+                  <v-select
+                    v-model="unitDiscount"
+                    :error-messages="errors"
+                    :items="listUnitDiscount"
+                    label="Satuan Diskon"
+                    class="mb-0 mt-2 px-4"
+                    outlined
+                    dense
+                  ></v-select>
+                </ValidationProvider>
+              </v-col>
+            </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
@@ -91,7 +108,9 @@ export default {
     return {
       variant: null,
       quantity: 1,
-      discount: 0
+      discount: 0,
+      unitDiscount: "rupiah (Rp.)",
+      listUnitDiscount: ["rupiah (Rp.)", "persen (%)"]
     }
   },
   methods: {
@@ -141,8 +160,14 @@ export default {
     },
     selectProduct() {
       this.selectedProduct.qty = this.quantity;
-      this.selectedProduct.discount = this.discount;
-      this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.price) - parseInt(this.discount);
+      if (this.unitDiscount === "rupiah (Rp.)") {
+        this.selectedProduct.discount = this.discount;
+        this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.price) - parseInt(this.discount);
+      } else {
+        let discRp = parseInt(this.selectedProduct.price) * parseFloat(this.discount) / 100;
+        this.selectedProduct.discount = parseInt(discRp) * parseInt(this.quantity);
+        this.selectedProduct.total = parseInt(this.quantity) * parseInt(this.selectedProduct.price) - parseInt(discRp);
+      }
 
       let productData = {
         ...this.selectedProduct
@@ -152,7 +177,13 @@ export default {
         productData.name = this.variant.name;
         productData.price = this.variant.price;
         productData.ingredients = this.variant.ingredients;
-        productData.total = parseInt(this.quantity) * parseInt(productData.price) - parseInt(this.discount);
+        if (this.unitDiscount === "rupiah (Rp.)") {
+          productData.total = parseInt(this.quantity) * parseInt(productData.price) - parseInt(this.discount);
+        } else {
+          let discRp = parseInt(productData.price) * parseFloat(this.discount) / 100;
+          this.selectedProduct.discount = parseInt(discRp) * parseInt(this.quantity);
+          productData.total = parseInt(this.quantity) * parseInt(productData.price) - parseInt(discRp);
+        }
       }
       if (this.checkDiscount()) {
         this.$store.commit("ADD_SELECTED_PRODUCT", productData);
