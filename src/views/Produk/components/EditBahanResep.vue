@@ -27,17 +27,33 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Kuantitas" rules="required">
-              <v-text-field
-                :error-messages="errors"
-                v-model="selectedIngredient.qty"
-                label="Kuantitas"
-                :suffix="selectedIngredient.ingredient.unit"
-                outlined
-                dense
-                class="mb-0 mt-8 px-4"
-              ></v-text-field>
-            </ValidationProvider>
+            <v-row no-gutters>
+              <v-col cols="6">
+                <ValidationProvider v-slot="{ errors }" name="Kuantitas" rules="required">
+                  <v-text-field
+                    :error-messages="errors"
+                    v-model="selectedIngredient.qty"
+                    label="Kuantitas"
+                    outlined
+                    dense
+                    class="mb-0 mt-8 px-4"
+                  ></v-text-field>
+                </ValidationProvider>
+              </v-col>
+              <v-col cols="6">
+                <ValidationProvider v-slot="{ errors }" name="Satuan" rules="required">
+                  <v-select
+                    v-model="selectedIngredient.unit"
+                    :error-messages="errors"
+                    :items="groupUnits"
+                    label="Satuan"
+                    class="mb-0 mt-8 px-4"
+                    outlined
+                    dense
+                  ></v-select>
+                </ValidationProvider>
+              </v-col>
+            </v-row>            
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
@@ -55,7 +71,22 @@ export default {
   props: ['show', 'selected'],
   data() {
     return {
-      selectedIngredient: {}
+      selectedIngredient: {},
+      listGroupUnits: [['liter (l)', 'mililiter (ml)'], ['kilogram (kg)', 'ons (ons)', 'gram (g)', 'miligram (mg)'], ['centimeter (cm)', 'meter (m)', 'inch (in)'], ['bungkus (bks)', 'botol (btl)', 'box (box)', 'butir (btr)', 'pieces (pcs)']]
+    }
+  },
+  computed: {
+    groupUnits() {
+      let groupUnits = [];
+      this.listGroupUnits.forEach(units => {
+        units.forEach(unit => {
+          if (unit === this.selectedIngredient.unit) {
+            groupUnits = units;
+          }
+        });
+      });
+      
+      return groupUnits;
     }
   },
   watch: {

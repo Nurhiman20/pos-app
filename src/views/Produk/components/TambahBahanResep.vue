@@ -22,18 +22,34 @@
                 :clearable="true"
               ></v-autocomplete>
             </ValidationProvider>
-            <ValidationProvider v-slot="{ errors }" name="Kuantitas" rules="required">
-              <v-text-field
-                :error-messages="errors"
-                v-model="qty"
-                label="Kuantitas"
-                placeholder="0.2"
-                :suffix="unit"
-                outlined
-                dense
-                class="mb-0 mt-8 px-4"
-              ></v-text-field>
-            </ValidationProvider>
+            <v-row no-gutters>
+              <v-col cols="6">
+                <ValidationProvider v-slot="{ errors }" name="Kuantitas" rules="required">
+                  <v-text-field
+                    :error-messages="errors"
+                    v-model="qty"
+                    label="Kuantitas"
+                    placeholder="0.2"
+                    outlined
+                    dense
+                    class="mb-0 mt-8 px-4"
+                  ></v-text-field>
+                </ValidationProvider>
+              </v-col>
+              <v-col cols="6">
+                <ValidationProvider v-slot="{ errors }" name="Satuan" rules="required">
+                  <v-select
+                    v-model="selectedUnit"
+                    :error-messages="errors"
+                    :items="groupUnits"
+                    label="Satuan"
+                    class="mb-0 mt-8 px-4"
+                    outlined
+                    dense
+                  ></v-select>
+                </ValidationProvider>
+              </v-col>
+            </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
@@ -53,14 +69,30 @@ export default {
     return {
       ingredient: null,
       qty: null,
-      unit: null
+      unit: null,
+      selectedUnit: null,
+      listGroupUnits: [['liter (l)', 'mililiter (ml)'], ['kilogram (kg)', 'ons (ons)', 'gram (g)', 'miligram (mg)'], ['centimeter (cm)', 'meter (m)', 'inch (in)'], ['bungkus (bks)', 'botol (btl)', 'box (box)', 'butir (btr)', 'pieces (pcs)']]
+    }
+  },
+  computed: {
+    groupUnits() {
+      let groupUnits = [];
+      this.listGroupUnits.forEach(units => {
+        units.forEach(unit => {
+          if (unit === this.unit) {
+            groupUnits = units;
+          }
+        });
+      });
+      
+      return groupUnits;
     }
   },
   watch: {
     ingredient(val) {
       if (val !== null) {
-        this.inStock = val.stock;
         this.unit = val.unit;
+        this.selectedUnit = val.unit;
       }
     }
   },
@@ -78,12 +110,14 @@ export default {
       let dataForm = {
         id_ingredient: this.ingredient.id,
         ingredient: this.ingredient,
-        qty: this.qty
+        qty: this.qty,
+        unit: this.selectedUnit
       }
       this.$emit('add', dataForm);
       this.ingredient = null;
       this.qty = null;
       this.unit = null;
+      this.selectedUnit = null;
     }
   },
 }

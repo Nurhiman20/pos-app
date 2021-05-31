@@ -87,7 +87,6 @@
 import addIngredientDialog from '../components/TambahBahanResep';
 import editIngredientDialog from '../components/EditBahanResep';
 
-
 export default {
   props: ['show'],
   components: {
@@ -104,7 +103,7 @@ export default {
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
         { text: 'Qty', value: 'qty', sortable: false },
-        { text: 'Unit', value: 'ingredient.unit', sortable: false }
+        { text: 'Unit', value: 'unit', sortable: false }
       ],
       dialogAddIngredient: false,      
       dialogEditIngredient: false
@@ -113,7 +112,9 @@ export default {
   watch: {
     product(val) {
       this.price = val.price;
-      this.listIngredient = val.ingredients;
+      if (val.ingredients !== undefined) {
+       this.listIngredient = val.ingredients; 
+      }
     }
   },
   methods: {
