@@ -37,9 +37,13 @@
           </v-col>
         </v-row>
       </div>
-      <div class="mt-2 d-flex flex-row justify-space-between justify-content-between border-bottom">
+      <div class="mt-2 d-flex flex-row justify-space-between justify-content-between">
         <p>Total Diskon</p>
         <p>Rp{{ formatCurrency(this.selected.total_discount) }},00</p>
+      </div>
+      <div class="mt-n2 d-flex flex-row justify-space-between justify-content-between border-bottom">
+        <p>Pajak ({{ this.$store.state.account.tax }}%)</p>
+        <p>Rp{{ formatCurrency(this.selected.tax) }},00</p>
       </div>
       <div class="mt-2 d-flex flex-row justify-space-between justify-content-between">
         <h3>Total</h3>

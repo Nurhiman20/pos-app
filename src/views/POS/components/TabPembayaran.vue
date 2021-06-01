@@ -78,9 +78,13 @@
               <p>Diskon</p>
               <p class="text-bold mr-2">Rp. {{ formatCurrency(discount) }},00</p>
             </div>
+            <div class="d-flex flex-row justify-space-between mt-2">
+              <p>Pajak ({{ $store.state.account.tax }}%)</p>
+              <p class="text-bold mr-2">Rp. {{ formatCurrency(tax) }},00</p>
+            </div>
             <div class="d-flex flex-row justify-space-between pa-2 pb-0" :class="groupPayment !== true ? 'total' : ''">
               <p :class="groupPayment === true ? 'text-bold ml-n2' : ''">Total</p>
-              <p class="text-bold">Rp. {{ formatCurrency(total) }},00</p>
+              <p class="text-bold">Rp. {{ formatCurrency(total + tax) }},00</p>
             </div>
           </div>
 
@@ -228,11 +232,15 @@ export default {
       }
       return disc
     },
+    tax() {
+      let taxAll = parseInt(this.$store.state.account.tax) * this.total / 100;
+      return taxAll
+    },
     moneyChange() {
       if (this.cash === 0) {
         return 0;
       } else if (this.cash !== 0 && this.groupPayment === false) {
-        return this.cash - this.total;
+        return this.cash - (this.total + this.tax);
       } else {
         return this.cash - this.totalTx();
       }
@@ -254,6 +262,7 @@ export default {
       }
     },
     txPay(val) {
+      console.log(val);
       this.tx = val;
       // this.paymentMethod = val[0].payment_method;
       // this.cash = val[0].cash;
@@ -337,7 +346,8 @@ export default {
       this.$emit('printReceipt', this.tx);
     },
     submitTransaction() {      
-      if (Object.keys(this.$store.state.selectedTx).length !== 0 && this.$store.state.selectedTx.payment.length !== 0) {
+      if (Object.keys(this.$store.state.selectedTx).length !== 0 && this.$store.state.selectedTx.status !== "Antre") {
+        console.log("tes");
         let dataEditPayment = this.$store.state.selectedTx;
         dataEditPayment.total = this.total;
         dataEditPayment.total_discount = this.discount;
@@ -354,6 +364,7 @@ export default {
             this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
           });
       } else {
+        console.log("tes2");
         if (Object.keys(this.$store.state.selectedTx).length !== 0) {
           this.tx = this.$store.state.selectedTx;
         }        
@@ -379,6 +390,9 @@ export default {
     }
   },
   created() {
+    console.log(this.tx);
+    console.log(this.txPay);
+    this.tx = this.txPay;
     if (Object.keys(this.$store.state.selectedTx).length !== 0) {
       this.paymentMethod = this.$store.state.selectedTx.payment[0].payment_method;
       this.cash = this.$store.state.selectedTx.payment[0].cash;

@@ -13,6 +13,8 @@
           <h2 class="mt-n3">{{ $store.state.detailOutlet.phone }}</h2>
           <p class="mt-3">Alamat cabang</p>
           <h2 class="mt-n3">{{ $store.state.detailOutlet.address }}</h2>
+          <p class="mt-3">Pajak</p>
+          <h2 class="mt-n3">{{ $store.state.detailOutlet.tax }}%</h2>
         </v-card>
       </v-col>
       <v-col cols="12" md="6" lg="6" xl="6">

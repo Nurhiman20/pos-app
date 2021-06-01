@@ -148,7 +148,8 @@ export default {
         products_sold: prod,
         time: this.dateTime(),
         total_discount: this.discount,
-        total: this.total,
+        tax: parseInt(this.$store.state.account.tax) * this.total / 100,
+        total: this.total + (parseInt(this.$store.state.account.tax) * this.total / 100),
         status: 'Antre',
         payment: []
       }

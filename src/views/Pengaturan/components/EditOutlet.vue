@@ -45,6 +45,17 @@
                 auto-grow
               ></v-textarea>
             </ValidationProvider>
+            <ValidationProvider v-slot="{ errors }" name="Pajak" rules="">
+              <v-text-field
+                :error-messages="errors"
+                v-model="selected.tax"
+                label="Pajak"
+                suffix="%"
+                outlined
+                dense
+                class="mb-0 mt-2 px-4"
+              ></v-text-field>
+            </ValidationProvider>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="warning darken-1" text @click="closeDialog">Batal</v-btn>
