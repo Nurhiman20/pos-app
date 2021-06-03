@@ -13,7 +13,6 @@
                 :item-text="textProduct"
                 :item-value="valueProduct"
                 label="Nama Produk"
-                cache-items
                 class="mb-0 mt-2 px-4"
                 outlined
                 dense
@@ -87,7 +86,6 @@
 import addIngredientDialog from '../components/TambahBahanResep';
 import editIngredientDialog from '../components/EditBahanResep';
 
-
 export default {
   props: ['show'],
   components: {
@@ -103,17 +101,19 @@ export default {
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
-        { text: 'Qty', value: 'qty', sortable: false },
-        { text: 'Unit', value: 'ingredient.unit', sortable: false }
+        { text: 'Qty', value: 'before_convert', sortable: false },
+        { text: 'Unit', value: 'unit', sortable: false }
       ],
-      dialogAddIngredient: false,      
+      dialogAddIngredient: false,
       dialogEditIngredient: false
     }
   },
   watch: {
     product(val) {
       this.price = val.price;
-      this.listIngredient = val.ingredients;
+      if (val.ingredients !== undefined) {
+       this.listIngredient = val.ingredients; 
+      }
     }
   },
   methods: {
@@ -138,6 +138,10 @@ export default {
       this.dialogEditIngredient = e;
     },
     closeDialog() {
+      this.product = null;
+      this.variant = null;
+      this.price = null;
+      this.listIngredient = [];   
       this.$emit('closeDialog', false);
     },
     goToEdit(e) {
