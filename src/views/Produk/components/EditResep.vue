@@ -95,7 +95,7 @@ export default {
       selectedIngredient: {},
       headers: [
         { text: 'Bahan', value: 'ingredient.name', sortable: false },
-        { text: 'Qty', value: 'qty', sortable: false },
+        { text: 'Qty', value: 'before_convert', sortable: false },
         { text: 'Unit', value: 'unit', sortable: false }
       ],
       dialogAddIngredient: false,      

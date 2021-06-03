@@ -106,11 +106,95 @@ export default {
     valueIngredient(item) {
       return item
     },
+    convertUnit(qty, unit) {
+      if (unit === 'miligram (mg)') {
+        if (this.ingredient.unit === 'kilogram (kg)') {
+          return parseFloat(qty) / 1000000
+        } else if (this.ingredient.unit === 'ons (ons)') {
+          return parseFloat(qty) / 100000
+        } else if (this.ingredient.unit === 'gram (g)') {
+          return parseFloat(qty) / 1000
+        } else {
+          return parseFloat(qty)
+        }
+      } else if (unit === 'gram (g)') {
+        if (this.ingredient.unit === 'kilogram (kg)') {
+          return parseFloat(qty) / 1000
+        } else if (this.ingredient.unit === 'ons (ons)') {
+          return parseFloat(qty) / 100
+        } else if (this.ingredient.unit === 'miligram (mg)') {
+          return parseFloat(qty) * 1000
+        } else {
+          return parseFloat(qty)
+        }
+      } else if (unit === 'ons (ons)') {
+        if (this.ingredient.unit === 'kilogram (kg)') {
+          return parseFloat(qty) / 10
+        } else if (this.ingredient.unit === 'gram (g)') {
+          return parseFloat(qty) * 100
+        } else if (this.ingredient.unit === 'miligram (mg)') {
+          return parseFloat(qty) * 100000
+        } else {
+          return parseFloat(qty)
+        }
+      } else if (unit === 'kilogram (kg)') {
+        if (this.ingredient.unit === 'ons (ons)') {
+          return parseFloat(qty) * 10
+        } else if (this.ingredient.unit === 'gram (g)') {
+          return parseFloat(qty) * 1000
+        } else if (this.ingredient.unit === 'miligram (mg)') {
+          return parseFloat(qty) * 1000000
+        } else {
+          return parseFloat(qty)
+        }
+      } else if (unit === 'mililiter (ml)') {
+        if (this.ingredient.unit === 'liter (l)') {
+          return parseFloat(qty) / 1000
+        } else {
+          return parseFloat(qty)
+        }
+      } else if (unit === 'liter (l)') {
+        if (this.ingredient.unit === 'mililiter (ml)') {
+          return parseFloat(qty) * 1000
+        } else {
+          return parseFloat(qty)
+        }
+      } else if (unit === 'centimeter (cm)') {
+        if (this.ingredient.unit === 'meter (m)') {
+          return parseFloat(qty) / 100
+        } else if (this.ingredient.unit === 'inch (in)') {
+          return parseFloat(qty) * 0.393701
+        } else {
+          return parseFloat(qty)
+        }
+      } else if (unit === 'meter (m)') {
+        if (this.ingredient.unit === 'centimeter (cm)') {
+          return parseFloat(qty) * 100
+        } else if (this.ingredient.unit === 'inch (in)') {
+          return parseFloat(qty) * 39.3701
+        } else {
+          return parseFloat(qty)
+        }
+      } else if (unit === 'inch (in)') {
+        if (this.ingredient.unit === 'centimeter (cm)') {
+          return parseFloat(qty) / 0.393701
+        } else if (this.ingredient.unit === 'meter (m)') {
+          return parseFloat(qty) / 39.3701
+        } else {
+          return parseFloat(qty)
+        }
+      } else {
+        return qty
+      }
+    },
     addIngredient() {
+      let convertedQty = this.convertUnit(this.qty, this.selectedUnit);
+
       let dataForm = {
         id_ingredient: this.ingredient.id,
         ingredient: this.ingredient,
-        qty: this.qty,
+        qty: convertedQty,
+        before_convert: this.qty,
         unit: this.selectedUnit
       }
       this.$emit('add', dataForm);

@@ -182,7 +182,8 @@ export default {
     doDelete() {
       this.$store.dispatch("deleteRecipe", this.selectedDelete)
         .then(() => {          
-          this.$store.dispatch("getRecipe");
+          this.$store.dispatch("getRecipe");     
+          this.$store.dispatch("getProduct");
           this.dialogConfirm = false;
           this.messageDialog = "Berhasil menghapus resep";
           this.dialogSuccess = true;
