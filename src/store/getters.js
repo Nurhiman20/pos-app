@@ -147,7 +147,7 @@ const listRvTransfer = (state) => {
 const listViewTransaction = (state) => {
   let filteredTx = [];
   state.listTransaction.forEach(tx => {
-    if (moment(tx.time).isBetween(state.dateStart, moment(state.dateEnd).add(1, 'days'), undefined, '[]') && tx.status !== 'Antre') {
+    if (moment(new Date(tx.time)).isBetween(state.dateStart, moment(new Date(state.dateEnd)).add(1, 'days'), undefined, '[]') && tx.status !== 'Antre') {
       filteredTx.push(tx);
     }
   })
@@ -189,7 +189,7 @@ const listQueueTransaction = (state) => {
 const totalTransactionToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'day') && element.status !== 'Antre') {
+    if (moment(new Date(element.time)).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -200,7 +200,7 @@ const totalTransactionToday = (state) => {
 const totalTransactionMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'month') && element.status !== 'Antre') {
+    if (moment(new Date(element.time)).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });
@@ -211,7 +211,7 @@ const totalTransactionMonth = (state) => {
 const totalAmountToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'day') && element.status !== 'Antre') {
+    if (moment(new Date(element.time)).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -224,7 +224,7 @@ const totalAmountToday = (state) => {
 const totalAmountMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'month') && element.status !== 'Antre') {
+    if (moment(new Date(element.time)).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });
@@ -237,7 +237,7 @@ const totalAmountMonth = (state) => {
 const totalProfitToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'day') && element.status !== 'Antre') {
+    if (moment(new Date(element.time)).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -263,7 +263,7 @@ const totalProfitToday = (state) => {
 const totalProfitMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(element.time).isSame(moment().format(), 'month') && element.status !== 'Antre') {
+    if (moment(new Date(element.time)).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });

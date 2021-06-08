@@ -199,11 +199,11 @@ export default {
     },
     formatTime(val) {
       moment.locale('id');
-      return moment(val).format('LT');
+      return moment(new Date(val)).format('LT');
     },
     formatDate(val) {
       moment.locale('id');
-      return moment(val).format('LL');
+      return moment(new Date(val)).format('LL');
     },
     closeDialogReceipt(e) {
       this.dialogReceipt = e;
