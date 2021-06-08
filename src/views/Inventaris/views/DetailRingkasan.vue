@@ -87,6 +87,9 @@
             :items="$store.state.detailInventory.tx"
             class="elevation-1 scrollbar-custom"
           >
+            <template v-slot:item.qty="{item}">
+              <p class="my-auto">{{ parseFloat(item.qty).toFixed(2) }}</p>
+            </template>
             <template v-slot:item.unit_cost="{item}">
               <p class="my-auto" v-if="(item.id.indexOf('rv') !== -1 && item.id.indexOf('tf') === -1) || item.id.indexOf('first') !== -1">Rp{{ formatCurrency(item.unit_cost) }},00</p>
             </template>
