@@ -153,13 +153,13 @@ const routes = [
     children: [
       {
         path: '/pelanggan/index',
-        name: 'Pelanggan',
+        name: 'Daftar Pelanggan',
         redirect: '/pelanggan/list',
         component: () => import('@/views/Pelanggan/index.vue'),
         children: [
           {
             path: '/pelanggan/list',
-            name: 'Daftar Pelanggan',
+            name: 'Daftar',
             component: () => import('@/views/Pelanggan/views/DataPelanggan.vue'),
             meta: {
               title: 'Daftar Pelanggan | Pelanggan | 21FACTORY'
@@ -167,7 +167,7 @@ const routes = [
           },
           {
             path: '/pelanggan/list/detail/:id',
-            name: 'Detail Pelanggan',
+            name: 'Detail',
             component: () => import('@/views/Pelanggan/views/DetailPelanggan.vue'),
             meta: {
               title: 'Detail Pelanggan | Pelanggan | 21FACTORY'
