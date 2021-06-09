@@ -62,7 +62,6 @@
       @success="successPutRecipe"
       @error="failedAddRecipe"
       @delete="deleteRecipe"
-      @successDelete="successDelete"
     ></edit-recipe-dialog>
 
     <response-dialog 
@@ -158,15 +157,18 @@ export default {
       this.$store.dispatch("getCategory");
     },
     closeDialogAdd(e) {
-      this.$store.dispatch("getRecipe")
-      this.dialogAddRecipe = e
+      this.$store.dispatch("getRecipe");
+      this.$store.dispatch("getProduct");
+      this.dialogAddRecipe = e;
     },
     closeDialogEdit(e) {
-      this.$store.dispatch("getRecipe")
-      this.dialogEditRecipe = e
+      this.$store.dispatch("getRecipe");
+      this.$store.dispatch("getProduct");
+      this.dialogEditRecipe = e;
     },
     successPutRecipe(e) {
       this.$store.dispatch("getRecipe");
+      this.$store.dispatch("getProduct");
       this.messageDialog = e;
       this.dialogSuccess = true;
     },
@@ -202,7 +204,6 @@ export default {
   created() {
     this.$store.dispatch("getRecipe");
     this.$store.dispatch("getProduct");
-    this.$store.dispatch("getIngredient");
   }
 }
 </script>

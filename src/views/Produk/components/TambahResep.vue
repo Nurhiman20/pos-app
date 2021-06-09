@@ -110,9 +110,11 @@ export default {
   },
   watch: {
     product(val) {
-      this.price = val.price;
-      if (val.ingredients !== undefined) {
-       this.listIngredient = val.ingredients; 
+      if (val !== null) {
+       this.price = val.price; 
+       if (val.ingredients !== undefined) {
+        this.listIngredient = val.ingredients; 
+        }
       }
     }
   },

@@ -262,7 +262,6 @@ export default {
       }
     },
     txPay(val) {
-      console.log(val);
       this.tx = val;
       // this.paymentMethod = val[0].payment_method;
       // this.cash = val[0].cash;
@@ -364,7 +363,6 @@ export default {
             this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
           });
       } else {
-        console.log("tes2");
         if (Object.keys(this.$store.state.selectedTx).length !== 0) {
           this.tx = this.$store.state.selectedTx;
         }        
@@ -390,10 +388,8 @@ export default {
     }
   },
   created() {
-    console.log(this.tx);
-    console.log(this.txPay);
     this.tx = this.txPay;
-    if (Object.keys(this.$store.state.selectedTx).length !== 0) {
+    if (Object.keys(this.$store.state.selectedTx).length !== 0 && this.$store.state.selectedTx.payment.length !== 0) {
       this.paymentMethod = this.$store.state.selectedTx.payment[0].payment_method;
       this.cash = this.$store.state.selectedTx.payment[0].cash;
     }
