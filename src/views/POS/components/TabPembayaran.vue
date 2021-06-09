@@ -340,15 +340,25 @@ export default {
 
       return dataPayment
     },
-    doPrint() {
-      this.addPayment();
-      this.$emit('printReceipt', this.tx);
+    doPrint() {      
+      if (Object.keys(this.$store.state.selectedTx).length !== 0 && this.$store.state.selectedTx.status !== "Antre") {
+        let dataEditPayment = this.$store.state.selectedTx;
+        dataEditPayment.total = this.total + this.tax;
+        dataEditPayment.tax = this.tax;
+        dataEditPayment.total_discount = this.discount;
+        dataEditPayment.payment[0].cash = this.cash;
+        dataEditPayment.payment[0].moneyChange = this.moneyChange;
+        this.$emit('printReceipt', dataEditPayment);
+      } else {
+        this.addPayment();
+        this.$emit('printReceipt', this.tx);
+      }
     },
     submitTransaction() {      
       if (Object.keys(this.$store.state.selectedTx).length !== 0 && this.$store.state.selectedTx.status !== "Antre") {
-        console.log("tes");
         let dataEditPayment = this.$store.state.selectedTx;
-        dataEditPayment.total = this.total;
+        dataEditPayment.total = this.total + this.tax;
+        dataEditPayment.tax = this.tax;
         dataEditPayment.total_discount = this.discount;
         dataEditPayment.payment[0].cash = this.cash;
         dataEditPayment.payment[0].moneyChange = this.moneyChange;
@@ -384,7 +394,7 @@ export default {
           .catch(() => {
             this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
           });
-      }  
+      }
     }
   },
   created() {
