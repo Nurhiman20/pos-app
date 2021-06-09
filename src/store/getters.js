@@ -218,7 +218,7 @@ const totalAmountToday = (state) => {
 
   const amountToday = transactionToday.reduce((acc, tx) => acc + tx.total, 0);
 
-  return amountToday;
+  return parseInt(amountToday);
 }
 
 const totalAmountMonth = (state) => {
@@ -231,7 +231,7 @@ const totalAmountMonth = (state) => {
 
   const amountMonth = transactionMonth.reduce((acc, tx) => acc + tx.total, 0);
 
-  return amountMonth;
+  return parseInt(amountMonth);
 }
 
 const totalProfitToday = (state) => {
@@ -257,7 +257,7 @@ const totalProfitToday = (state) => {
     })
   });
 
-  return amountToday - costToday;
+  return parseInt(amountToday - costToday);
 }
 
 const totalProfitMonth = (state) => {
@@ -283,7 +283,7 @@ const totalProfitMonth = (state) => {
     })
   });
 
-  return amountMonth - costMonth;
+  return parseInt(amountMonth - costMonth);
 }
 
 const orderOnDetail = (state) => {
