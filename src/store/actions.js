@@ -115,14 +115,17 @@ async function updateProduct({ state, commit }, dataForm) {
     variant: dataForm.variant,
     image: dataForm.image
   };
-  updatedInv.tx.forEach(tx => {
-    if (tx.id === 'first-000000') {
-      tx.qty = dataForm.stock;
-      tx.unit = dataForm.unit;
-      tx.unit_cost = dataForm.price_cost;
-      tx.price = dataForm.price;
-    }
-  });
+  
+  if (updatedInv.id !== null) {
+    updatedInv.tx.forEach(tx => {
+      if (tx.id === 'first-000000') {
+        tx.qty = dataForm.stock;
+        tx.unit = dataForm.unit;
+        tx.unit_cost = dataForm.price_cost;
+        tx.price = dataForm.price;
+      }
+    }); 
+  }
 
   // set inventory data
   let invData = {
@@ -156,10 +159,13 @@ async function updateProduct({ state, commit }, dataForm) {
       transaction.objectStore('recipe').put(updatedProductRecipe);
     }
     if (updatedInv.id !== null && dataForm.without_ingredient === true) {
+      // update product without ingredient in inventory
       transaction.objectStore('inventory').put(updatedInv);
     } else if (updatedInv.id !== null && dataForm.without_ingredient === false) {
+      // remove product from inventory when product was set to 'without ingredient'
       transaction.objectStore('inventory').delete(dataForm.id);
     } else if (updatedInv.id === null && dataForm.without_ingredient === true) {
+      // add product to inventory when product was set to 'with ingredient'
       transaction.objectStore('inventory').put(invData);
     }
     transaction.done
