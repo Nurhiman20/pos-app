@@ -144,7 +144,7 @@ export default {
         id_outlet: this.$store.state.account.id,
         outlet: this.$store.state.account,
         destination_outlet: this.outlet,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a'),
+        time: moment().format('DD/MM/YYYY, HH:mm:ss'),
         ingredients: this.listIngredient,
         status: 'Pesanan',
         delivery: []

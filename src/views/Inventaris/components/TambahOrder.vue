@@ -184,7 +184,7 @@ export default {
         supplier: this.supplier,
         notes: this.notes,
         receive: [],
-        time: moment().format('MM/DD/YYYY, h:mm:ss a')
+        time: moment().format('DD/MM/YYYY, HH:mm:ss')
       };
       this.$store.dispatch("submitOrder", dataForm)
         .then(() => {

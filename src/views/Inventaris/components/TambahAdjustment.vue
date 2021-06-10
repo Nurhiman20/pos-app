@@ -119,7 +119,7 @@ export default {
         actual_stock: this.actualStock,
         adjustment: this.countAdjustment(this.inStock, this.actualStock),
         notes: this.notes,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a')
+        time: moment().format('DD/MM/YYYY, HH:mm:ss')
       };
       this.$store.dispatch("submitAdjustment", dataForm)
         .then(() => {

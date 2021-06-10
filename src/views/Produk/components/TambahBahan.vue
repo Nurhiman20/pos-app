@@ -126,7 +126,7 @@ export default {
         stock: this.stockIngredient,
         unit: this.unitIngredient,
         price: this.pricePerUnit,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a')
+        time: moment().format('DD/MM/YYYY, HH:mm:ss')
       };
       this.$store.dispatch("submitIngredient", dataForm)
         .then(() => {

@@ -195,7 +195,7 @@ export default {
         ingredients: this.listIngredient,
         supplier: this.order.supplier,
         notes: this.notes,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a'),
+        time: moment().format('DD/MM/YYYY, HH:mm:ss'),
         status: this.checkStatus()
       };
       this.$store.dispatch("submitReceive", dataForm)

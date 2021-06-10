@@ -179,7 +179,7 @@ export default {
         id_order: this.rvDeliver.id,
         order: this.rvDeliver,
         delivery_outlet: this.rvDeliver.outlet,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a'),
+        time: moment().format('DD/MM/YYYY, HH:mm:ss'),
         ingredients: this.listIngredient,
         status: 'Penerimaan',
         receive_status: this.checkStatus()

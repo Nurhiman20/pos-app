@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import * as moment from 'moment';
+
 export default {
   data() {
     return {
@@ -113,7 +115,7 @@ export default {
       return uniqid
     },
     dateTime() {
-      return new Date().toLocaleString();
+      return moment().format('DD/MM/YYYY, HH:mm:ss');
     },
     goToEdit(item) {
       this.$emit('editProduct', item);

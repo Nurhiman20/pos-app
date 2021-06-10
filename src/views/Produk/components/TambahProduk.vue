@@ -197,7 +197,7 @@ export default {
         stock: this.stockIngredient,
         unit: this.unitIngredient,
         image: this.imageProduct,
-        time: moment().format('MM/DD/YYYY, h:mm:ss a')
+        time: moment().format('DD/MM/YYYY, HH:mm:ss')
       };
       this.$store.dispatch("submitProduct", dataForm)
         .then(() => {
