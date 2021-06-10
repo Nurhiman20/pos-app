@@ -147,6 +147,21 @@
           <div class="d-flex flex-row justify-space-between">
             <v-card-title>Transfer</v-card-title>
           </div>
+          <v-data-table
+            :headers="headersTransfer"
+            :items="$store.getters.transferOnDetail"
+            class="elevation-1 scrollbar-custom"
+            hide-default-footer
+          >
+            <template v-slot:item.outlet="{item}">
+              <div v-if="item.status === 'Pengiriman' || item.status === 'Pesanan'">
+                <p>{{ item.destination_outlet.name }}</p>
+              </div>
+              <div v-else>
+                <p>{{ item.delivery_outlet.name }}</p>
+              </div>
+            </template>
+          </v-data-table>
         </v-card>
       </v-col>
       <v-col cols="12" md="6" lg="6" xl="6">
@@ -232,6 +247,13 @@ export default {
         { text: 'Total', value: 'supplier', sortable: false },
         { text: 'Status', value: 'status', sortable: false }
       ],
+      headersTransfer: [
+        { text: 'ID', value: 'id', sortable: false },
+        { text: 'Waktu', value: 'time', sortable: true },
+        { text: 'Status', value: 'status', sortable: true },
+        { text: 'Cabang', value: 'outlet', sortable: true },
+        { text: 'Qty', value: 'qty', sortable: false }
+      ],
       headersAdjustment: [
         { text: 'Waktu', value: 'time', sortable: false },
         { text: 'Bahan', value: 'ingredient.name', sortable: true },
@@ -280,6 +302,7 @@ export default {
     this.$store.dispatch("getInventoryById", this.$route.params.id);
     this.$store.dispatch("getOrder");
     this.$store.dispatch("getReceive");
+    this.$store.dispatch("getTransfer");
     this.$store.dispatch("getAdjustment");
     this.$store.dispatch("getTransaction");    
   }

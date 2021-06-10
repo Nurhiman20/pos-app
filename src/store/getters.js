@@ -323,6 +323,19 @@ const adjustmentOnDetail = (state) => {
   return adjustments;
 }
 
+const transferOnDetail = (state) => {
+  let transfer = [];
+  state.listTransfer.forEach(tf => {
+    tf.ingredients.forEach(ing => {
+      if (ing.id_ingredient === state.detailInventory.id) {
+        tf.qty = ing.qty;
+        transfer.push(tf);
+      }
+    });
+  });
+  
+  return transfer;
+}
 
 const countCustomerTx = (state) => {
   let transaction = [];
@@ -464,6 +477,7 @@ export default {
   totalProfitMonth,
   orderOnDetail,
   receiveOnDetail,
+  transferOnDetail,
   adjustmentOnDetail,
   countCustomerTx,
   viewCustomerTx,
