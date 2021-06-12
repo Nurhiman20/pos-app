@@ -153,6 +153,7 @@ export default {
         tax: parseInt(this.$store.state.account.tax) * this.total / 100,
         total: this.total + (parseInt(this.$store.state.account.tax) * this.total / 100),
         status: 'Antre',
+        queue: this.$store.getters.transactionQueue,
         payment: []
       }
 

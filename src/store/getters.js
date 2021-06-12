@@ -378,6 +378,24 @@ const transactionOnDetail = (state) => {
   return transaction;
 }
 
+const transactionQueue = (state) => {
+  let listDate = state.listTransaction.map(tx => new Date(tx.time));
+  let lastDate = listDate.sort().reverse()[0];
+  let lastTx = {};
+  
+  state.listTransaction.forEach(tx => {
+    if (lastDate.getTime() === new Date(tx.time).getTime()) {
+      lastTx = tx;
+    }
+  });
+
+  if (lastTx.queue !== undefined && moment(new Date(lastTx.time)).isSame(moment().format(), 'day') ) {
+    return parseInt(lastTx.queue) + 1;
+  } else {
+    return '1'
+  }
+}
+
 const viewHighestCost = (state) => {
   let txUnitCost = [];
   state.detailInventory.tx.forEach(tx => {
@@ -482,6 +500,7 @@ export default {
   countCustomerTx,
   viewCustomerTx,
   transactionOnDetail,
+  transactionQueue,
   viewHighestCost,
   profitInventory,
   valueInventory

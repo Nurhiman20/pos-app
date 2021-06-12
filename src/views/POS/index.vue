@@ -207,8 +207,8 @@ export default {
     this.$store.dispatch("getCategory");    
     this.$store.dispatch("getCustomer");
     this.$store.dispatch("getTable");
-    this.$store.dispatch("getTransaction");
-  },
+    this.$store.dispatch("getTransaction");    
+  }
 }
 </script>
 

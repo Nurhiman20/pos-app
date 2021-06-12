@@ -16,9 +16,13 @@
         <p>Waktu</p>
         <p>{{ this.selected.time }}</p>
       </div>
-      <div class="d-flex flex-row justify-space-between justify-content-between mt-n3 border-bottom">
+      <div class="d-flex flex-row justify-space-between justify-content-between mt-n3">
         <p>ID Receipt</p>
         <p>{{ this.selected.id }}</p>
+      </div>
+      <div class="d-flex flex-row justify-space-between justify-content-between mt-n3 border-bottom">
+        <p>Nomor antrean</p>
+        <p>{{ this.selected.queue }}</p>
       </div>
       <!-- <div class="d-flex flex-row justify-space-between mt-n3 border-bottom">
         <p>Nomor Meja</p>
