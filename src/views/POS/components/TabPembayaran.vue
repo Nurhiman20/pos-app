@@ -282,7 +282,7 @@ export default {
     },
     textTx(item) {
       if (item.table_number !== undefined) {
-        return item.id + ' | ' + item.time + ' | ' + item.table_number.table_number
+        return item.id + ' | ' + item.time + ' | ' + item.table_number.table_number + ' | Nomor Antrean: ' + item.queue
       } else {
         return ''
       }      

@@ -141,7 +141,7 @@ export default {
       this.toPayment = true;
       this.submitTransaction();
     },
-    submitTransaction() {
+    submitTransaction() {      
       let prod = this.$store.state.selectedProduct;
 
       let dataForm = {
@@ -197,12 +197,12 @@ export default {
         });
     },
   },
-  created() {
+  created() {    
     if (this.$store.state.selectedTx.customer !== undefined && this.$store.state.selectedTx.table_number !== undefined) {
       this.customer = this.$store.state.selectedTx.customer;
       this.tableNumber = this.$store.state.selectedTx.table_number;
     }
-  },
+  }
 }
 </script>
 

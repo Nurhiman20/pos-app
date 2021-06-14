@@ -147,7 +147,7 @@ const listRvTransfer = (state) => {
 const listViewTransaction = (state) => {
   let filteredTx = [];
   state.listTransaction.forEach(tx => {
-    if (moment(new Date(tx.time)).isBetween(state.dateStart, moment(new Date(state.dateEnd)).add(1, 'days'), undefined, '[]') && tx.status !== 'Antre') {
+    if (moment(new Date(moment(tx.time, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD'))).isBetween(state.dateStart, moment(state.dateEnd).add(1, 'days'), undefined, '[]') && tx.status !== 'Antre') {
       filteredTx.push(tx);
     }
   })
@@ -189,7 +189,7 @@ const listQueueTransaction = (state) => {
 const totalTransactionToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(new Date(element.time)).isSame(moment().format(), 'day') && element.status !== 'Antre') {
+    if (moment(new Date(moment(element.time, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD'))).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -200,7 +200,7 @@ const totalTransactionToday = (state) => {
 const totalTransactionMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(new Date(element.time)).isSame(moment().format(), 'month') && element.status !== 'Antre') {
+    if (moment(new Date(moment(element.time, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD'))).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });
@@ -211,7 +211,7 @@ const totalTransactionMonth = (state) => {
 const totalAmountToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(new Date(element.time)).isSame(moment().format(), 'day') && element.status !== 'Antre') {
+    if (moment(new Date(moment(element.time, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD'))).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -224,7 +224,7 @@ const totalAmountToday = (state) => {
 const totalAmountMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(new Date(element.time)).isSame(moment().format(), 'month') && element.status !== 'Antre') {
+    if (moment(new Date(moment(element.time, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD'))).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });
@@ -237,7 +237,7 @@ const totalAmountMonth = (state) => {
 const totalProfitToday = (state) => {
   let transactionToday = [];
   state.listTransaction.forEach(element => {
-    if (moment(new Date(element.time)).isSame(moment().format(), 'day') && element.status !== 'Antre') {
+    if (moment(new Date(moment(element.time, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD'))).isSame(moment().format(), 'day') && element.status !== 'Antre') {
       transactionToday.push(element);
     }
   });
@@ -263,7 +263,7 @@ const totalProfitToday = (state) => {
 const totalProfitMonth = (state) => {
   let transactionMonth = [];
   state.listTransaction.forEach(element => {
-    if (moment(new Date(element.time)).isSame(moment().format(), 'month') && element.status !== 'Antre') {
+    if (moment(new Date(moment(element.time, 'DD/MM/YYYY, HH:mm:ss').format('YYYY-MM-DD'))).isSame(moment().format(), 'month') && element.status !== 'Antre') {
       transactionMonth.push(element);
     }
   });
@@ -379,17 +379,17 @@ const transactionOnDetail = (state) => {
 }
 
 const transactionQueue = (state) => {
-  let listDate = state.listTransaction.map(tx => new Date(tx.time));
+  let listDate = state.listTransaction.map(tx => new Date(moment(tx.time, 'DD/MM/YYYY, HH:mm:ss').format()));
   let lastDate = listDate.sort().reverse()[0];
   let lastTx = {};
   
   state.listTransaction.forEach(tx => {
-    if (lastDate.getTime() === new Date(tx.time).getTime()) {
+    if (lastDate.getTime() === new Date(moment(tx.time, 'DD/MM/YYYY, HH:mm:ss').format()).getTime()) {
       lastTx = tx;
     }
   });
 
-  if (lastTx.queue !== undefined && moment(new Date(lastTx.time)).isSame(moment().format(), 'day') ) {
+  if (lastTx.queue !== undefined && moment(new Date(moment(lastTx.time, 'DD/MM/YYYY, HH:mm:ss').format())).isSame(moment().format(), 'day') ) {
     return parseInt(lastTx.queue) + 1;
   } else {
     return '1'
