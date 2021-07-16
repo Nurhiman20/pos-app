@@ -1,4 +1,5 @@
 # POS App
+:moneybag: Web app for Point of Sales and inventory management :package:
 
 ## Project setup
 ```
