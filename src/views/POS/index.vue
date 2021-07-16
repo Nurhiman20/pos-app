@@ -9,26 +9,22 @@
               background-color="transparent"
               color="primary"
             >
-              <v-tab>
-                Pesanan
-              </v-tab>
-              <v-tab>
-                Pembayaran
-              </v-tab>
+              <v-tab> Pesanan </v-tab>
+              <v-tab> Pembayaran </v-tab>
             </v-tabs>
           </v-card>
         </v-col>
       </v-row>
-        
+
       <v-tabs-items v-model="tab" class="mt-4">
-        <v-tab-item>          
+        <v-tab-item>
           <v-card outlined color="background">
             <v-row>
               <v-col cols="12" md="7" lg="7" xl="7">
                 <product-catalog
                   :categories="$store.state.listCategory"
                   :products="$store.getters.listViewProduct"
-                  @setFilter=setFilterProduct
+                  @setFilter="setFilterProduct"
                   @productSelected="openSelectDialog"
                 ></product-catalog>
               </v-col>
@@ -69,7 +65,7 @@
 
     <save-transaction-dialog
       :show="saveDialog"
-      :transaction="transactionData"      
+      :transaction="transactionData"
       @close="closeSaveDialog"
       @success="successSaveTransaction"
       @error="failedSaveTransaction"
@@ -79,10 +75,10 @@
       :show="dialogReceipt"
       :selected="selectedTransaction"
       @closeDialog="closeDialogReceipt"
-    ></receipt-dialog> 
+    ></receipt-dialog>
 
     <!-- response dialog -->
-    <response-dialog 
+    <response-dialog
       :success="dialogSuccess"
       :failed="dialogFailed"
       :message="messageDialog"
@@ -93,14 +89,14 @@
 </template>
 
 <script>
-import productCatalog from './components/KatalogProduk';
-import productSale from './components/PenjualanProduk';
-import selectProductDialog from './components/DialogPilihProduk';
-import editProductDialog from './components/DialogEditProduk';
-import saveTransactionDialog from './components/DialogSimpanTransaksi';
-import responseDialog from '../../components/ResponseDialog';
-import paymentTab from './components/TabPembayaran';
-import receiptDialog from './components/DialogStruk';
+import productCatalog from "./components/KatalogProduk";
+import productSale from "./components/PenjualanProduk";
+import selectProductDialog from "./components/DialogPilihProduk";
+import editProductDialog from "./components/DialogEditProduk";
+import saveTransactionDialog from "./components/DialogSimpanTransaksi";
+import responseDialog from "../../components/ResponseDialog";
+import paymentTab from "./components/TabPembayaran";
+import receiptDialog from "./components/DialogStruk";
 
 export default {
   components: {
@@ -111,7 +107,7 @@ export default {
     saveTransactionDialog,
     responseDialog,
     paymentTab,
-    receiptDialog
+    receiptDialog,
   },
   data() {
     return {
@@ -119,11 +115,11 @@ export default {
       tx: {},
       selectedItem: {
         id: null,
-        name: null
+        name: null,
       },
       editSelected: {
         id: null,
-        name: null
+        name: null,
       },
       selectedTransaction: {},
       tab: null,
@@ -133,8 +129,8 @@ export default {
       dialogReceipt: false,
       dialogSuccess: false,
       dialogFailed: false,
-      messageDialog: null
-    }
+      messageDialog: null,
+    };
   },
   methods: {
     closeEditDialog(e) {
@@ -152,7 +148,7 @@ export default {
       // if (this.$store.state.selectedTx.id !== undefined) {
       //   this.$store.commit("SET_EDIT_TX", null);
       //   this.$router.push('/laporan/transaksi');
-      // }      
+      // }
       // this.$store.commit("SET_EDIT_TX", {});
     },
     closeDialogFailed(e) {
@@ -192,24 +188,24 @@ export default {
       this.dialogReceipt = true;
     },
     setFilterProduct(e) {
-      this.$store.commit("SET_FILTER_CATEGORY", e)
+      this.$store.commit("SET_FILTER_CATEGORY", e);
     },
     formatCurrency(val) {
-      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
     },
     saveTransaction(e) {
       this.transactionData = e;
       this.saveDialog = true;
-    }
+    },
   },
   created() {
+    this.$store.dispatch("getTransaction");
     this.$store.dispatch("getProduct");
-    this.$store.dispatch("getCategory");    
+    this.$store.dispatch("getCategory");
     this.$store.dispatch("getCustomer");
     this.$store.dispatch("getTable");
-    this.$store.dispatch("getTransaction");    
-  }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">

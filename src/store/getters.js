@@ -379,16 +379,26 @@ const transactionOnDetail = (state) => {
 }
 
 const transactionQueue = (state) => {
-  let listDate = state.listTransaction.map(tx => new Date(moment(tx.time, 'DD/MM/YYYY, HH:mm:ss').format()));
+  // Get list of time transaction
+  let listDate = [];
+  state.listTransaction.forEach(tx => {
+    if (tx.status === 'Antre') {
+      listDate.push(new Date(moment(tx.time, 'DD/MM/YYYY, HH:mm:ss').format()))
+    }
+  });
+
+  // get last transaction time
   let lastDate = listDate.sort().reverse()[0];
+
+  // get last transaction
   let lastTx = {};
-  
   state.listTransaction.forEach(tx => {
     if (lastDate.getTime() === new Date(moment(tx.time, 'DD/MM/YYYY, HH:mm:ss').format()).getTime()) {
       lastTx = tx;
     }
   });
 
+  // set queue number by checking lastTx
   if (lastTx.queue !== undefined && moment(new Date(moment(lastTx.time, 'DD/MM/YYYY, HH:mm:ss').format())).isSame(moment().format(), 'day') ) {
     return parseInt(lastTx.queue) + 1;
   } else {
