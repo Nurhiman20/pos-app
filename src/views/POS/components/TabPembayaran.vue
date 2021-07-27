@@ -195,6 +195,49 @@
                         }},00
                       </p>
                     </div>
+                    <ValidationProvider
+                      v-slot="{ errors }"
+                      name="Metode pembayaran"
+                      rules="required"
+                    >
+                      <v-select
+                        v-model="item.payment_method"
+                        :error-messages="errors"
+                        :items="paymentMethods"
+                        label="Metode Pembayaran"
+                        class="mb-0 mt-6 px-4"
+                        outlined
+                        dense
+                      ></v-select>
+                    </ValidationProvider>
+                    <ValidationProvider
+                      v-slot="{ errors }"
+                      name="Tunai"
+                      rules=""
+                    >
+                      <v-text-field
+                        v-model="item.cash"
+                        :error-messages="errors"
+                        label="Tunai"
+                        outlined
+                        dense
+                        class="mb-0 mt-2 px-4"
+                        v-if="item.payment_method === 'Tunai'"
+                      ></v-text-field>
+                    </ValidationProvider>
+                    <div
+                      class="px-4 mb-4"
+                      v-if="item.payment_method === 'Tunai'"
+                    >
+                      <div
+                        class="d-flex flex-row justify-space-between pa-2 pb-0 kembali"
+                      >
+                        <p>Kembali</p>
+                        <p class="text-bold">
+                          Rp. {{ formatCurrency(countMoneyChange(item, i)) }},00
+                        </p>
+                      </div>
+                    </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -344,7 +387,7 @@
     <select-item-dialog
       :show="selectDialog"
       :selectedItem="selectedItem"
-      @add="addPayment"
+      @add="addPaymentSplit"
       @close="closeSelectDialog"
     ></select-item-dialog>
   </div>
@@ -481,6 +524,19 @@ export default {
       );
       return totalAll;
     },
+    countMoneyChange(prod, indexProd) {
+      if (prod.cash === 0) {
+        this.tx.payment[indexProd].money_change = 0;
+        return 0;
+      } else {
+        let countChange =
+          prod.cash -
+          (this.countTotal(prod.item_product) +
+            this.totalTax(prod.item_product));
+        this.tx.payment[indexProd].money_change = countChange;
+        return countChange;
+      }
+    },
     textCustomer(item) {
       return item.name + ' - ' + item.phone_number;
     },
@@ -552,18 +608,18 @@ export default {
         tx: null,
       });
     },
-    addPayment(e) {
+    addPaymentSplit(e) {
       const foundCustomer = this.tx.payment.some(
         (el) => el.customer.id === e.customer.id
       );
       if (!foundCustomer) {
         let dataPayment = {
           id: this.randomId(),
-          payment_method: this.paymentMethod,
+          payment_method: null,
           item_product: [e.selected_item],
           customer: e.customer,
-          cash: null,
-          money_change: null,
+          cash: 0,
+          money_change: 0,
           time: this.dateTime(),
         };
 
@@ -575,6 +631,18 @@ export default {
           }
         });
       }
+    },
+    addPayment() {
+      let dataPayment = {
+        id: this.randomId(),
+        payment_method: this.paymentMethod,
+        time: this.dateTime(),
+      };
+      if (this.paymentMethod === 'Tunai') {
+        dataPayment.cash = this.cash;
+        dataPayment.moneyChange = this.moneyChange;
+      }
+      this.tx.payment.push(dataPayment);
     },
     doPrint() {
       if (
@@ -619,7 +687,11 @@ export default {
         if (Object.keys(this.$store.state.selectedTx).length !== 0) {
           this.tx = this.$store.state.selectedTx;
         }
-        this.addPayment();
+
+        if (this.tx.payment.length === 0) {
+          this.addPayment();
+        }
+
         this.tx.status = 'Sukses';
 
         this.$store
