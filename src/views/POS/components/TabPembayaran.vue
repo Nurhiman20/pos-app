@@ -238,6 +238,19 @@
                         </p>
                       </div>
                     </div>
+                    <div class="px-4 pb-3">
+                      <v-btn
+                        class="mt-3"
+                        color="secondary"
+                        block
+                        :loading="$store.state.loading"
+                        @click="doPrint"
+                        :disabled="item.cash === 0"
+                      >
+                        <v-icon class="mr-2">mdi-printer</v-icon>
+                        Cetak Struk
+                      </v-btn>
+                    </div>
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
@@ -375,6 +388,7 @@
               :loading="$store.state.loading"
               @click="doPrint"
               :disabled="cash === 0"
+              v-if="!splitPayment"
             >
               <v-icon class="mr-2">mdi-printer</v-icon>
               Cetak Struk
