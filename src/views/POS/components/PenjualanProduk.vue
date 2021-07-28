@@ -45,10 +45,42 @@
             ></v-autocomplete>
           </v-col>
           <v-col cols="12" md="12" lg="12" class="py-0">
-            <v-btn class="mt-3" block color="primary" @click="submitTransaction" v-if="Object.keys(this.$store.state.selectedTx).length === 0">Transaksi</v-btn>
-            <v-btn class="mt-3" block color="secondary" @click="goToPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length === 0">Lanjut Pembayaran</v-btn>
-            <v-btn class="mt-3" block color="primary" @click="goEditPayment" :disabled="$store.state.selectedProduct.length === 0" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Edit Pembayaran</v-btn>
-            <v-btn class="mt-3" block color="secondary" outlined dark @click="cancelEdit" v-if="Object.keys(this.$store.state.selectedTx).length !== 0">Batal Edit Transaksi</v-btn>
+            <v-btn
+              class="mt-3"
+              block
+              color="primary"
+              @click="submitTransaction"
+              v-if="Object.keys(this.$store.state.selectedTx).length === 0"
+              >Transaksi</v-btn
+            >
+            <v-btn
+              class="mt-3"
+              block
+              color="secondary"
+              @click="goToPayment"
+              :disabled="$store.state.selectedProduct.length === 0"
+              v-if="Object.keys(this.$store.state.selectedTx).length === 0"
+              >Lanjut Pembayaran</v-btn
+            >
+            <v-btn
+              class="mt-3"
+              block
+              color="primary"
+              @click="goEditPayment"
+              :disabled="$store.state.selectedProduct.length === 0"
+              v-if="Object.keys(this.$store.state.selectedTx).length !== 0"
+              >Edit Pembayaran</v-btn
+            >
+            <v-btn
+              class="mt-3"
+              block
+              color="secondary"
+              outlined
+              dark
+              @click="cancelEdit"
+              v-if="Object.keys(this.$store.state.selectedTx).length !== 0"
+              >Batal Edit Transaksi</v-btn
+            >
           </v-col>
         </v-row>
       </div>
@@ -67,23 +99,29 @@ export default {
       tableNumber: null,
       toPayment: false,
       headers: [
-        { text: 'Produk', value: 'name', sortable: false },        
+        { text: 'Produk', value: 'name', sortable: false },
         { text: 'Harga', value: 'price', sortable: false },
         { text: 'Qty', value: 'qty', sortable: false },
         { text: 'Diskon', value: 'discount', sortable: false },
         { text: 'Total', value: 'total', sortable: false },
-        { text: '', value: 'actions', sortable: false }
-      ]
-    }
+        { text: '', value: 'actions', sortable: false },
+      ],
+    };
   },
   computed: {
     total() {
-      const totalAll = this.$store.state.selectedProduct.reduce((acc, prod) => acc + parseInt(prod.total), 0);
+      const totalAll = this.$store.state.selectedProduct.reduce(
+        (acc, prod) => acc + parseInt(prod.total),
+        0
+      );
       return totalAll;
     },
     discount() {
-      const disc = this.$store.state.selectedProduct.reduce((acc, prod) => acc + parseInt(prod.discount), 0);
-      return disc
+      const disc = this.$store.state.selectedProduct.reduce(
+        (acc, prod) => acc + parseInt(prod.discount),
+        0
+      );
+      return disc;
     },
     moneyChange() {
       if (this.cash === 0) {
@@ -91,28 +129,28 @@ export default {
       } else {
         return this.cash - this.total;
       }
-    }
+    },
   },
   methods: {
     textCustomer(item) {
-      return item.name + ' - ' + item.phone_number
+      return item.name + ' - ' + item.phone_number;
     },
     valueCustomer(item) {
-      return item
-    },    
+      return item;
+    },
     textTable(item) {
-      return item.table_number
+      return item.table_number;
     },
     valueTable(item) {
-      return item
+      return item;
     },
     formatCurrency(val) {
-      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
     },
     randomId() {
       var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
       var uniqid = 'tr-' + randLetter + Date.now();
-      return uniqid
+      return uniqid;
     },
     dateTime() {
       return moment().format('DD/MM/YYYY, HH:mm:ss');
@@ -121,7 +159,7 @@ export default {
       this.$emit('editProduct', item);
     },
     cancelEdit() {
-      this.$store.commit("SET_EDIT_TX", null);
+      this.$store.commit('SET_EDIT_TX', null);
       this.$router.push('/laporan/transaksi');
     },
     goEditPayment() {
@@ -141,7 +179,7 @@ export default {
       this.toPayment = true;
       this.submitTransaction();
     },
-    submitTransaction() {      
+    submitTransaction() {
       let prod = this.$store.state.selectedProduct;
 
       let dataForm = {
@@ -150,20 +188,24 @@ export default {
         products_sold: prod,
         time: this.dateTime(),
         total_discount: this.discount,
-        tax: parseInt(this.$store.state.account.tax) * this.total / 100,
-        total: this.total + (parseInt(this.$store.state.account.tax) * this.total / 100),
+        tax: (parseInt(this.$store.state.account.tax) * this.total) / 100,
+        total:
+          this.total +
+          (parseInt(this.$store.state.account.tax) * this.total) / 100,
         status: 'Antre',
         queue: this.$store.getters.transactionQueue,
-        payment: []
-      }
+        payment: [],
+        payment_type: 'Normal',
+        index_payment: 0,
+      };
 
       if (this.customer === null) {
         dataForm.customer = {
           id: 'default-customer-0000',
           name: 'Default',
           phone_number: '-',
-          email: '-'
-        }
+          email: '-',
+        };
       } else {
         dataForm.customer = this.customer;
       }
@@ -174,36 +216,40 @@ export default {
           table_number: 0,
           capacity: '-',
           id_outlet: this.$store.state.account.id,
-          outlet: this.$store.state.account
-        }
+          outlet: this.$store.state.account,
+        };
       } else {
         dataForm.table_number = this.tableNumber;
       }
-      
-      this.$store.dispatch("submitTransaction", dataForm)
-        .then(() => {         
-          this.$store.commit("SET_SELECTED_PRODUCT", []);     
+
+      this.$store
+        .dispatch('submitTransaction', dataForm)
+        .then(() => {
+          this.$store.commit('SET_SELECTED_PRODUCT', []);
           this.customer = null;
-          this.tableNumber = null;          
-          this.$emit("success", "Transaksi telah disimpan");
+          this.tableNumber = null;
+          this.$emit('success', 'Transaksi telah disimpan');
           if (this.toPayment === true) {
-            this.$store.commit("SET_SELECTED_PRODUCT", dataForm.products_sold);   
-            this.$emit("toPayment", dataForm);
+            this.$store.commit('SET_SELECTED_PRODUCT', dataForm.products_sold);
+            this.$emit('toPayment', dataForm);
           }
           this.toPayment = false;
         })
         .catch(() => {
-          this.$emit("error", "Terjadi masalah. Silahkan coba lagi nanti");
+          this.$emit('error', 'Terjadi masalah. Silahkan coba lagi nanti');
         });
     },
   },
-  created() {    
-    if (this.$store.state.selectedTx.customer !== undefined && this.$store.state.selectedTx.table_number !== undefined) {
+  created() {
+    if (
+      this.$store.state.selectedTx.customer !== undefined &&
+      this.$store.state.selectedTx.table_number !== undefined
+    ) {
       this.customer = this.$store.state.selectedTx.customer;
       this.tableNumber = this.$store.state.selectedTx.table_number;
     }
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">
@@ -213,7 +259,7 @@ export default {
 }
 
 .kembali {
-  background-color:var(--v-secondary-base);
+  background-color: var(--v-secondary-base);
   color: var(--v-primary-base);
 }
 </style>

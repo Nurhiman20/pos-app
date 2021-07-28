@@ -51,7 +51,10 @@
           </ValidationProvider>
           <v-row class="mt-3 px-4 align-center">
             <v-col
-              cols="1"
+              cols="12"
+              md="1"
+              lg="1"
+              xl="1"
               class="flex-grow-1 flex-shrink-0"
               style="min-width: 100px; max-width: 100%"
             >
@@ -77,7 +80,7 @@
                 ></v-autocomplete>
               </ValidationProvider>
             </v-col>
-            <v-col cols="3">
+            <v-col cols="12" md="3" lg="3" xl="3">
               <div class="d-flex flex-row justify-end">
                 <v-btn
                   color="success"
@@ -92,7 +95,7 @@
                   color="success"
                   dark
                   :outlined="splitPayment ? false : true"
-                  @click="splitPayment = !splitPayment"
+                  @click="changeSplit"
                   :disabled="groupPayment ? true : false"
                   >Bagi / Split</v-btn
                 >
@@ -159,15 +162,13 @@
                       <p>Diskon</p>
                       <p class="text-bold mr-2">
                         Rp.
-                        {{
-                          formatCurrency(totalDiscount(item.item_product))
-                        }},00
+                        {{ formatCurrency(item.total_discount) }},00
                       </p>
                     </div>
                     <div class="d-flex flex-row justify-space-between mt-2">
                       <p>Pajak ({{ $store.state.account.tax }}%)</p>
                       <p class="text-bold mr-2">
-                        Rp. {{ formatCurrency(totalTax(item.item_product)) }},00
+                        Rp. {{ formatCurrency(item.tax) }},00
                       </p>
                     </div>
                     <div
@@ -187,12 +188,7 @@
                       </p>
                       <p class="text-bold">
                         Rp.
-                        {{
-                          formatCurrency(
-                            countTotal(item.item_product) +
-                              totalTax(item.item_product)
-                          )
-                        }},00
+                        {{ formatCurrency(item.total) }},00
                       </p>
                     </div>
                     <ValidationProvider
@@ -244,7 +240,7 @@
                         color="secondary"
                         block
                         :loading="$store.state.loading"
-                        @click="doPrint"
+                        @click="doPrint(i)"
                         :disabled="item.cash === 0"
                       >
                         <v-icon class="mr-2">mdi-printer</v-icon>
@@ -386,7 +382,7 @@
               color="secondary"
               block
               :loading="$store.state.loading"
-              @click="doPrint"
+              @click="doPrint(0)"
               :disabled="cash === 0"
               v-if="!splitPayment"
             >
@@ -598,8 +594,8 @@ export default {
           (acc, tx) => acc + parseInt(tx.tx.total),
           0
         );
-        let countTotal = this.total + totalOtherTx;
-        return countTotal;
+        let countTotalTx = this.total + totalOtherTx;
+        return countTotalTx;
       } else {
         return this.total;
       }
@@ -622,6 +618,17 @@ export default {
         tx: null,
       });
     },
+    changeSplit() {
+      this.splitPayment = !this.splitPayment;
+
+      if (this.splitPayment === false) {
+        this.tx.payment = [];
+        this.tx.payment_type = 'Normal';
+      } else {
+        this.tx.payment = [];
+        this.tx.payment_type = 'Split';
+      }
+    },
     addPaymentSplit(e) {
       const foundCustomer = this.tx.payment.some(
         (el) => el.customer.id === e.customer.id
@@ -634,6 +641,11 @@ export default {
           customer: e.customer,
           cash: 0,
           money_change: 0,
+          total:
+            this.countTotal([e.selected_item]) +
+            this.totalTax([e.selected_item]),
+          tax: this.totalTax([e.selected_item]),
+          total_discount: this.totalDiscount([e.selected_item]),
           time: this.dateTime(),
         };
 
@@ -642,6 +654,11 @@ export default {
         this.tx.payment.forEach((payment) => {
           if (payment.customer.id === e.customer.id) {
             payment.item_product.push(e.selected_item);
+            payment.total_discount = this.totalDiscount(payment.item_product);
+            payment.tax = this.totalTax(payment.item_product);
+            payment.total =
+              this.countTotal(payment.item_product) +
+              this.totalTax(payment.item_product);
           }
         });
       }
@@ -654,11 +671,12 @@ export default {
       };
       if (this.paymentMethod === 'Tunai') {
         dataPayment.cash = this.cash;
-        dataPayment.moneyChange = this.moneyChange;
+        dataPayment.money_change = this.moneyChange;
       }
       this.tx.payment.push(dataPayment);
     },
-    doPrint() {
+    doPrint(indexPayment) {
+      console.log(this.tx);
       if (
         Object.keys(this.$store.state.selectedTx).length !== 0 &&
         this.$store.state.selectedTx.status !== 'Antre'
@@ -670,8 +688,11 @@ export default {
         dataEditPayment.payment[0].cash = this.cash;
         dataEditPayment.payment[0].moneyChange = this.moneyChange;
         this.$emit('printReceipt', dataEditPayment);
-      } else {
+      } else if (this.tx.payment_type === 'Normal') {
         this.addPayment();
+        this.$emit('printReceipt', this.tx);
+      } else {
+        this.tx.index_payment = indexPayment;
         this.$emit('printReceipt', this.tx);
       }
     },
@@ -702,7 +723,7 @@ export default {
           this.tx = this.$store.state.selectedTx;
         }
 
-        if (this.tx.payment.length === 0) {
+        if (this.tx.payment_type === 'Normal') {
           this.addPayment();
         }
 
