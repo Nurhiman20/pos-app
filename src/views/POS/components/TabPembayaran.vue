@@ -404,6 +404,7 @@
 </template>
 
 <script>
+import * as moment from 'moment';
 import selectItemDialog from './DialogPilihItem.vue';
 
 export default {
@@ -586,7 +587,7 @@ export default {
       return uniqid;
     },
     dateTime() {
-      return new Date().toLocaleString();
+      return moment().format('DD/MM/YYYY, HH:mm:ss');
     },
     totalTx() {
       if (this.otherTx[0].tx !== null) {
@@ -676,7 +677,6 @@ export default {
       this.tx.payment.push(dataPayment);
     },
     doPrint(indexPayment) {
-      console.log(this.tx);
       if (
         Object.keys(this.$store.state.selectedTx).length !== 0 &&
         this.$store.state.selectedTx.status !== 'Antre'
