@@ -492,6 +492,13 @@ export default {
         return this.$store.state.selectedTx.products_sold;
       }
     },
+    listProductSplit() {
+      if (Object.keys(this.$store.state.selectedTx).length === 0) {
+        return this.tx.payment;
+      } else {
+        return this.$store.state.selectedTx.payment;
+      }
+    },
   },
   watch: {
     tx(val) {
@@ -751,6 +758,12 @@ export default {
   created() {
     this.tx = this.txPay;
     if (
+      Object.keys(this.$store.state.selectedTx).length !== 0 &&
+      this.$store.state.selectedTx.payment.length !== 0 &&
+      this.$store.state.selectedTx.payment_type === 'Split'
+    ) {
+      this.splitPayment = true;
+    } else if (
       Object.keys(this.$store.state.selectedTx).length !== 0 &&
       this.$store.state.selectedTx.payment.length !== 0
     ) {
