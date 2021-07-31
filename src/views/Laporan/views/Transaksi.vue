@@ -97,24 +97,31 @@
         hide-default-footer
         @click:row="goToEdit"
       >
-        <template v-slot:item.products_sold="{item}">
+        <template v-slot:item.products_sold="{ item }">
           <div v-for="(prod, index) in item.products_sold" :key="index">
             <div class="d-flex flex-row align-center py-2">
-              <v-img :src="showImage(prod.image)" min-width="60" max-width="60" :aspect-ratio="4/3"></v-img>
+              <v-img
+                :src="showImage(prod.image)"
+                min-width="60"
+                max-width="60"
+                :aspect-ratio="4 / 3"
+              ></v-img>
               <div class="ml-2 mt-4">
                 <p class="text-bold mb-0">{{ prod.name }} ({{ prod.qty }})</p>
-                <p class="app-subtitle">Rp{{ formatCurrency(prod.price) }},00</p>
+                <p class="app-subtitle">
+                  Rp{{ formatCurrency(prod.price) }},00
+                </p>
               </div>
             </div>
           </div>
         </template>
-        <template v-slot:item.total="{item}">
+        <template v-slot:item.total="{ item }">
           <p>Rp{{ formatCurrency(item.total) }},00</p>
         </template>
-        <template v-slot:item.date="{item}">
+        <template v-slot:item.date="{ item }">
           <p>{{ formatDate(item.time) }}</p>
         </template>
-        <template v-slot:item.time="{item}">
+        <template v-slot:item.time="{ item }">
           <p>{{ formatTime(item.time) }}</p>
         </template>
       </v-data-table>
@@ -135,7 +142,7 @@ import * as moment from 'moment';
 
 export default {
   components: {
-    receiptApp
+    receiptApp,
   },
   data() {
     return {
@@ -152,7 +159,7 @@ export default {
         { text: 'Waktu', value: 'time', sortable: true },
         { text: 'ID Transaksi', value: 'id', sortable: false },
         { text: 'Produk', value: 'products_sold', sortable: false },
-        { text: 'Total Harga', value: 'total', sortable: false }
+        { text: 'Total Harga', value: 'total', sortable: false },
       ],
       jsonFields: {
         ID: 'id',
@@ -160,50 +167,52 @@ export default {
         Pelanggan: {
           field: 'customer',
           callback: (value) => {
-            let strText = `Nama: ${value.name}\nNomor HP: ${value.phone_number}`
-            return strText
-          }
+            let strText = `Nama: ${value.name}\nNomor HP: ${value.phone_number}`;
+            return strText;
+          },
         },
         Produk: {
           field: 'products_sold',
           callback: (value) => {
             let strText = '';
             for (let i = 0; i < value.length; i++) {
-              strText += `Nama: ${value[i].name}\nQty: ${value[i].qty}\nHarga: ${value[i].price}\n\n`
-            }            
-            return strText
-          }
+              strText += `Nama: ${value[i].name}\nQty: ${value[i].qty}\nHarga: ${value[i].price}\n\n`;
+            }
+            return strText;
+          },
         },
         Diskon: 'total_discount',
         'Total Harga': 'total',
         Tunai: 'cash',
-        Kembali: 'money_change'
+        Kembali: 'money_change',
       },
-      dialogReceipt: false
-    }
+      dialogReceipt: false,
+    };
   },
   watch: {
     search(val) {
       val && val !== this.select && this.querySelections(val);
-    }
+    },
   },
   methods: {
     querySelections(v) {
-      let listTransaction = this.$store.getters.listViewTransaction.map(item => item.id);
-      this.itemTransaction = listTransaction.filter(e => {
+      let listTransaction = this.$store.getters.listViewTransaction.map(
+        (item) => item.id
+      );
+      this.itemTransaction = listTransaction.filter((e) => {
         return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1;
       });
     },
     formatCurrency(val) {
-      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')
+      return val.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.');
     },
     formatTime(val) {
       moment.locale('id');
-      return moment(new Date(val)).format('LT');
+      return moment(val, 'DD/MM/YYYY, HH:mm:ss').format('LT');
     },
     formatDate(val) {
       moment.locale('id');
-      return moment(new Date(val)).format('LL');
+      return moment(val, 'DD/MM/YYYY, HH:mm:ss').format('LL');
     },
     closeDialogReceipt(e) {
       this.dialogReceipt = e;
@@ -215,7 +224,7 @@ export default {
         return null;
       }
     },
-    setDateStart(e) {      
+    setDateStart(e) {
       this.$store.commit('SET_DATE_START', e);
     },
     setDateEnd(e) {
@@ -224,14 +233,14 @@ export default {
     goToEdit(e) {
       this.selectedTransaction = e;
       this.dialogReceipt = true;
-    }
+    },
   },
   created() {
-    this.$store.dispatch("getTransaction");    
+    this.$store.dispatch('getTransaction');
     this.date = moment().format('YYYY-MM-DD');
     this.dateEnd = moment().format('YYYY-MM-DD');
     this.setDateStart(this.date);
     this.setDateEnd(this.dateEnd);
   },
-}
+};
 </script>
